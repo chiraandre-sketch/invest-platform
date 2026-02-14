@@ -1,87 +1,57 @@
-/**********************
- UTILISATEUR
-**********************/
-function getUser() {
-  return JSON.parse(localStorage.getItem("user"));
-}
-
-function setUser(user) {
-  localStorage.setItem("user", JSON.stringify(user));
-}
-
-function logout() {
-  localStorage.removeItem("user");
-  window.location.href = "login.html";
-}
-
-/**********************
+/***********************
  INSCRIPTION
-**********************/
-function registerUser() {
-  const phone = document.getElementById("reg-phone").value;
-  const pass = document.getElementById("reg-pass").value;
-  const pass2 = document.getElementById("reg-pass2").value;
+***********************/
+const registerForm = document.getElementById("registerForm");
+if (registerForm) {
+  registerForm.addEventListener("submit", function (e) {
+    e.preventDefault();
 
-  if (!phone || !pass || !pass2) {
-    alert("Tous les champs sont obligatoires");
-    return;
-  }
+    const phone = document.getElementById("regPhone").value;
+    const pass = document.getElementById("regPassword").value;
+    const confirm = document.getElementById("regConfirm").value;
 
-  if (pass !== pass2) {
-    alert("Les mots de passe ne correspondent pas");
-    return;
-  }
+    if (pass !== confirm) {
+      alert("Les mots de passe ne correspondent pas");
+      return;
+    }
 
-  setUser({
-    phone: phone,
-    password: pass,
-    solde: 0
+    localStorage.setItem("user_phone", phone);
+    localStorage.setItem("user_pass", pass);
+    localStorage.setItem("connected", "no");
+
+    alert("Inscription réussie. Connectez-vous.");
+    window.location.href = "index.html";
   });
-
-  window.location.href = "dashboard.html";
 }
 
-/**********************
+/***********************
  CONNEXION
-**********************/
-function loginUser() {
-  const phone = document.getElementById("login-phone").value;
-  const pass = document.getElementById("login-pass").value;
+***********************/
+const loginForm = document.getElementById("loginForm");
+if (loginForm) {
+  loginForm.addEventListener("submit", function (e) {
+    e.preventDefault();
 
-  const user = getUser();
+    const phone = document.getElementById("loginPhone").value;
+    const pass = document.getElementById("loginPassword").value;
 
-  if (!user) {
-    alert("Aucun compte trouvé");
-    return;
-  }
-
-  if (user.phone !== phone || user.password !== pass) {
-    alert("Identifiants incorrects");
-    return;
-  }
-
-  window.location.href = "dashboard.html";
+    if (
+      phone === localStorage.getItem("user_phone") &&
+      pass === localStorage.getItem("user_pass")
+    ) {
+      localStorage.setItem("connected", "yes");
+      window.location.href = "dashboard.html";
+    } else {
+      alert("Numéro ou mot de passe incorrect");
+    }
+  });
 }
 
-/**********************
+/***********************
  PROTECTION DASHBOARD
-**********************/
-function protectDashboard() {
-  const user = getUser();
-  if (!user) {
-    window.location.href = "login.html";
+***********************/
+if (window.location.pathname.includes("dashboard.html")) {
+  if (localStorage.getItem("connected") !== "yes") {
+    window.location.href = "index.html";
   }
 }
-
-/**********************
- SOLDE
-**********************/
-function afficherSolde() {
-  const user = getUser();
-  if (!user) return;
-
-  const el = document.getElementById("solde");
-  if (el) el.innerText = user.solde + " CDF";
-}
-
-document.addEventListener("DOMContentLoaded", afficherSolde);
