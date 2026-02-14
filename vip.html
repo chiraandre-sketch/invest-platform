@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Produits VIP</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #0f172a;
+    color: #fff;
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 20px;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.solde-box {
+    text-align: center;
+    background: #020617;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+.vip-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.vip-card {
+    background: #020617;
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+.vip-card img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.vip-card h3 {
+    margin: 10px 0;
+}
+
+.vip-card p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+.vip-card button {
+    margin-top: 10px;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background: #22c55e;
+    color: #000;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.vip-card button:hover {
+    background: #16a34a;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Produits VIP</h2>
+
+    <div class="solde-box">
+        <p>Solde actuel</p>
+        <h3 id="solde">0 FC</h3>
+    </div>
+
+    <div class="vip-grid">
+
+        <div class="vip-card">
+            <img src="images/vip1.jpg">
+            <h3>VIP 1</h3>
+            <p>Prix : 20 000 FC</p>
+            <p>Revenu journalier : 3 000 FC</p>
+            <p>Durée : 30 jours</p>
+            <button onclick="acheterVIP(20000)">Acheter</button>
+        </div>
+
+        <div class="vip-card">
+            <img src="images/vip2.jpg">
+            <h3>VIP 2</h3>
+            <p>Prix : 35 000 FC</p>
+            <p>Revenu journalier : 5 200 FC</p>
+            <p>Durée : 30 jours</p>
+            <button onclick="acheterVIP(35000)">Acheter</button>
+        </div>
+
+        <div class="vip-card">
+            <img src="images/vip3.jpg">
+            <h3>VIP 3</h3>
+            <p>Prix : 90 000 FC</p>
+            <p>Revenu journalier : 13 500 FC</p>
+            <p>Durée : 30 jours</p>
+            <button onclick="acheterVIP(90000)">Acheter</button>
+        </div>
+
+        <div class="vip-card">
+            <img src="images/vip4.jpg">
+            <h3>VIP 4</h3>
+            <p>Prix : 280 000 FC</p>
+            <p>Revenu journalier : 42 000 FC</p>
+            <p>Durée : 30 jours</p>
+            <button onclick="acheterVIP(280000)">Acheter</button>
+        </div>
+
+        <div class="vip-card">
+            <img src="images/vip5.jpg">
+            <h3>VIP 5</h3>
+            <p>Prix : 850 000 FC</p>
+            <p>Revenu journalier : 127 500 FC</p>
+            <p>Durée : 30 jours</p>
+            <button onclick="acheterVIP(850000)">Acheter</button>
+        </div>
+
+    </div>
+</div>
+
+<script>
+let solde = 0; // change ce montant pour tester
+
+function afficherSolde() {
+    document.getElementById("solde").innerText = solde + " FC";
+}
+
+function acheterVIP(prix) {
+    if (solde >= prix) {
+        solde -= prix;
+        afficherSolde();
+        alert("✅ Achat réussi !");
+    } else {
+        alert("❌ Solde insuffisant. Rechargez votre compte.");
+    }
+}
+
+afficherSolde();
+</script>
+
+</body>
+</html>
