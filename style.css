@@ -1,0 +1,193 @@
+/* RESET & BASE */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+body {
+    background-image: url("../images/bg.jpg"); /* Vérifie bien que l'image est dans le dossier images */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+}
+
+/* AUTH PAGES (Login & Register) */
+.auth-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.auth-card {
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
+    padding: 30px;
+    border-radius: 18px;
+    width: 90%;
+    max-width: 380px;
+    text-align: center;
+    color: #fff;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.logo {
+    width: 90px;
+    margin-bottom: 15px;
+}
+
+.auth-card input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 10px;
+    outline: none;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 14px;
+    background: #00c853;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-primary:hover { background: #00a445; transform: scale(1.02); }
+
+.auth-link a {
+    color: #00e5ff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* DASHBOARD & MENU */
+.main-page { padding: 20px; padding-bottom: 80px; }
+
+.top-actions {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.btn {
+    flex: 1;
+    text-align: center;
+    padding: 12px;
+    border-radius: 10px;
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.green { background: #00c853; }
+.blue { background: #2979ff; }
+.whatsapp { background: #25d366; }
+
+.menu-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.95);
+    margin-bottom: 10px;
+    border-radius: 12px;
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.menu-item.logout { color: #d32f2f; }
+
+/* VIP CARDS */
+.vip-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 15px;
+}
+
+.vip-card {
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    color: white;
+    border-radius: 15px;
+    padding: 12px;
+    text-align: center;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.vip-card img {
+    width: 100%;
+    border-radius: 10px;
+    height: 120px;
+    object-fit: cover;
+}
+
+/* PAGE RETRAIT (WITHDRAW) */
+.withdraw-container {
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(12px);
+    padding: 25px;
+    border-radius: 20px;
+    color: #fff;
+    width: 90%;
+    max-width: 420px;
+    margin: auto;
+}
+
+.solde-display {
+    background: #1b5e20;
+    padding: 15px;
+    border-radius: 12px;
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+}
+
+.btn-retirer {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #1e88e5, #0d47a1);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* NAVIGATION BASSE */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #fff;
+    display: flex;
+    justify-content: space-around;
+    padding: 12px 0;
+    border-top: 1px solid #ddd;
+    z-index: 1000;
+}
+
+.nav-item {
+    text-decoration: none;
+    color: #777;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.nav-item.active {
+    color: #8b1c3d;
+    border-bottom: 2px solid #00ff4c;
+}
