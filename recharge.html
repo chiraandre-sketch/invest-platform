@@ -1,0 +1,162 @@
+<!DOCTYPEphp>
+<php lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recharger mon compte</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6f9;
+}
+
+.container {
+    max-width: 420px;
+    margin: auto;
+    padding: 15px;
+}
+
+h2 {
+    margin-bottom: 10px;
+}
+
+.networks {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.network {
+    border: 2px solid #ddd;
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    font-weight: bold;
+    cursor: pointer;
+    background: #fff;
+}
+
+.network.active {
+    border-color: #8b1c3d;
+    background: #fff0f4;
+}
+
+.number-box {
+    background: #fff;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.number {
+    font-size: 20px;
+    font-weight: bold;
+    color: #8b1c3d;
+}
+
+input {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 12px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 15px;
+}
+
+button {
+    width: 100%;
+    padding: 15px;
+    border-radius: 12px;
+    border: none;
+    background: #8b1c3d;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.instructions {
+    background: #eef5ff;
+    border-radius: 12px;
+    padding: 15px;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.instructions li {
+    margin-bottom: 6px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>🔻 Recharger mon compte</h2>
+
+<p><strong>Choisissez votre réseau</strong></p>
+
+<div class="networks">
+    <div class="network active" onclick="selectNetwork('airtel')">Airtel Money</div>
+    <div class="network" onclick="selectNetwork('orange')">Orange Money</div>
+    <div class="network" onclick="selectNetwork('vodacom')">Vodacom (M-Pesa)</div>
+</div>
+
+<div class="number-box">
+    <p>Envoyez l'argent à ce numéro :</p>
+    <div class="number" id="payNumber"> 0975617195 </div>
+    <small>Après paiement, vous recevrez un SMS avec l’ID de transaction</small>
+</div>
+
+<input type="text" placeholder="Votre numéro de téléphone">
+<input type="number" placeholder="Montant à déposer">
+<input type="text" placeholder="ID de transaction (reçu par SMS)">
+
+<button onclick="validerDepot()">Valider mon dépôt</button>
+
+<div class="instructions">
+    <strong>Instructions :</strong>
+    <ol>
+        <li>Sélectionnez votre réseau</li>
+        <li>Envoyez l'argent au numéro affiché</li>
+        <li>Entrez votre numéro de téléphone</li>
+        <li>Entrez l’ID de transaction reçu par SMS</li>
+        <li>Validez votre dépôt</li>
+    </ol>
+    ⏱ Délai de traitement : 1–5 minutes
+</div>
+
+</div>
+
+<script>
+function selectNetwork(network) {
+    document.querySelectorAll('.network').forEach(n => n.classList.remove('active'));
+
+    let number = "";
+
+    if (network === "airtel") {
+        number = "0975617195";
+        document.querySelectorAll('.network')[0].classList.add('active');
+    }
+    if (network === "orange") {
+        number = "";
+        document.querySelectorAll('.network')[1].classList.add('active');
+    }
+    if (network === "vodacom") {
+        number = "";
+        document.querySelectorAll('.network')[2].classList.add('active');
+    }
+
+    document.getElementById("payNumber").innerText = number;
+}
+
+function validerDepot() {
+    alert("Dépôt envoyé avec succès. En attente de confirmation.");
+}
+</script>
+
+</body>
+</php>
