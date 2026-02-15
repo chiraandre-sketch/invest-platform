@@ -3,78 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tableau de Bord - DELL INVEST</title>
+    <title>DELL INVEST - Dashboard</title>
     <style>
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: #f4f7fe; color: #333; padding-bottom: 80px; }
-        .header-section { background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('IMG_2276.jpeg'); background-size: cover; height: 180px; padding: 20px; color: white; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; }
-        .balance-card { background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.3); margin-top: 10px; }
-        .balance-amount { font-size: 1.8rem; font-weight: bold; }
+        body { margin: 0; font-family: 'Arial', sans-serif; background-color: #f5f6fa; padding-bottom: 80px; }
+        .header { background: #1a237e; color: white; padding: 30px 20px; border-bottom-left-radius: 25px; border-bottom-right-radius: 25px; }
+        .balance-box { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 15px; margin-top: 15px; border: 1px solid rgba(255,255,255,0.2); }
         
-        /* Grille d'actions */
-        .action-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 20px; margin-top: -30px; }
-        .action-item { background: white; padding: 15px 5px; border-radius: 15px; text-align: center; text-decoration: none; color: #333; box-shadow: 0 4px 12px rgba(0,0,0,0.05); font-size: 0.8rem; font-weight: 600; }
+        /* Zone Parrainage Style Exemplaire */
+        .invite-card { background: white; margin: 20px; padding: 20px; border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .invite-label { color: #888; font-size: 0.8rem; text-transform: uppercase; }
+        .invite-row { display: flex; justify-content: space-between; align-items: center; margin: 10px 0; }
+        .code-display { font-size: 1.3rem; font-weight: bold; color: #1a237e; letter-spacing: 1px; }
+        .copy-btn { background: #ffeb3b; border: none; padding: 8px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; color: #000; }
         
-        /* SECTION PARRAINAGE (CE QUI MANQUAIT) */
-        .network-card { background: white; margin: 0 20px 20px 20px; padding: 20px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-        .stat-box { display: flex; justify-content: space-between; background: #f0f4ff; padding: 15px; border-radius: 15px; margin-bottom: 15px; }
-        .copy-area { display: flex; background: #f9f9f9; padding: 8px; border-radius: 10px; border: 1px dashed #1a237e; }
-        .copy-area input { flex: 1; border: none; background: none; font-size: 0.7rem; outline: none; color: #555; }
-        .copy-btn { background: #1a237e; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .team-stats { display: flex; border-top: 1px solid #eee; margin-top: 15px; padding-top: 15px; }
+        .stat-item { flex: 1; text-align: center; }
+        .stat-val { font-size: 1.1rem; font-weight: bold; color: #1a237e; }
+        .stat-lbl { font-size: 0.7rem; color: #999; }
 
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; }
-        .nav-link { text-decoration: none; color: #888; font-size: 0.7rem; text-align: center; }
-        .nav-link.active { color: #d32f2f; font-weight: bold; }
+        .action-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 20px; margin-top: -20px; }
+        .btn-action { background: white; padding: 15px; border-radius: 15px; text-align: center; text-decoration: none; color: #333; font-size: 0.75rem; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #eee; }
+        .nav-item { text-decoration: none; color: #bbb; font-size: 0.7rem; text-align: center; }
+        .nav-item.active { color: #1a237e; }
     </style>
 </head>
 <body>
 
-    <div class="header-section">
-        <div style="font-weight: bold; color: #ffeb3b;">DELL INVEST</div>
-        <div class="balance-card">
-            <div style="font-size: 0.8rem;">Solde disponible</div>
-            <div class="balance-amount" id="solde">0 CDF</div>
+    <div class="header">
+        <div style="font-weight: bold;">DELL INVEST</div>
+        <div class="balance-box">
+            <div style="font-size: 0.8rem; opacity: 0.8;">Solde total</div>
+            <div id="solde" style="font-size: 1.8rem; font-weight: bold;">0.00 CDF</div>
         </div>
     </div>
 
     <div class="action-grid">
-        <a href="recharge.html" class="action-item"><span>➕</span><br>Recharger</a>
-        <a href="withdraw.html" class="action-item"><span>💸</span><br>Retirer</a>
-        <a href="about.html" class="action-item"><span>ℹ️</span><br>A propos</a>
+        <a href="recharge.html" class="btn-action"><span style="font-size: 1.5rem;">📥</span><br>Dépôt</a>
+        <a href="withdraw.html" class="btn-action"><span style="font-size: 1.5rem;">📤</span><br>Retrait</a>
+        <a href="about.html" class="btn-action"><span style="font-size: 1.5rem;">📖</span><br>Guide</a>
     </div>
 
-    <div class="network-card">
-        <div style="font-weight: bold; color: #1a237e; margin-bottom: 15px;">🤝 Mon Réseau</div>
-        <div class="stat-box">
-            <div>
-                <span style="font-size: 0.7rem; color: #666;">MON CODE</span>
-                <div id="mon-code" style="font-weight: bold; color: #1a237e;">CHARGEMENT...</div>
-            </div>
-            <div style="text-align: right;">
-                <span style="font-size: 0.7rem; color: #666;">FILLEULS</span>
-                <div id="compteur-fillieuls" style="font-weight: bold; color: #2e7d32; font-size: 1.2rem;">0</div>
-            </div>
-        </div>
-        <div class="copy-area">
-            <input type="text" id="mon-lien" readonly value="Lien en cours...">
+    <div class="invite-card">
+        <div class="invite-label">Mon Code d'invitation</div>
+        <div class="invite-row">
+            <div id="mon-code" class="code-display">--------</div>
             <button class="copy-btn" onclick="copyLink()">COPIER</button>
+        </div>
+        
+        <input type="text" id="mon-lien" style="position: absolute; left: -9999px;">
+
+        <div class="team-stats">
+            <div class="stat-item" style="border-right: 1px solid #eee;">
+                <div id="compteur-fillieuls" class="stat-val">0</div>
+                <div class="stat-lbl">Équipe (Pers.)</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-val">0 CDF</div>
+                <div class="stat-lbl">Commission</div>
+            </div>
         </div>
     </div>
 
     <nav class="nav-bar">
-        <a href="dashboard.html" class="nav-link active">🏠<br>Accueil</a>
-        <a href="vip.html" class="nav-link">💎<br>Produits</a>
-        <a href="equipe.html" class="nav-link">👥<br>Équipe</a>
-        <a href="profil.html" class="nav-link">👤<br>Profil</a>
+        <a href="dashboard.html" class="nav-item active">🏠<br>Accueil</a>
+        <a href="vip.html" class="nav-item">💎<br>Produits</a>
+        <a href="equipe.html" class="nav-item">👥<br>Équipe</a>
+        <a href="profil.html" class="nav-item">👤<br>Profil</a>
     </nav>
 
     <script src="app.js"></script>
-    <script>
-        function copyLink() {
-            const input = document.getElementById("mon-lien");
-            input.select();
-            document.execCommand("copy");
-            alert("Lien de parrainage copié !");
-        }
-    </script>
 </body>
 </html>
