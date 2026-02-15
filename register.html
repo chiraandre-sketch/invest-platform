@@ -14,10 +14,10 @@
     <img src="IMG_2276.jpeg" class="logo">
     <h2>Inscription</h2>
 
-    <form action="index.html">
-      <input type="tel" placeholder="+243XXXXXXXXX" required>
-      <input type="password" placeholder="Mot de passe" required>
-      <input type="password" placeholder="Confirmer mot de passe" required>
+    <form onsubmit="return validerInscription(event)">
+      <input type="tel" id="reg_phone" placeholder="+243XXXXXXXXX" required>
+      <input type="password" id="reg_pass" placeholder="Mot de passe (6 min.)" required>
+      <input type="password" id="reg_confirm" placeholder="Confirmer mot de passe" required>
 
       <button class="btn-primary" type="submit">
         S'inscrire
@@ -30,6 +30,42 @@
     </p>
   </div>
 </div>
+
+<script>
+function validerInscription(event) {
+    event.preventDefault(); // Empêche l'envoi automatique pour vérifier d'abord
+
+    let telephone = document.getElementById('reg_phone').value;
+    let password = document.getElementById('reg_pass').value;
+    let confirm = document.getElementById('reg_confirm').value;
+
+    // 1. Vérification de la longueur du mot de passe
+    if (password.length < 6) {
+        alert("Erreur : Le mot de passe doit contenir au moins 6 caractères.");
+        return false;
+    }
+
+    // 2. Vérification de la confirmation du mot de passe
+    if (password !== confirm) {
+        alert("Erreur : Les deux mots de passe ne sont pas identiques.");
+        return false;
+    }
+
+    // 3. Vérification si le numéro existe déjà
+    let compteExistant = localStorage.getItem(telephone);
+    if (compteExistant) {
+        alert("Ce numéro est déjà utilisé. Veuillez vous connecter.");
+        window.location.href = "index.html";
+        return false;
+    }
+
+    // 4. Enregistrement et succès
+    localStorage.setItem(telephone, password);
+    alert("Compte créé avec succès !");
+    window.location.href = "index.html";
+    return false;
+}
+</script>
 
 </body>
 </html>
