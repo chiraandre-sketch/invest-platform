@@ -93,4 +93,10 @@ function syncUser(user) {
         localStorage.setItem("ALL_USERS", JSON.stringify(users));
         setCurrentUser(user);
     }
+}// 🔗 LIEN OFFICIEL WHATSAPP DELL INVEST
+const WHATSAPP_GROUP_LINK = "https://chat.whatsapp.com/XXXXXXXXXXX";
+
+// Fonction pour rejoindre le groupe
+function rejoindreWhatsApp() {
+    window.open(WHATSAPP_GROUP_LINK, "_blank");
 }
