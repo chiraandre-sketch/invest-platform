@@ -10,6 +10,12 @@ function getUser() {
 function registerUser(phone, password, inviteCode) {
     let allUsers = JSON.parse(localStorage.getItem("all_users"));
     
+    // Vérification si le numéro existe déjà
+    if (allUsers.find(u => u.phone === phone)) {
+        alert("Ce numéro est déjà utilisé.");
+        return false;
+    }
+
     const newUser = {
         phone: phone,
         password: password,
