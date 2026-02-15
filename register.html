@@ -1,61 +1,46 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inscription - DELL INVEST</title>
-    <style>
-        body { font-family: sans-serif; background: #f4f7fe; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 90%; max-width: 400px; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background: #1a237e; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
-    </style>
+<meta charset="UTF-8">
+<title>Inscription - DELL INVEST</title>
+<style>
+body{font-family:sans-serif;background:#f4f7fe;display:flex;justify-content:center;align-items:center;height:100vh;margin:0}
+.card{background:#fff;padding:30px;border-radius:20px;width:90%;max-width:400px}
+input,button{width:100%;padding:12px;margin:10px 0;border-radius:10px}
+button{background:#1a237e;color:#fff;border:none;font-weight:bold}
+</style>
 </head>
 <body>
+
 <div class="card">
-    <h2 style="text-align: center; color: #1a237e;">Créer un compte</h2>
-    <input type="tel" id="phone" placeholder="+243810000000">
-    <input type="password" id="pass" placeholder="Mot de passe (6 min)">
-    <input type="text" id="invite" placeholder="Code d'invitation" readonly style="background: #eee;">
-    <button onclick="validerInscription()">S'INSCRIRE</button>
-    <p style="text-align:center; font-size:0.8rem;">Déjà un compte ? <a href="login.html">Se connecter</a></p>
+<h2 style="text-align:center">Créer un compte</h2>
+<input id="phone" placeholder="+243810000000">
+<input id="pass" type="password" placeholder="Mot de passe">
+<input id="invite" placeholder="Code d'invitation">
+<button onclick="register()">S'INSCRIRE</button>
+<p style="text-align:center;font-size:12px">
+Déjà inscrit ? <a href="login.html">Connexion</a>
+</p>
 </div>
 
 <script src="app.js"></script>
 <script>
-    window.onload = function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const code = urlParams.get('inviteCode');
-        if (code) document.getElementById('invite').value = code;
-    };
+const params = new URLSearchParams(window.location.search);
+if (params.get("inviteCode")) {
+    document.getElementById("invite").value = params.get("inviteCode");
+}
 
-    function validerInscription() {
-        const p = document.getElementById('phone').value.trim();
-        const pw = document.getElementById('pass').value;
-        const inv = document.getElementById('invite').value;
+function register() {
+    const phone = phone.value.trim();
+    const pass = document.getElementById("pass").value;
+    const invite = document.getElementById("invite").value.trim();
 
-        if (!p.startsWith("+243") || p.length < 13) {
-            alert("Format requis : +243 suivi de 9 chiffres.");
-            return;
-        }
-        if (pw.length < 6) {
-            alert("Le mot de passe doit faire au moins 6 caractères.");
-            return;
-        }
-
-        const allUsers = JSON.parse(localStorage.getItem("all_users")) || [];
-        if (allUsers.find(u => u.phone === p)) {
-            alert("Numéro déjà utilisé. Connectez-vous.");
-            window.location.href = "login.html";
-            return;
-        }
-
-        if (registerUser(p, pw, inv)) {
-            alert("Compte créé avec succès !");
-            window.location.href = "dashboard.html";
-        }
+    if (registerUser(phone, pass, invite)) {
+        alert("Inscription réussie");
+        window.location.href = "dashboard.html";
     }
+}
 </script>
+
 </body>
 </html>
-
