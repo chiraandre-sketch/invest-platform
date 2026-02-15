@@ -1,92 +1,171 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DELL INVEST - Accueil</title>
-    <style>
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f4f7fe; padding-bottom: 80px; }
-        .header { background: #1a237e; color: white; padding: 25px; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; text-align: center; }
-        .balance-card { background: white; margin: -30px 20px 20px 20px; padding: 20px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); text-align: center; }
-        .balance-amount { font-size: 2rem; font-weight: bold; color: #1a237e; margin: 10px 0; }
-        
-        .actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 20px; margin-top: 20px; }
-        .btn-action { background: white; padding: 15px 5px; border-radius: 15px; text-align: center; text-decoration: none; color: #333; font-size: 0.8rem; font-weight: 600; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+<meta charset="UTF-8">
+<title>Dashboard - DELL INVEST</title>
 
-        .invite-section { background: #1e293b; color: white; margin: 20px; padding: 20px; border-radius: 20px; }
-        .copy-btn { background: #ffeb3b; color: #1a237e; border: none; padding: 10px 20px; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 15px; }
+<style>
+body{
+    font-family:sans-serif;
+    background:#f4f7fe;
+    margin:0;
+    padding-bottom:80px;
+}
 
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #eee; }
-        .nav-link { text-decoration: none; color: #999; font-size: 0.7rem; text-align: center; }
-        .active { color: #1a237e; font-weight: bold; }
-    </style>
+.header{
+    background:#1a237e;
+    color:#fff;
+    padding:25px;
+    text-align:center;
+    border-bottom-left-radius:25px;
+    border-bottom-right-radius:25px;
+}
+
+.card{
+    background:#fff;
+    margin:20px;
+    padding:20px;
+    border-radius:20px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.1);
+}
+
+.balance{
+    font-size:28px;
+    font-weight:bold;
+    color:#1a237e;
+    text-align:center;
+}
+
+.small{
+    font-size:12px;
+    color:#777;
+    text-align:center;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+    margin:20px;
+}
+
+.btn{
+    background:#fff;
+    border-radius:15px;
+    padding:15px 5px;
+    text-align:center;
+    font-size:12px;
+    text-decoration:none;
+    color:#333;
+    box-shadow:0 4px 10px rgba(0,0,0,0.05);
+}
+
+.invite{
+    background:#1e293b;
+    color:#fff;
+    margin:20px;
+    padding:20px;
+    border-radius:20px;
+    text-align:center;
+}
+
+.invite-code{
+    font-size:22px;
+    font-weight:bold;
+    letter-spacing:2px;
+    margin:10px 0;
+}
+
+.copy{
+    background:#ffeb3b;
+    border:none;
+    padding:10px;
+    border-radius:10px;
+    font-weight:bold;
+    cursor:pointer;
+    width:100%;
+}
+
+.nav{
+    position:fixed;
+    bottom:0;
+    width:100%;
+    background:#fff;
+    display:flex;
+    justify-content:space-around;
+    border-top:1px solid #eee;
+    padding:10px 0;
+}
+
+.nav a{
+    text-decoration:none;
+    font-size:11px;
+    color:#777;
+    text-align:center;
+}
+
+.active{
+    color:#1a237e;
+    font-weight:bold;
+}
+</style>
 </head>
+
 <body>
 
-    <div class="header">
-        <h2 style="margin: 0;">DELL INVEST</h2>
-        <p style="font-size: 0.8rem; opacity: 0.8;">Investissez dans l'avenir</p>
-    </div>
+<!-- PROTECTION -->
+<script src="app.js"></script>
+<script>
+protectDashboard();
+</script>
 
-    <div class="balance-card">
-        <div style="font-size: 0.8rem; color: #666;">Solde Total</div>
-        <div class="balance-amount" id="solde-display">0 CDF</div>
-        <div style="font-size: 0.7rem; color: #4caf50;">● Compte Actif</div>
-    </div>
+<div class="header">
+    <h2 style="margin:0">DELL INVEST</h2>
+    <p style="font-size:12px;opacity:0.8">Investissez dans l’avenir</p>
+</div>
 
-    <div class="actions">
-        <a href="recharge.html" class="btn-action">➕<br>Dépôt</a>
-        <a href="withdraw.html" class="btn-action">💸<br>Retrait</a>
-        <a href="vip.html" class="btn-action">💎<br>VIP</a>
-    </div>
+<div class="card">
+    <div class="small">Solde total</div>
+    <div class="balance" id="solde">0 CDF</div>
+    <div class="small" style="color:#4caf50">● Compte actif</div>
+</div>
 
-    <div class="invite-section">
-        <div style="font-size: 0.7rem; color: #94a3b8; margin-bottom: 10px;">VOTRE CODE D'INVITATION</div>
-        <div id="code-display" style="font-size: 1.5rem; font-weight: bold; letter-spacing: 2px;">----</div>
-        <button class="copy-btn" onclick="copierMonLien()">COPIER MON LIEN</button>
-    </div>
+<div class="grid">
+    <a href="recharge.html" class="btn">➕<br>Dépôt</a>
+    <a href="withdraw.html" class="btn">💸<br>Retrait</a>
+    <a href="vip.html" class="btn">💎<br>VIP</a>
+</div>
 
-    <nav class="nav-bar">
-        <a href="dashboard.html" class="nav-link active">🏠<br>Accueil</a>
-        <a href="vip.html" class="nav-link">💎<br>Investir</a>
-        <a href="equipe.html" class="nav-link">👥<br>Équipe</a>
-        <a href="profil.html" class="nav-link">👤<br>Profil</a>
-    </nav>
+<div class="invite">
+    <div class="small" style="color:#cbd5e1">CODE D’INVITATION</div>
+    <div class="invite-code" id="code">----</div>
+    <div class="small">Invités : <span id="invites">0</span></div>
+    <button class="copy" onclick="copyLink()">COPIER MON LIEN</button>
+</div>
 
-    <script src="app.js"></script>
-    <script>
-        function updateUI() {
-            const user = getUser();
-            if (!user) {
-                window.location.href = "login.html"; // Rediriger si non connecté
-                return;
-            }
+<div class="nav">
+    <a href="dashboard.html" class="active">🏠<br>Accueil</a>
+    <a href="vip.html">💎<br>Investir</a>
+    <a href="equipe.html">👥<br>Équipe</a>
+    <a href="profil.html">👤<br>Profil</a>
+</div>
 
-            // Afficher les données
-            document.getElementById("solde-display").innerText = (user.solde || 0) + " CDF";
-            document.getElementById("code-display").innerText = user.myInviteCode;
-        }
+<script>
+const user = getUser();
 
-        function copierMonLien() {
-            const user = getUser();
-            const baseUrl = window.location.origin + window.location.pathname.replace("dashboard.html", "register.html");
-            const fullLink = baseUrl + "?inviteCode=" + user.myInviteCode;
+document.getElementById("solde").innerText = user.solde + " CDF";
+document.getElementById("code").innerText = user.myInviteCode;
+document.getElementById("invites").innerText = user.invitedCount;
 
-            navigator.clipboard.writeText(fullLink).then(() => {
-                alert("Lien d'invitation copié !");
-            }).catch(err => {
-                // Fallback pour anciens navigateurs
-                const tmp = document.createElement("input");
-                document.body.appendChild(tmp);
-                tmp.value = fullLink;
-                tmp.select();
-                document.execCommand("copy");
-                document.body.removeChild(tmp);
-                alert("Lien copié !");
-            });
-        }
+function copyLink(){
+    const link = location.origin + location.pathname.replace("dashboard.html","register.html") 
+        + "?inviteCode=" + user.myInviteCode;
 
-        window.onload = updateUI;
-    </script>
+    navigator.clipboard.writeText(link).then(()=>{
+        alert("Lien d'invitation copié !");
+    });
+}
+</script>
+
 </body>
 </html>
