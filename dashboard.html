@@ -3,36 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tableau de bord</title>
+    <title>Tableau de bord - DELL INVEST</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            /* Utilisation de ton image de fond */
+            background-image: url("IMG_2276.jpeg");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .container {
+            padding: 20px;
+            min-height: 100vh;
+            background: rgba(0, 0, 0, 0.4); /* Voile pour la lisibilité */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px 20px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-top: 60px;
+        }
+
+        .balance-title {
+            font-size: 1.1rem;
+            color: #666;
+            margin: 0;
+        }
+
+        .balance-amount {
+            color: #00c853;
+            font-size: 36px;
+            font-weight: 800;
+            margin: 15px 0 30px 0;
+        }
+
+        /* Design des boutons allongés */
+        .btn-large {
+            display: block;
+            width: 100%;
+            padding: 18px 0;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: white;
+            transition: transform 0.2s;
+            border: none;
+        }
+
+        .btn-large:active {
+            transform: scale(0.98);
+        }
+
+        .bg-green { background: #00c853; }
+        .bg-blue { background: #2979ff; }
+        .bg-whatsapp { background: #25D366; }
+
+        /* Menu du bas */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            border-top: 1px solid #eee;
+        }
+
+        .nav-item {
+            text-decoration: none;
+            color: #888;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .nav-item.active {
+            color: #2979ff;
+        }
+    </style>
 </head>
 <body>
 
-<div class="glass-card" style="margin-top: 40px;">
-  <h3>Mon Solde</h3>
-  <h2 style="color:#00c853;font-size:32px;margin:10px 0;">0.00 CDF</h2>
+<div class="container">
+    <div class="glass-card">
+        <p class="balance-title">Mon Solde</p>
+        <div class="balance-amount">0.00 CDF</div>
 
-  <div style="display:flex;gap:10px;margin-bottom:15px;">
-    <a href="recharge.html" class="btn-primary" style="text-decoration:none;">Dépôt</a>
-    <a href="withdraw.html" class="btn-primary" style="text-decoration:none;background:#2979ff;">Retrait</a>
-  </div>
-
-  <a href="https://chat.whatsapp.com/FGlMMhRWzKv1OGsDkLDIGL"
-     class="btn-primary"
-     style="text-decoration:none;background:#25D366;display:block;">
-     📢 Rejoindre le Groupe WhatsApp
-  </a>
-</div>
-
-<div style="padding:0 20px;margin-bottom:100px;">
-  <a href="depots.html" class="menu-item">Historique Dépôts ❯</a>
-  <a href="retraits.html" class="menu-item">Historique Retraits ❯</a>
-  <a href="investissement.html" class="menu-item">Mes Investissements ❯</a>
-  <a href="index.html" class="menu-item" style="color:red;">Déconnexion ❯</a>
+        <a href="recharge.html" class="btn-large bg-green">Dépôt</a>
+        <a href="withdraw.html" class="btn-large bg-blue">Retrait</a>
+        
+        <a href="https://chat.whatsapp.com/FGlMMhRWzKv1OGsDkLDIGL" class="btn-large bg-whatsapp">
+            📢 Rejoindre le Groupe WhatsApp
+        </a>
+    </div>
 </div>
 
 <nav class="bottom-nav">
-  <a href="dashboard.html" class="nav-item">Accueil</a>
+  <a href="dashboard.html" class="nav-item active">Accueil</a>
   <a href="vip.html" class="nav-item">Produits</a>
   <a href="equipe.html" class="nav-item">Équipe</a>
   <a href="profil.html" class="nav-item">Profil</a>
