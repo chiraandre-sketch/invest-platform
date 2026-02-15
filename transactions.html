@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historique - DELL INVEST</title>
+    <style>
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f4f7fe; padding-bottom: 20px; }
+        .header { background: #1a237e; color: white; padding: 20px; text-align: center; position: sticky; top: 0; }
+        .list { padding: 15px; }
+        .item { background: white; padding: 15px; border-radius: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .type { font-weight: bold; color: #333; display: block; }
+        .date { font-size: 0.7rem; color: #888; }
+        .amount { font-weight: bold; }
+        .status { font-size: 0.6rem; padding: 3px 8px; border-radius: 5px; background: #e8f5e9; color: #2e7d32; text-transform: uppercase; }
+        .neg { color: #d32f2f; }
+        .pos { color: #2e7d32; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+            <a href="profil.html" style="color: white; text-decoration: none;">❮</a>
+            <span style="font-weight: bold;">HISTORIQUE</span>
+            <span></span>
+        </div>
+    </div>
+
+    <div class="list" id="trans-list">
+        </div>
+
+    <script src="app.js"></script>
+    <script>
+        function loadTransactions() {
+            const user = getUser();
+            const listDiv = document.getElementById("trans-list");
+
+            if (!user || !user.transactions || user.transactions.length === 0) {
+                listDiv.innerHTML = "<p style='text-align:center; color:#888; margin-top:50px;'>Aucune transaction pour le moment.</p>";
+                return;
+            }
+
+            user.transactions.forEach(t => {
+                const isNeg = t.type === "Retrait" || t.type === "Achat VIP";
+                listDiv.innerHTML += `
+                    <div class="item">
+                        <div>
+                            <span class="type">${t.type}</span>
+                            <span class="date">${t.date}</span>
+                            <div style="font-size:0.6rem; color:#aaa; margin-top:5px;">ID: ${t.id}</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div class="amount ${isNeg ? 'neg' : 'pos'}">${isNeg ? '-' : '+'}${t.montant} CDF</div>
+                            <span class="status">${t.status}</span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+        window.onload = loadTransactions;
+    </script>
+</body>
+</html>
