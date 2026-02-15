@@ -1,136 +1,39 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Inscription - Investissement RDC</title>
-<link rel="stylesheet" href="style.css">
-<style>
-    /* Style pour s'assurer que le design reste propre */
-    .auth-page {
-        background-image: url("IMG_2276.jpeg");
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
-        margin: 0;
-        font-family: Arial, sans-serif;
-    }
-    .auth-wrapper {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        background: rgba(0,0,0,0.4);
-    }
-    .auth-card {
-        background: white;
-        padding: 30px;
-        border-radius: 20px;
-        width: 90%;
-        max-width: 380px;
-        text-align: center;
-    }
-    .logo { width: 80px; border-radius: 50%; margin-bottom: 10px; }
-    input {
-        width: 100%;
-        padding: 12px;
-        margin: 10px 0;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        box-sizing: border-box;
-    }
-    .btn-primary {
-        width: 100%;
-        padding: 15px;
-        background: #3b82f6;
-        color: white;
-        border: none;
-        border-radius: 10px;
-        font-weight: bold;
-        cursor: pointer;
-        margin-top: 10px;
-    }
-    .auth-link { margin-top: 15px; font-size: 0.9rem; }
-    .auth-link a { color: #3b82f6; text-decoration: none; font-weight: bold; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription - DELL INVEST</title>
+    <style>
+        body { font-family: sans-serif; background: #f4f7fe; padding: 20px; }
+        .box { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #1a237e; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+    </style>
 </head>
+<body>
+    <div class="box">
+        <h2>Créer un compte</h2>
+        <input type="tel" id="reg-phone" placeholder="Numéro de téléphone">
+        <input type="password" id="reg-pass" placeholder="Mot de passe">
+        <input type="text" id="reg-invite" placeholder="Code d'invitation" readonly style="background: #eee;">
+        <button onclick="handleRegister()">S'INSCRIRE</button>
+    </div>
 
-<body class="auth-page">
+    <script src="app.js"></script>
+    <script>
+        // Récupérer le code dans l'URL (ex: ?inviteCode=DELL1234)
+        window.onload = function() {
+            const params = new URLSearchParams(window.location.search);
+            const code = params.get('inviteCode');
+            if(code) document.getElementById('reg-invite').value = code;
+        }
 
-<div class="auth-wrapper">
-  <div class="auth-card">
-    <img src="IMG_2276.jpeg" class="logo">
-    <h2>Inscription</h2>
-
-    <form onsubmit="return executerInscription(event)">
-      <input type="tel" id="reg_phone" placeholder="+243XXXXXXXXX" required>
-      <input type="password" id="reg_pass" placeholder="Mot de passe (6 min.)" required>
-      <input type="password" id="reg_confirm" placeholder="Confirmer mot de passe" required>
-
-      <button class="btn-primary" type="submit">
-        S'inscrire
-      </button>
-    </form>
-
-    <p class="auth-link">
-      Déjà un compte ?
-      <a href="index.html">Se connecter</a>
-    </p>
-  </div>
-</div>
-
-<script>
-function executerInscription(event) {
-    event.preventDefault();
-
-    let telephone = document.getElementById('reg_phone').value;
-    let password = document.getElementById('reg_pass').value;
-    let confirm = document.getElementById('reg_confirm').value;
-
-    // 1. Vérification de la longueur du mot de passe
-    if (password.length < 6) {
-        alert("Le mot de passe doit contenir au moins 6 caractères.");
-        return false;
-    }
-
-    // 2. Vérification de la confirmation
-    if (password !== confirm) {
-        alert("Les mots de passe ne sont pas identiques.");
-        return false;
-    }
-
-    // 3. Vérification si le numéro existe déjà
-    if (localStorage.getItem(telephone)) {
-        alert("Ce numéro est déjà utilisé.");
-        return false;
-    }
-
-    // --- PARTIE PARRAINAGE ---
-    // On regarde si le lien contient un parrain (ex: register.html?ref=5627)
-    const urlParams = new URLSearchParams(window.location.search);
-    const codeParrain = urlParams.get('ref');
-
-    if (codeParrain) {
-        // On récupère les stats de l'équipe du parrain
-        let key = 'teamStats_' + codeParrain;
-        let stats = JSON.parse(localStorage.getItem(key)) || { lv1: 0, lv2: 0, lv3: 0 };
-        
-        // On ajoute +1 au niveau 1 du parrain
-        stats.lv1 = parseInt(stats.lv1) + 1;
-        
-        // On sauvegarde la mise à jour pour le parrain
-        localStorage.setItem(key, JSON.stringify(stats));
-    }
-    // -------------------------
-
-    // 4. Enregistrement du nouvel utilisateur
-    localStorage.setItem(telephone, password);
-    
-    alert("Compte créé avec succès ! Connectez-vous.");
-    window.location.href = "index.html";
-    return false;
-}
-</script>
-
+        function handleRegister() {
+            // Utilise la logique de app.js pour enregistrer l'utilisateur
+            // Assurez-vous d'avoir la fonction registerUser() dans votre app.js
+            registerUser(); 
+        }
+    </script>
 </body>
 </html>
