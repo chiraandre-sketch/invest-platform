@@ -13,31 +13,23 @@ button{background:#1a237e;color:#fff;border:none;font-weight:bold}
 <body>
 
 <div class="card">
-<h2 style="text-align:center">Créer un compte</h2>
+<h2>Créer un compte</h2>
+
 <input id="phone" placeholder="+243810000000">
 <input id="pass" type="password" placeholder="Mot de passe">
 <input id="invite" placeholder="Code d'invitation">
-<button onclick="register()">S'INSCRIRE</button>
-<p style="text-align:center;font-size:12px">
-Déjà inscrit ? <a href="login.html">Connexion</a>
-</p>
+
+<button onclick="submitRegister()">S’INSCRIRE</button>
+
+<p>Déjà inscrit ? <a href="login.html">Connexion</a></p>
 </div>
 
 <script src="app.js"></script>
 <script>
-const params = new URLSearchParams(window.location.search);
-if (params.get("inviteCode")) {
-    document.getElementById("invite").value = params.get("inviteCode");
-}
-
-function register() {
-    const phone = phone.value.trim();
-    const pass = document.getElementById("pass").value;
-    const invite = document.getElementById("invite").value.trim();
-
-    if (registerUser(phone, pass, invite)) {
+function submitRegister() {
+    if (registerUser(phone.value.trim(), pass.value, invite.value.trim())) {
         alert("Inscription réussie");
-        window.location.href = "dashboard.html";
+        location.href = "login.html";
     }
 }
 </script>
