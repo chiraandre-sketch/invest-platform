@@ -32,4 +32,32 @@ function registerUser(phone, password, inviteCode) {
     localStorage.setItem("all_users", JSON.stringify(allUsers));
     localStorage.setItem("user", JSON.stringify(newUser)); // Connecter l'utilisateur
     return true;
+}// Fonction pour ajouter une transaction
+function addTransaction(type, montant, details) {
+    let user = getUser();
+    if (!user) return;
+
+    // Créer l'objet transaction
+    const newTrans = {
+        id: "#TR" + Math.floor(100000 + Math.random() * 900000),
+        type: type, // "Dépôt", "Retrait", "Achat VIP"
+        montant: montant,
+        details: details,
+        date: new Date().toLocaleString('fr-FR'),
+        status: "Terminé"
+    };
+
+    // Ajouter à la liste de l'utilisateur
+    if (!user.transactions) user.transactions = [];
+    user.transactions.unshift(newTrans); // Le plus récent en premier
+
+    // Sauvegarder
+    localStorage.setItem("user", JSON.stringify(user));
+    
+    // Mettre à jour la base globale
+    let all = JSON.parse(localStorage.getItem("all_users"));
+    let index = all.findIndex(u => u.phone === user.phone);
+    all[index] = user;
+    localStorage.setItem("all_users", JSON.stringify(all));
 }
+
