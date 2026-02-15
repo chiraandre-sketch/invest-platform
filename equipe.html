@@ -5,126 +5,120 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mon Équipe - DELL INVEST</title>
     <style>
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f4f7fe; padding-bottom: 80px; }
-        .header { background: #1a237e; color: white; padding: 25px; text-align: center; border-bottom-left-radius: 25px; border-bottom-right-radius: 25px; }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f8f9ff; padding-bottom: 90px; }
+        .header { background: #1a237e; color: white; padding: 30px 20px; text-align: center; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; }
         
         .invite-card { background: #1e293b; color: white; margin: 20px; padding: 20px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
-        .label { font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; margin-bottom: 8px; }
-        .link-box { font-size: 0.7rem; color: #10b981; background: rgba(0,0,0,0.3); padding: 12px; border-radius: 10px; word-break: break-all; margin-bottom: 15px; border: 1px solid #334155; }
+        .label { font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; margin-bottom: 5px; }
+        .link-display { font-size: 0.7rem; color: #10b981; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px; word-break: break-all; margin-bottom: 15px; }
         
-        .invite-footer { display: flex; justify-content: space-between; align-items: center; }
-        .code-display { font-size: 1.3rem; font-weight: bold; letter-spacing: 1px; }
-        .btn-copy { background: #10b981; color: white; border: none; padding: 10px 20px; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        .btn-copy { background: #ffeb3b; color: #1a237e; border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; width: 100%; }
 
-        .stats { padding: 0 20px; }
-        .lv-item { background: white; margin-bottom: 12px; padding: 18px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.03); }
-        .lv-title { font-weight: bold; font-size: 0.95rem; }
-        .lv-sub { font-size: 0.7rem; color: #888; }
-        .badge { background: #e0e7ff; color: #1a237e; padding: 6px 12px; border-radius: 8px; font-weight: bold; }
+        .team-stats { padding: 0 20px; margin-top: 10px; }
+        .lv-card { background: white; margin-bottom: 15px; padding: 15px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border-left: 6px solid #1a237e; }
+        .lv-info b { display: block; color: #1a237e; font-size: 1rem; }
+        .lv-info span { font-size: 0.75rem; color: #888; }
+        .count-badge { background: #e0e7ff; color: #1a237e; padding: 8px 15px; border-radius: 10px; font-weight: bold; }
 
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #eee; }
-        .nav-link { text-decoration: none; color: #94a3b8; font-size: 0.7rem; text-align: center; }
+        .nav-link { text-decoration: none; color: #999; font-size: 0.7rem; text-align: center; }
         .active { color: #1a237e; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div style="font-size: 1.1rem; font-weight: bold;">RÉSEAU DELL INVEST</div>
-        <div style="font-size: 0.75rem; opacity: 0.8;">Gagnez sur 3 niveaux d'invitation</div>
+        <h2 style="margin:0;">MON ÉQUIPE</h2>
+        <p style="font-size: 0.8rem; opacity: 0.8;">Gagnez jusqu'à 29% de commissions</p>
     </div>
 
     <div class="invite-card">
-        <div class="label">Votre lien de partage</div>
-        <div id="mon-lien-url" class="link-box">Génération du lien...</div>
+        <div class="label">Lien d'invitation</div>
+        <div id="full-link" class="link-display">Chargement...</div>
         
-        <div class="invite-footer">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
             <div>
-                <div class="label">Votre Code</div>
-                <div id="mon-code-texte" class="code-display">----</div>
+                <div class="label">Mon Code</div>
+                <div id="my-code" style="font-size: 1.4rem; font-weight: bold;">----</div>
             </div>
-            <button class="btn-copy" onclick="copierLien()">PHOTOCOPIER</button>
+            <button class="btn-copy" style="width: auto; padding: 10px 20px;" onclick="copyTeamLink()">COPIER</button>
         </div>
     </div>
 
-    <div class="stats">
-        <div class="lv-item" style="border-left: 5px solid #1a237e;">
-            <div><div class="lv-title">Niveau 1</div><div class="lv-sub">Commission 25%</div></div>
-            <div id="nb-lv1" class="badge">0</div>
+    <div class="team-stats">
+        <div class="lv-card">
+            <div class="lv-info">
+                <b>Niveau 1 (Direct)</b>
+                <span>Commission : 25%</span>
+            </div>
+            <div id="cnt-lv1" class="count-badge">0</div>
         </div>
-        <div class="lv-item" style="border-left: 5px solid #6366f1;">
-            <div><div class="lv-title">Niveau 2</div><div class="lv-sub">Commission 3%</div></div>
-            <div id="nb-lv2" class="badge">0</div>
+
+        <div class="lv-card" style="border-left-color: #6366f1;">
+            <div class="lv-info">
+                <b>Niveau 2</b>
+                <span>Commission : 3%</span>
+            </div>
+            <div id="cnt-lv2" class="count-badge">0</div>
         </div>
-        <div class="lv-item" style="border-left: 5px solid #a855f7;">
-            <div><div class="lv-title">Niveau 3</div><div class="lv-sub">Commission 1%</div></div>
-            <div id="nb-lv3" class="badge">0</div>
+
+        <div class="lv-card" style="border-left-color: #a855f7;">
+            <div class="lv-info">
+                <b>Niveau 3</b>
+                <span>Commission : 1%</span>
+            </div>
+            <div id="cnt-lv3" class="count-badge">0</div>
         </div>
     </div>
 
     <nav class="nav-bar">
         <a href="dashboard.html" class="nav-link">🏠<br>Accueil</a>
+        <a href="vip.html" class="nav-link">💎<br>Investir</a>
         <a href="equipe.html" class="nav-link active">👥<br>Équipe</a>
         <a href="profil.html" class="nav-link">👤<br>Profil</a>
     </nav>
 
+    <script src="app.js"></script>
     <script>
-        // CE SCRIPT FONCTIONNE TOUT SEUL
-        function chargerEquipe() {
-            // 1. Récupérer l'utilisateur dans le stockage du téléphone
-            let utilisateur = JSON.parse(localStorage.getItem("user"));
-            let tousLesInscrits = JSON.parse(localStorage.getItem("all_users")) || [];
-
-            if (!utilisateur) {
-                document.getElementById("mon-lien-url").innerText = "Connectez-vous pour voir le lien";
-                return;
-            }
-
-            // 2. Créer un code si l'utilisateur n'en a pas encore
-            if (!utilisateur.myInviteCode) {
-                utilisateur.myInviteCode = "DELL" + Math.floor(1000 + Math.random() * 9000);
-                localStorage.setItem("user", JSON.stringify(utilisateur));
-            }
-
-            // 3. Fabriquer le lien d'invitation
-            let adresseSite = window.location.origin + window.location.pathname.replace("equipe.html", "register.html");
-            let lienComplet = adresseSite + "?inviteCode=" + utilisateur.myInviteCode;
-
-            // 4. Afficher les infos
-            document.getElementById("mon-code-texte").innerText = utilisateur.myInviteCode;
-            document.getElementById("mon-lien-url").innerText = lienComplet;
-
-            // 5. Calculer l'équipe (Lv1, Lv2, Lv3)
-            let lv1 = tousLesInscrits.filter(u => u.referredBy === utilisateur.myInviteCode);
-            let lv1Codes = lv1.map(u => u.myInviteCode);
+        function initTeam() {
+            const user = getUser();
+            const allUsers = JSON.parse(localStorage.getItem("all_users")) || [];
             
-            let lv2 = tousLesInscrits.filter(u => lv1Codes.includes(u.referredBy));
-            let lv2Codes = lv2.map(u => u.myInviteCode);
-            
-            let lv3 = tousLesInscrits.filter(u => lv2Codes.includes(u.referredBy));
+            if (!user) return;
 
-            document.getElementById("nb-lv1").innerText = lv1.length;
-            document.getElementById("nb-lv2").innerText = lv2.length;
-            document.getElementById("nb-lv3").innerText = lv3.length;
+            // Affichage code et lien
+            const baseUrl = window.location.origin + window.location.pathname.replace("equipe.html", "register.html");
+            const myLink = baseUrl + "?inviteCode=" + user.myInviteCode;
+            
+            document.getElementById("my-code").innerText = user.myInviteCode;
+            document.getElementById("full-link").innerText = myLink;
+
+            // CALCUL DES NIVEAUX
+            // Lv1 : Ceux qui ont été invités par moi
+            const lv1 = allUsers.filter(u => u.referredBy === user.myInviteCode);
+            
+            // Lv2 : Ceux qui ont été invités par mon Lv1
+            const lv1Codes = lv1.map(u => u.myInviteCode);
+            const lv2 = allUsers.filter(u => lv1Codes.includes(u.referredBy));
+            
+            // Lv3 : Ceux qui ont été invités par mon Lv2
+            const lv2Codes = lv2.map(u => u.myInviteCode);
+            const lv3 = allUsers.filter(u => lv2Codes.includes(u.referredBy));
+
+            // Mise à jour des chiffres
+            document.getElementById("cnt-lv1").innerText = lv1.length;
+            document.getElementById("cnt-lv2").innerText = lv2.length;
+            document.getElementById("cnt-lv3").innerText = lv3.length;
         }
 
-        // FONCTION COPIER
-        function copierLien() {
-            let texte = document.getElementById("mon-lien-url").innerText;
-            navigator.clipboard.writeText(texte).then(() => {
-                alert("Lien copié ! Partagez-le pour gagner des commissions.");
-            }).catch(() => {
-                // Secours pour les anciens téléphones
-                let input = document.createElement("input");
-                input.value = texte; document.body.appendChild(input);
-                input.select(); document.execCommand("copy");
-                document.body.removeChild(input);
+        function copyTeamLink() {
+            const text = document.getElementById("full-link").innerText;
+            navigator.clipboard.writeText(text).then(() => {
                 alert("Lien copié !");
             });
         }
 
-        // Lancer la logique dès que la page s'ouvre
-        window.onload = chargerEquipe;
+        window.onload = initTeam;
     </script>
 </body>
 </html>
