@@ -7,7 +7,6 @@
     <style>
         body { margin: 0; font-family: 'Segoe UI', Arial, sans-serif; background-color: #f4f7fe; color: #333; padding-bottom: 80px; }
         
-        /* Header & Solde */
         .header-section {
             background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('IMG_2276.jpeg');
             background-size: cover; background-position: center; height: 180px;
@@ -19,26 +18,19 @@
         }
         .balance-amount { font-size: 1.8rem; font-weight: bold; }
 
-        /* Grille d'actions */
         .action-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 0 20px; margin-top: -30px; }
         .action-item {
             background: white; padding: 15px 5px; border-radius: 15px; text-align: center;
             text-decoration: none; color: #333; box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             font-size: 0.8rem; font-weight: 600;
         }
-        .action-icon { font-size: 1.5rem; display: block; margin-bottom: 5px; }
 
-        /* Bloc Parrainage (Le milieu) */
+        /* Bloc Parrainage */
         .referral-container {
             margin: 20px; background: white; border-radius: 20px; padding: 20px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.08);
         }
 
-        /* Carrousel */
-        .carousel-container { margin: 20px; height: 120px; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .slide { width: 100%; height: 100%; background-size: cover; background-position: center; }
-
-        /* Navigation Basse */
         .nav-bar {
             position: fixed; bottom: 0; width: 100%; background: white;
             display: flex; justify-content: space-around; padding: 12px 0;
@@ -46,6 +38,17 @@
         }
         .nav-link { text-decoration: none; color: #888; font-size: 0.75rem; text-align: center; }
         .nav-link.active { color: #1a237e; font-weight: bold; }
+
+        /* Notification de succès */
+        #toast {
+            visibility: hidden; min-width: 200px; background-color: #333; color: #fff;
+            text-align: center; border-radius: 10px; padding: 16px;
+            position: fixed; z-index: 2000; left: 50%; bottom: 100px;
+            transform: translateX(-50%); font-size: 14px;
+        }
+        #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
+        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 100px; opacity: 1;} }
+        @keyframes fadeout { from {bottom: 100px; opacity: 1;} to {bottom: 0; opacity: 0;} }
     </style>
 </head>
 <body>
@@ -59,15 +62,15 @@
     </div>
 
     <div class="action-grid">
-        <a href="recharge.html" class="action-item"><span class="action-icon">➕</span>Recharger</a>
-        <a href="withdraw.html" class="action-item"><span class="action-icon">💸</span>Retirer</a>
-        <a href="about.html" class="action-item"><span class="action-icon">ℹ️</span>Infos</a>
+        <a href="recharge.html" class="action-item">➕<br>Recharger</a>
+        <a href="withdraw.html" class="action-item">💸<br>Retirer</a>
+        <a href="about.html" class="action-item">ℹ️<br>Infos</a>
     </div>
 
     <div class="referral-container">
         <div style="font-size: 0.8rem; color: #888; margin-bottom: 5px;">VOTRE CODE D'INVITATION</div>
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <span id="mon-code" style="font-size: 1.4rem; font-weight: bold; color: #1a237e; letter-spacing: 1px;">Génération...</span>
+            <span id="mon-code" style="font-size: 1.4rem; font-weight: bold; color: #1a237e; letter-spacing: 1px;">Chargement...</span>
             <button onclick="copyLink()" style="background: #ffeb3b; border: none; padding: 10px 20px; border-radius: 25px; font-weight: bold; cursor: pointer;">COPIER LE LIEN</button>
         </div>
 
@@ -85,9 +88,7 @@
         </div>
     </div>
 
-    <div class="carousel-container">
-        <div class="slide" style="background-image: url('IMG_2276.jpeg');"></div>
-    </div>
+    <div id="toast">Lien copié avec succès !</div>
 
     <nav class="nav-bar">
         <a href="dashboard.html" class="nav-link active">🏠<br>Accueil</a>
@@ -98,13 +99,27 @@
 
     <script src="app.js"></script>
     <script>
-        // Fonction simple pour copier
-        function copyLink() {
-            const input = document.getElementById("mon-lien");
-            input.select();
-            input.setSelectionRange(0, 99999); // Pour mobile
-            document.execCommand("copy");
-            alert("Lien d'invitation copié !");
+        async function copyLink() {
+            const linkText = document.getElementById("mon-lien").value;
+            
+            try {
+                // Méthode moderne ( Clipboard API )
+                await navigator.clipboard.writeText(linkText);
+                showToast();
+            } catch (err) {
+                // Méthode de secours pour les anciens mobiles
+                const input = document.getElementById("mon-lien");
+                input.select();
+                input.setSelectionRange(0, 99999);
+                document.execCommand("copy");
+                showToast();
+            }
+        }
+
+        function showToast() {
+            const x = document.getElementById("toast");
+            x.className = "show";
+            setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
         }
     </script>
 </body>
