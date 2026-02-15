@@ -13,27 +13,22 @@ button{background:#1a237e;color:#fff;border:none;font-weight:bold}
 <body>
 
 <div class="card">
-<h2 style="text-align:center">Connexion</h2>
+<h2>Connexion</h2>
+
 <input id="phone" placeholder="+243810000000">
 <input id="pass" type="password" placeholder="Mot de passe">
-<button onclick="login()">SE CONNECTER</button>
-<p style="text-align:center;font-size:12px">
-Pas de compte ? <a href="register.html">Inscription</a>
-</p>
+
+<button onclick="submitLogin()">SE CONNECTER</button>
+
+<p>Pas de compte ? <a href="register.html">S’inscrire</a></p>
 </div>
 
 <script src="app.js"></script>
 <script>
-function login() {
-    const phone = document.getElementById("phone").value.trim();
-    const pass = document.getElementById("pass").value;
-
-    if (!loginUser(phone, pass)) {
-        alert("Identifiants incorrects");
-        return;
+function submitLogin() {
+    if (loginUser(phone.value.trim(), pass.value)) {
+        location.href = "dashboard.html";
     }
-
-    window.location.href = "dashboard.html";
 }
 </script>
 
