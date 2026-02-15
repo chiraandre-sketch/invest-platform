@@ -6,7 +6,8 @@
 }
 
 body {
-    background-image: url("bg.jpg"); 
+    /* Remplacement de bg.jpg par votre nouvelle image */
+    background-image: url("IMG_2276.jpeg"); 
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
