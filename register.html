@@ -5,35 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inscription - DELL INVEST</title>
     <style>
-        body { font-family: sans-serif; background: #f4f7fe; padding: 20px; }
-        .box { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background: #1a237e; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        body { font-family: sans-serif; background: #f4f7fe; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 90%; max-width: 400px; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #1a237e; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; }
     </style>
 </head>
 <body>
-    <div class="box">
-        <h2>Créer un compte</h2>
-        <input type="tel" id="reg-phone" placeholder="Numéro de téléphone">
-        <input type="password" id="reg-pass" placeholder="Mot de passe">
-        <input type="text" id="reg-invite" placeholder="Code d'invitation" readonly style="background: #eee;">
-        <button onclick="handleRegister()">S'INSCRIRE</button>
-    </div>
 
-    <script src="app.js"></script>
-    <script>
-        // Récupérer le code dans l'URL (ex: ?inviteCode=DELL1234)
-        window.onload = function() {
-            const params = new URLSearchParams(window.location.search);
-            const code = params.get('inviteCode');
-            if(code) document.getElementById('reg-invite').value = code;
-        }
+<div class="card">
+    <h2 style="text-align: center; color: #1a237e;">Créer un compte</h2>
+    <input type="tel" id="phone" placeholder="Numéro de téléphone">
+    <input type="password" id="pass" placeholder="Mot de passe">
+    <input type="text" id="invite" placeholder="Code d'invitation (Optionnel)" readonly style="background: #f0f0f0;">
+    <button onclick="validerInscription()">S'INSCRIRE</button>
+</div>
 
-        function handleRegister() {
-            // Utilise la logique de app.js pour enregistrer l'utilisateur
-            // Assurez-vous d'avoir la fonction registerUser() dans votre app.js
-            registerUser(); 
+<script src="app.js"></script>
+<script>
+    // 1. Lire le code dans l'URL dès l'ouverture
+    window.onload = function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('inviteCode');
+        if (code) {
+            document.getElementById('invite').value = code;
         }
-    </script>
+    };
+
+    // 2. Lancer l'inscription
+    function validerInscription() {
+        const p = document.getElementById('phone').value;
+        const pw = document.getElementById('pass').value;
+        const inv = document.getElementById('invite').value;
+
+        if (p && pw) {
+            if (registerUser(p, pw, inv)) {
+                window.location.href = "dashboard.html";
+            }
+        } else {
+            alert("Remplissez tous les champs.");
+        }
+    }
+</script>
 </body>
 </html>
