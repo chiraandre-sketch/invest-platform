@@ -13,9 +13,9 @@
     <img src="IMG_2276.jpeg" class="logo">
     <h2>Connexion</h2>
 
-    <form action="dashboard.html">
-      <input type="tel" placeholder="+243XXXXXXXXX" required>
-      <input type="password" placeholder="Mot de passe" required>
+    <form onsubmit="return connecterUtilisateur(event)">
+      <input type="tel" id="login_phone" placeholder="+243XXXXXXXXX" required>
+      <input type="password" id="login_pass" placeholder="Mot de passe" required>
 
       <button class="btn-primary" type="submit">
         Se connecter
@@ -28,6 +28,34 @@
     </p>
   </div>
 </div>
+
+<script>
+function connecterUtilisateur(event) {
+    event.preventDefault(); // Empêche la redirection immédiate
+
+    let telephone = document.getElementById('login_phone').value;
+    let password = document.getElementById('login_pass').value;
+
+    // 1. Chercher si le numéro existe dans la mémoire du téléphone
+    let motDePasseStocke = localStorage.getItem(telephone);
+
+    if (motDePasseStocke === null) {
+        alert("Erreur : Ce numéro n'est pas enregistré. Veuillez vous inscrire.");
+        return false;
+    }
+
+    // 2. Vérifier si le mot de passe est le bon
+    if (password !== motDePasseStocke) {
+        alert("Erreur : Mot de passe incorrect.");
+        return false;
+    }
+
+    // 3. Si tout est correct, on autorise l'accès
+    localStorage.setItem("session_active", "true");
+    window.location.href = "dashboard.html";
+    return false;
+}
+</script>
 
 </body>
 </html>
