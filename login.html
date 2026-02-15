@@ -1,45 +1,38 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <title>Connexion - DELL INVEST</title>
-    <style>
-        body { font-family: sans-serif; background: #f4f7fe; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .card { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        input, button { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; }
-        button { background: #1a237e; color: white; border: none; font-weight: bold; cursor: pointer; }
-    </style>
+<meta charset="UTF-8">
+<title>Connexion - DELL INVEST</title>
+<style>
+body{font-family:sans-serif;background:#f4f7fe;display:flex;justify-content:center;align-items:center;height:100vh;margin:0}
+.card{background:#fff;padding:30px;border-radius:20px;width:90%;max-width:400px}
+input,button{width:100%;padding:12px;margin:10px 0;border-radius:10px}
+button{background:#1a237e;color:#fff;border:none;font-weight:bold}
+</style>
 </head>
 <body>
 
 <div class="card">
-    <h2 style="text-align:center; color:#1a237e;">Connexion</h2>
-
-    <input type="tel" id="phone" placeholder="+243810000000">
-    <input type="password" id="pass" placeholder="Mot de passe">
-
-    <button onclick="connexion()">SE CONNECTER</button>
-
-    <p style="text-align:center; font-size:0.8rem;">
-        Pas de compte ? <a href="register.html">S'inscrire</a>
-    </p>
+<h2 style="text-align:center">Connexion</h2>
+<input id="phone" placeholder="+243810000000">
+<input id="pass" type="password" placeholder="Mot de passe">
+<button onclick="login()">SE CONNECTER</button>
+<p style="text-align:center;font-size:12px">
+Pas de compte ? <a href="register.html">Inscription</a>
+</p>
 </div>
 
+<script src="app.js"></script>
 <script>
-function connexion() {
+function login() {
     const phone = document.getElementById("phone").value.trim();
     const pass = document.getElementById("pass").value;
 
-    let users = JSON.parse(localStorage.getItem("users")) || [];
-
-    const user = users.find(u => u.phone === phone && u.pass === pass);
-
-    if (!user) {
-        alert("Numéro ou mot de passe incorrect");
+    if (!loginUser(phone, pass)) {
+        alert("Identifiants incorrects");
         return;
     }
 
-    localStorage.setItem("connected_user", phone);
     window.location.href = "dashboard.html";
 }
 </script>
