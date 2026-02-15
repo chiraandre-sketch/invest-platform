@@ -5,73 +5,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Équipe - DELL INVEST</title>
     <style>
-        body { margin: 0; font-family: sans-serif; background-color: #f8f9ff; padding-bottom: 80px; }
-        .blue-btn { background: #6366f1; color: white; border: none; width: 90%; padding: 15px; border-radius: 10px; margin: 20px auto; display: block; font-weight: bold; }
-        .bonus-card { background: linear-gradient(135deg, #a855f7, #ec4899); color: white; margin: 0 20px; padding: 30px; border-radius: 20px; text-align: center; font-size: 1.2rem; font-weight: bold; }
-        .invite-section { display: flex; gap: 10px; padding: 20px; }
-        .invite-box { background: #2d2d2d; color: white; padding: 15px; border-radius: 15px; flex: 1; text-align: center; overflow: hidden; }
-        .copy-tag { background: #6ee7b7; color: #064e3b; padding: 8px; border-radius: 5px; font-weight: bold; cursor: pointer; border: none; font-size: 0.7rem; margin-top: 10px; width: 100%; }
-        .lv-item { background: white; margin: 10px 20px; padding: 20px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #eee; }
-        .nav-item { text-decoration: none; color: #bbb; font-size: 0.7rem; text-align: center; }
-        .nav-item.active { color: #6366f1; }
+        body { margin: 0; font-family: sans-serif; background: #f0f2f5; padding-bottom: 80px; }
+        .bonus-card { background: linear-gradient(135deg, #6366f1, #a855f7); color: white; margin: 15px; padding: 25px; border-radius: 20px; text-align: center; font-weight: bold; }
+        .invite-container { display: flex; gap: 10px; padding: 0 15px; }
+        .invite-box { background: #1e293b; color: white; padding: 15px; border-radius: 15px; flex: 1; text-align: center; }
+        .btn-copy { background: #10b981; color: white; border: none; padding: 5px 10px; border-radius: 5px; font-size: 0.7rem; margin-top: 10px; cursor: pointer; }
+        .lv-row { background: white; margin: 10px 15px; padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #ddd; }
+        .nav-link { text-decoration: none; color: #94a3b8; font-size: 0.7rem; text-align: center; }
+        .nav-link.active { color: #6366f1; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <button class="blue-btn">INVITER DES AMIS</button>
-    <div class="bonus-card">DELL INVEST - BONUS</div>
+    <div class="bonus-card">PROJET DELL INVEST<br>SYSTÈME DE PARRAINAGE</div>
 
-    <div class="invite-section">
+    <div class="invite-container">
         <div class="invite-box">
-            <span style="font-size: 0.7rem; color: #888;">LIEN D'INVITATION</span>
-            <div id="equipe-lien-text" style="font-size: 0.55rem; color: #ccc; margin: 10px 0; word-break: break-all;">Génération...</div>
-            <button class="copy-tag" onclick="copyAction()">PHOTOCOPIER</button>
+            <span style="font-size: 0.7rem; opacity: 0.7;">MON LIEN</span>
+            <div id="equipe-lien-text" style="font-size: 0.5rem; word-break: break-all; margin: 8px 0;">Chargement...</div>
+            <button class="btn-copy" onclick="doCopy()">PHOTOCOPIER</button>
             <input type="hidden" id="hidden-link">
         </div>
         <div class="invite-box">
-            <span style="font-size: 0.7rem; color: #888;">CODE D'INVITATION</span>
-            <div id="equipe-code" style="font-size: 1.1rem; font-weight: bold; margin: 10px 0;">------</div>
-            <button class="copy-tag" onclick="copyAction()">PHOTOCOPIER</button>
+            <span style="font-size: 0.7rem; opacity: 0.7;">MON CODE</span>
+            <div id="equipe-code" style="font-size: 1.1rem; font-weight: bold; margin: 8px 0;">----</div>
+            <button class="btn-copy" onclick="doCopy()">PHOTOCOPIER</button>
         </div>
     </div>
 
-    <div class="lv-item">
-        <div><b style="color:#3b82f6;">Lv1 25%</b><br><small>Récompense directe</small></div>
+    <div class="lv-row">
+        <div><b style="color:#6366f1;">Niveau 1 (25%)</b></div>
         <div id="count-lv1">0 Utilisateurs</div>
     </div>
-    <div class="lv-item">
-        <div><b style="color:#10b981;">Lv2 3%</b><br><small>Niveau 2</small></div>
+    <div class="lv-row">
+        <div><b style="color:#8b5cf6;">Niveau 2 (3%)</b></div>
         <div id="count-lv2">0 Utilisateurs</div>
     </div>
-    <div class="lv-item">
-        <div><b style="color:#f59e0b;">Lv3 1%</b><br><small>Niveau 3</small></div>
+    <div class="lv-row">
+        <div><b style="color:#d946ef;">Niveau 3 (1%)</b></div>
         <div id="count-lv3">0 Utilisateurs</div>
     </div>
 
     <nav class="nav-bar">
-        <a href="dashboard.html" class="nav-item">🏠<br>Accueil</a>
-        <a href="vip.html" class="nav-item">💎<br>Investir</a>
-        <a href="equipe.html" class="nav-item active">👥<br>Équipe</a>
-        <a href="profil.html" class="nav-item">👤<br>Moi</a>
+        <a href="dashboard.html" class="nav-link">🏠<br>Accueil</a>
+        <a href="equipe.html" class="nav-link active">👥<br>Équipe</a>
+        <a href="profil.html" class="nav-link">👤<br>Profil</a>
     </nav>
 
     <script src="app.js"></script>
     <script>
-        async function copyAction() {
+        function doCopy() {
             const link = document.getElementById("hidden-link").value;
-            try {
-                await navigator.clipboard.writeText(link);
-                alert("Lien copié avec succès !");
-            } catch (err) {
-                const temp = document.createElement("input");
-                temp.value = link;
-                document.body.appendChild(temp);
-                temp.select();
-                document.execCommand("copy");
-                document.body.removeChild(temp);
-                alert("Lien copié !");
-            }
+            navigator.clipboard.writeText(link).then(() => {
+                alert("Copié dans le presse-papier !");
+            }).catch(() => {
+                const t = document.createElement("input");
+                t.value = link; document.body.appendChild(t); t.select();
+                document.execCommand("copy"); document.body.removeChild(t);
+                alert("Copié !");
+            });
         }
     </script>
 </body>
