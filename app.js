@@ -1,5 +1,5 @@
 /**********************
- UTILISATEUR
+  GESTION UTILISATEUR
 **********************/
 function getUser() {
   return JSON.parse(localStorage.getItem("user"));
@@ -9,7 +9,7 @@ function setUser(user) {
   localStorage.setItem("user", JSON.stringify(user));
 }
 
-// Récupérer la liste globale de tous les inscrits (pour le comptage)
+// Liste de TOUS les inscrits pour le calcul du parrainage
 function getAllUsers() {
   return JSON.parse(localStorage.getItem("all_users")) || [];
 }
@@ -19,20 +19,20 @@ function logout() {
   window.location.href = "login.html";
 }
 
-// Fonction pour générer un code unique (ex: DELL8492)
+// Génère un code unique (ex: DELL5293)
 function generateInviteCode() {
   return "DELL" + Math.floor(1000 + Math.random() * 9000);
 }
 
 /**********************
- INSCRIPTION
+  INSCRIPTION (CORRIGÉE)
 **********************/
 function registerUser() {
   const phone = document.getElementById("reg-phone").value;
   const pass = document.getElementById("reg-pass").value;
   const pass2 = document.getElementById("reg-pass2").value;
   
-  // Récupérer le code du parrain (soit dans un champ, soit dans l'URL)
+  // Récupère le parrain via l'URL (?ref=DELLxxxx)
   const urlParams = new URLSearchParams(window.location.search);
   const parrainCode = urlParams.get('ref') || "DIRECT";
 
@@ -46,44 +46,72 @@ function registerUser() {
     return;
   }
 
-  // Création du nouvel utilisateur avec son code unique
+  // Création du profil avec code unique
   const newUser = {
     phone: phone,
     password: pass,
     solde: 0,
-    myInviteCode: generateInviteCode(), // Son propre code
-    referredBy: parrainCode // Qui l'a parrainé
+    myInviteCode: generateInviteCode(),
+    referredBy: parrainCode
   };
 
-  // 1. Sauvegarder comme utilisateur actuel
+  // Sauvegarde session actuelle
   setUser(newUser);
 
-  // 2. Ajouter à la liste globale (pour que les autres voient leur compteur augmenter)
+  // Ajout à la base de données globale
   const allUsers = getAllUsers();
   allUsers.push(newUser);
   localStorage.setItem("all_users", JSON.stringify(allUsers));
 
+  alert("Compte créé ! Bienvenue chez DELL INVEST");
   window.location.href = "dashboard.html";
 }
 
 /**********************
- PARRAINAGE & DASHBOARD
+  CONNEXION
 **********************/
-function afficherInfosParrainage() {
-  const user = getUser();
-  if (!user) return;
+function loginUser() {
+  const phone = document.getElementById("login-phone").value;
+  const pass = document.getElementById("login-pass").value;
+  const allUsers = getAllUsers();
 
-  // 1. Afficher le code de l'utilisateur
+  // Chercher l'utilisateur dans la liste globale
+  const user = allUsers.find(u => u.phone === phone && u.password === pass);
+
+  if (!user) {
+    alert("Identifiants incorrects ou compte inexistant");
+    return;
+  }
+
+  setUser(user);
+  window.location.href = "dashboard.html";
+}
+
+/**********************
+  MISE À JOUR DASHBOARD
+**********************/
+function initDashboard() {
+  const user = getUser();
+  if (!user) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  // 1. Affichage du Solde
+  const soldeEl = document.getElementById("solde");
+  if (soldeEl) soldeEl.innerText = user.solde + " CDF";
+
+  // 2. Affichage du Code de parrainage
   const codeEl = document.getElementById("mon-code");
   if (codeEl) codeEl.innerText = user.myInviteCode;
 
-  // 2. Afficher le lien de parrainage
-  const lienEl = document.getElementById("mon-lien");
-  if (lienEl) {
-    lienEl.value = "https://chiraandre-sketch.github.io/invest-platform/register.html?ref=" + user.myInviteCode;
+  // 3. Génération du Lien de parrainage
+  const lienInput = document.getElementById("mon-lien");
+  if (lienInput) {
+    lienInput.value = "https://chiraandre-sketch.github.io/invest-platform/register.html?ref=" + user.myInviteCode;
   }
 
-  // 3. COMPTEUR : Calculer le nombre de personnes parrainées
+  // 4. CALCUL DU COMPTEUR (Combien de personnes m'ont choisi comme parrain)
   const allUsers = getAllUsers();
   const mesFilleuls = allUsers.filter(u => u.referredBy === user.myInviteCode);
   
@@ -91,18 +119,13 @@ function afficherInfosParrainage() {
   if (countEl) countEl.innerText = mesFilleuls.length;
 }
 
-/**********************
- INITIALISATION
-**********************/
-function afficherSolde() {
-  const user = getUser();
-  if (!user) return;
-
-  const el = document.getElementById("solde");
-  if (el) el.innerText = user.solde + " CDF";
+// Fonction pour copier le lien
+function copyLink() {
+  const copyText = document.getElementById("mon-lien");
+  copyText.select();
+  copyText.setSelectionRange(0, 99999);
+  navigator.clipboard.writeText(copyText.value);
+  alert("Lien de parrainage copié !");
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  afficherSolde();
-  afficherInfosParrainage();
-});
+document.addEventListener("DOMContentLoaded", initDashboard);
