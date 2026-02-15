@@ -1,61 +1,26 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion - Investissement RDC</title>
-    <link rel="stylesheet" href="style.css">
+    <title>DELL INVEST</title>
+    <script>
+        window.onload = function() {
+            // On vérifie si l'utilisateur est déjà enregistré dans le téléphone
+            const user = localStorage.getItem("user");
+            
+            if (user) {
+                // S'il est déjà connecté, on l'envoie à l'accueil
+                window.location.href = "dashboard.html";
+            } else {
+                // Sinon, on lui demande de se connecter ou de s'inscrire
+                window.location.href = "login.html";
+            }
+        };
+    </script>
 </head>
-<body class="auth-page">
-
-<div class="auth-wrapper">
-  <div class="auth-card">
-    <img src="IMG_2276.jpeg" class="logo">
-    <h2>Connexion</h2>
-
-    <form onsubmit="return connecterUtilisateur(event)">
-      <input type="tel" id="login_phone" placeholder="+243XXXXXXXXX" required>
-      <input type="password" id="login_pass" placeholder="Mot de passe" required>
-
-      <button class="btn-primary" type="submit">
-        Se connecter
-      </button>
-    </form>
-
-    <p class="auth-link">
-      Pas encore de compte ?
-      <a href="register.html">S'inscrire</a>
-    </p>
-  </div>
-</div>
-
-<script>
-function connecterUtilisateur(event) {
-    event.preventDefault(); // Empêche la redirection immédiate
-
-    let telephone = document.getElementById('login_phone').value;
-    let password = document.getElementById('login_pass').value;
-
-    // 1. Chercher si le numéro existe dans la mémoire du téléphone
-    let motDePasseStocke = localStorage.getItem(telephone);
-
-    if (motDePasseStocke === null) {
-        alert("Erreur : Ce numéro n'est pas enregistré. Veuillez vous inscrire.");
-        return false;
-    }
-
-    // 2. Vérifier si le mot de passe est le bon
-    if (password !== motDePasseStocke) {
-        alert("Erreur : Mot de passe incorrect.");
-        return false;
-    }
-
-    // 3. Si tout est correct, on autorise l'accès
-    localStorage.setItem("session_active", "true");
-    window.location.href = "dashboard.html";
-    return false;
-}
-</script>
-
+<body style="background: #1a237e; display: flex; justify-content: center; align-items: center; height: 100vh; color: white; font-family: sans-serif;">
+    <div style="text-align: center;">
+        <h2>DELL INVEST</h2>
+        <p>Chargement sécurisé...</p>
+    </div>
 </body>
 </html>
