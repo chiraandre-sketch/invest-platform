@@ -4,190 +4,76 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mon Équipe - DELL INVEST</title>
-    <link rel="stylesheet" href="style.css">
     <style>
-        body {
-            background-image: url("IMG_2276.jpeg");
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            margin: 0;
-            font-family: 'Segoe UI', Arial, sans-serif;
-        }
+        body { margin: 0; font-family: sans-serif; background-color: #f8f9ff; padding-bottom: 80px; }
+        .blue-btn { background: #6366f1; color: white; border: none; width: 90%; padding: 15px; border-radius: 10px; margin: 20px auto; display: block; font-weight: bold; }
+        .bonus-card { background: linear-gradient(135deg, #a855f7, #ec4899); color: white; margin: 0 20px; padding: 30px; border-radius: 20px; text-align: center; font-size: 1.2rem; font-weight: bold; }
+        
+        .invite-section { display: flex; gap: 10px; padding: 20px; }
+        .invite-box { background: #2d2d2d; color: white; padding: 15px; border-radius: 15px; flex: 1; text-align: center; font-size: 0.8rem; }
+        .invite-box strong { display: block; font-size: 1.1rem; margin: 10px 0; }
+        .copy-tag { background: #6ee7b7; color: #064e3b; padding: 5px 10px; border-radius: 5px; font-weight: bold; cursor: pointer; border: none; font-size: 0.7rem; }
 
-        .overlay {
-            background: rgba(255, 255, 255, 0.85);
-            min-height: 100vh;
-            padding: 20px;
-            padding-bottom: 100px;
-            box-sizing: border-box;
-        }
+        .lv-item { background: white; margin: 10px 20px; padding: 20px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .lv-info div { font-weight: bold; color: #3b82f6; }
+        .lv-info span { font-size: 0.7rem; color: #aaa; }
+        .user-count { font-weight: bold; color: #333; }
 
-        .btn-invite-top {
-            background: #5c7cfa;
-            color: white;
-            width: 100%;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            font-weight: bold;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-        }
-
-        .bonus-card {
-            background: linear-gradient(135deg, #7950f2, #be4bdb);
-            color: white;
-            padding: 40px 20px;
-            border-radius: 20px;
-            text-align: center;
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
-
-        .invite-section {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .info-box {
-            background: #2c2e33;
-            color: white;
-            padding: 15px;
-            border-radius: 15px;
-            text-align: center;
-        }
-
-        .info-box p { margin: 0; font-size: 0.75rem; color: #adb5bd; }
-        .info-box b { display: block; margin: 8px 0; font-size: 0.8rem; word-break: break-all; }
-        .info-box h2 { margin: 5px 0; font-size: 1.2rem; }
-
-        .btn-copy {
-            background: #63e6be;
-            color: #087f5b;
-            border: none;
-            padding: 8px;
-            width: 100%;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 0.8rem;
-        }
-
-        .stat-row {
-            background: white;
-            padding: 15px;
-            border-radius: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        }
-
-        .stat-info b { display: block; font-size: 1rem; }
-        .stat-info span { font-size: 0.8rem; color: #868e96; }
-        .stat-count { font-weight: bold; color: #495057; }
-
-        /* Navigation basse */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: white;
-            display: flex;
-            justify-content: space-around;
-            padding: 15px 0;
-            border-top: 1px solid #eee;
-        }
-
-        .nav-item { text-decoration: none; color: #adb5bd; font-weight: bold; font-size: 0.9rem; }
-        .nav-item.active { color: #5c7cfa; }
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #eee; }
+        .nav-item { text-decoration: none; color: #bbb; font-size: 0.7rem; text-align: center; }
+        .nav-item.active { color: #6366f1; }
     </style>
 </head>
 <body>
 
-<div class="overlay">
-    <div class="btn-invite-top">Inviter des amis</div>
-    
-    <div class="bonus-card">
-        DELL INVEST - BONUS
-    </div>
+    <button class="blue-btn">INVITER DES AMIS</button>
+    <div class="bonus-card">DELL INVEST - BONUS</div>
 
     <div class="invite-section">
-        <div class="info-box">
-            <p>LIEN D'INVITATION</p>
-            <b id="myLink">https://chiraandre-sketch.github.io/invest-platform/register.html?ref=DELL5627</b>
-            <button class="btn-copy" onclick="copier('myLink')">PHOTOCOPIER</button>
+        <div class="invite-box" id="equipe-lien">
+            LIEN D'INVITATION
+            <div id="equipe-lien-text" style="font-size: 0.6rem; word-break: break-all; margin: 10px 0; color: #ccc;">Chargement...</div>
+            <button class="copy-tag" onclick="copyEquipeLink()">PHOTOCOPIER</button>
+            <input type="hidden" id="hidden-link">
         </div>
-        <div class="info-box">
-            <p>CODE D'INVITATION</p>
-            <h2 id="myCode">DELL5627</h2>
-            <button class="btn-copy" onclick="copier('myCode')">PHOTOCOPIER</button>
+        <div class="invite-box">
+            CODE D'INVITATION
+            <strong id="equipe-code">------</strong>
+            <button class="copy-tag" onclick="copyEquipeLink()">PHOTOCOPIER</button>
         </div>
     </div>
 
-    <div class="stat-row">
-        <div class="stat-info">
-            <b style="color: #4dabf7;">Lv1 25% Commission</b>
+    <div class="lv-item">
+        <div class="lv-info">
+            <div>Lv1 25% Commission</div>
             <span>Récompense directe</span>
         </div>
-        <div class="stat-count" id="countLv1">0 Utilisateurs</div>
+        <div class="user-count" id="count-lv1">0 Utilisateurs</div>
     </div>
 
-    <div class="stat-row">
-        <div class="stat-info">
-            <b style="color: #69db7c;">Lv2 3% Commission</b>
+    <div class="lv-item">
+        <div class="lv-info">
+            <div>Lv2 3% Commission</div>
             <span>Récompense niveau 2</span>
         </div>
-        <div class="stat-count" id="countLv2">0 Utilisateurs</div>
+        <div class="user-count" id="count-lv2">0 Utilisateurs</div>
     </div>
 
-    <div class="stat-row">
-        <div class="stat-info">
-            <b style="color: #ffd43b;">Lv3 1% Commission</b>
+    <div class="lv-item">
+        <div class="lv-info">
+            <div>Lv3 1% Commission</div>
             <span>Récompense niveau 3</span>
         </div>
-        <div class="stat-count" id="countLv3">0 Utilisateurs</div>
+        <div class="user-count" id="count-lv3">0 Utilisateurs</div>
     </div>
-</div>
 
-<nav class="bottom-nav">
-    <a href="dashboard.html" class="nav-item">Accueil</a>
-    <a href="equipe.html" class="nav-item active">Équipe</a>
-    <a href="vip.html" class="nav-item">Investir</a>
-    <a href="profil.html" class="nav-item">Moi</a>
-</nav>
+    <nav class="nav-bar">
+        <a href="dashboard.html" class="nav-item">🏠<br>Accueil</a>
+        <a href="vip.html" class="nav-item">💎<br>Investir</a>
+        <a href="equipe.html" class="nav-item active">👥<br>Équipe</a>
+        <a href="profil.html" class="nav-item">👤<br>Moi</a>
+    </nav>
 
-<script>
-    // 1. Identifiant unique de cet utilisateur (pour le test on garde DELL5627)
-    const monID = "DELL5627";
-
-    // 2. Fonction pour copier le texte
-    function copier(id) {
-        let texte = document.getElementById(id).innerText;
-        navigator.clipboard.writeText(texte).then(() => {
-            alert("Copié avec succès !");
-        });
-    }
-
-    // 3. Charger les statistiques réelles depuis le stockage
-    function chargerStats() {
-        let stats = JSON.parse(localStorage.getItem('teamStats_' + monID)) || { lv1: 0, lv2: 0, lv3: 0 };
-        
-        document.getElementById('countLv1').innerText = stats.lv1 + " Utilisateurs";
-        document.getElementById('countLv2').innerText = stats.lv2 + " Utilisateurs";
-        document.getElementById('countLv3').innerText = stats.lv3 + " Utilisateurs";
-    }
-
-    // Lancer au chargement
-    window.onload = chargerStats;
-</script>
-
+    <script src="app.js"></script>
 </body>
 </html>
