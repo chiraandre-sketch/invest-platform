@@ -1,53 +1,77 @@
-// --- FONCTIONS DE BASE ---
-function getUser() {
-    return JSON.parse(localStorage.getItem("user"));
+/********************************GLOBAL********************************/
+function getUser() { return JSON.parse(localStorage.getItem("user")); }
+function setUser(user) { localStorage.setItem("user", JSON.stringify(user)); }
+function getAllUsers() { return JSON.parse(localStorage.getItem("all_users")) || []; }
+
+/********************************INSCRIPTION********************************/
+function registerUser() {
+    const phone = document.getElementById("reg-phone").value;
+    const pass = document.getElementById("reg-pass").value;
+    const pass2 = document.getElementById("reg-pass2").value;
+    
+    // Capture du code d'invitation comme dans ton exemplaire
+    const urlParams = new URLSearchParams(window.location.search);
+    const inviteCode = urlParams.get('inviteCode') || "DIRECT";
+
+    if (!phone || !pass || !pass2) { alert("Tous les champs sont obligatoires"); return; }
+    if (pass !== pass2) { alert("Les mots de passe ne correspondent pas"); return; }
+
+    // Génération d'un code unique style exemplaire (Majuscules et Chiffres)
+    const myNewCode = Math.random().toString(36).substring(2, 10).toUpperCase();
+
+    const newUser = {
+        phone: phone,
+        password: pass,
+        solde: 0,
+        myInviteCode: myNewCode,
+        referredBy: inviteCode,
+        date: new Date().toLocaleDateString()
+    };
+
+    // Sauvegarde
+    let allUsers = getAllUsers();
+    allUsers.push(newUser);
+    localStorage.setItem("all_users", JSON.stringify(allUsers));
+    setUser(newUser);
+
+    window.location.href = "dashboard.html";
 }
 
-function getAllUsers() {
-    return JSON.parse(localStorage.getItem("all_users")) || [];
-}
-
-// --- INITIALISATION DU DASHBOARD ---
+/********************************DASHBOARD********************************/
 function initDashboard() {
     const user = getUser();
     const allUsers = getAllUsers();
 
-    if (!user) {
-        // Si pas de session, retour au login
-        if (!window.location.href.includes("login.html") && !window.location.href.includes("register.html")) {
-            window.location.href = "login.html";
-        }
-        return;
-    }
+    if (!user) return;
 
-    // 1. Afficher le solde
+    // 1. Affichage du Solde
     const soldeEl = document.getElementById("solde");
-    if (soldeEl) soldeEl.innerText = (user.solde || 0) + " CDF";
+    if (soldeEl) soldeEl.innerText = (user.solde || 0).toFixed(2) + " CDF";
 
-    // 2. Afficher le code d'invitation
+    // 2. Affichage du Code Invitation
     const codeEl = document.getElementById("mon-code");
-    if (codeEl) {
-        // Si l'utilisateur n'a pas encore de code (ancien compte), on lui en donne un
-        if (!user.myInviteCode) {
-            user.myInviteCode = "DELL" + Math.floor(1000 + Math.random() * 9000);
-            localStorage.setItem("user", JSON.stringify(user));
-        }
-        codeEl.innerText = user.myInviteCode;
-    }
+    if (codeEl) codeEl.innerText = user.myInviteCode;
 
-    // 3. Afficher le lien de parrainage
+    // 3. Lien de parrainage (Format exemplaire)
     const lienEl = document.getElementById("mon-lien");
     if (lienEl) {
-        lienEl.value = "https://chiraandre-sketch.github.io/invest-platform/register.html?ref=" + user.myInviteCode;
+        lienEl.value = "https://chiraandre-sketch.github.io/invest-platform/register.html?inviteCode=" + user.myInviteCode;
     }
 
-    // 4. Compter les filleuls
+    // 4. Compteur d'équipe (Dynamique)
     const countEl = document.getElementById("compteur-fillieuls");
     if (countEl) {
-        const nombre = allUsers.filter(u => u.referredBy === user.myInviteCode).length;
-        countEl.innerText = nombre;
+        const team = allUsers.filter(u => u.referredBy === user.myInviteCode);
+        countEl.innerText = team.length;
     }
 }
 
-// Lancer au chargement
+// Fonction de copie
+function copyLink() {
+    const input = document.getElementById("mon-lien");
+    input.select();
+    document.execCommand("copy");
+    alert("Lien d'invitation copié !");
+}
+
 document.addEventListener("DOMContentLoaded", initDashboard);
