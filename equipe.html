@@ -11,145 +11,47 @@
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
-            color: white;
+            color: #333;
             margin: 0;
             font-family: Arial, sans-serif;
         }
-        .team-container {
-            padding: 20px;
-            padding-bottom: 100px;
-            text-align: center;
-        }
-        .header-box {
-            background: #3b82f6;
-            padding: 15px;
-            border-radius: 5px;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-        .bonus-card {
-            background: linear-gradient(135deg, #6366f1, #a855f7);
-            padding: 40px 20px;
-            border-radius: 15px;
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        .stat-box {
-            background: white;
-            color: #333;
-            padding: 15px;
-            border-radius: 10px;
-        }
-        .stat-box h4 { margin: 0; color: #06b6d4; font-size: 1.2rem; }
-        .invite-section {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        .invite-card {
-            background: #1e293b;
-            padding: 15px;
-            border-radius: 10px;
-            border: 1px solid #334155;
-        }
-        .invite-card p { font-size: 0.8rem; margin-bottom: 10px; color: #cbd5e1; }
-        .url-text { font-size: 0.65rem; word-break: break-all; display: block; margin-bottom: 10px; }
-        .btn-copy {
-            background: #2dd4bf;
-            color: #0f172a;
-            border: none;
-            padding: 8px;
-            border-radius: 20px;
-            font-weight: bold;
-            width: 100%;
-            cursor: pointer;
-            font-size: 0.8rem;
-        }
-        .lv-item {
-            display: flex;
-            align-items: center;
-            background: white;
-            color: #333;
-            margin-bottom: 10px;
-            padding: 10px;
-            border-radius: 10px;
-            justify-content: space-between;
-        }
-        .lv-circle {
-            width: 40px; height: 40px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-weight: bold; border: 2px solid;
-        }
+        .team-container { padding: 20px; padding-bottom: 100px; text-align: center; background: rgba(255,255,255,0.8); min-height: 100vh; }
+        .header-box { background: #3b82f6; padding: 15px; border-radius: 5px; font-weight: bold; color: white; margin-bottom: 15px; }
+        .bonus-card { background: linear-gradient(135deg, #6366f1, #a855f7); padding: 40px 20px; border-radius: 15px; font-size: 1.5rem; font-weight: bold; margin-bottom: 20px; color: white; }
+        .invite-section { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .invite-card { background: #2d3748; padding: 15px; border-radius: 10px; color: white; }
+        .btn-copy { background: #4fd1c5; color: #1a202c; border: none; padding: 8px; border-radius: 20px; font-weight: bold; width: 100%; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div class="team-container">
     <div class="header-box">INVITER DES AMIS</div>
-    
     <div class="bonus-card">DELL INVEST - BONUS</div>
-
-    <div class="stats-grid">
-        <div class="stat-box"><h4>0</h4><p>Total personnes</p></div>
-        <div class="stat-box"><h4>0.00 CDF</h4><p>Total récompenses</p></div>
-    </div>
 
     <div class="invite-section">
         <div class="invite-card">
-            <p>LIEN D'INVITATION</p>
-            <span class="url-text">https://chiraandre-sketch.github.io/invest-platform/</span>
+            <p style="font-size: 0.7rem;">LIEN D'INVITATION</p>
+            <p style="font-size: 0.6rem; word-break: break-all;">https://chiraandre-sketch.github.io/invest-platform/</p>
             <button class="btn-copy" onclick="copyText('https://chiraandre-sketch.github.io/invest-platform/')">PHOTOCOPIER</button>
         </div>
         <div class="invite-card">
-            <p>CODE D'INVITATION</p>
-            <h3 style="margin: 5px 0;">DELL5627</h3>
+            <p style="font-size: 0.7rem;">CODE D'INVITATION</p>
+            <h3 style="margin: 10px 0;">DELL5627</h3>
             <button class="btn-copy" onclick="copyText('DELL5627')">PHOTOCOPIER</button>
         </div>
     </div>
 
-    <div class="lv-item">
-        <div style="display:flex; align-items:center;">
-            <div class="lv-circle" style="color:#3b82f6; border-color:#3b82f6;">Lv1</div>
-            <div style="margin-left:15px; text-align:left;">
-                <b style="display:block;">25%</b>
-                <small>Commission</small>
-            </div>
-        </div>
-        <div style="text-align:right;"><small>0 Utilisateurs</small></div>
-    </div>
-
-    <div class="lv-item">
-        <div style="display:flex; align-items:center;">
-            <div class="lv-circle" style="color:#22c55e; border-color:#22c55e;">Lv2</div>
-            <div style="margin-left:15px; text-align:left;">
-                <b style="display:block;">3%</b>
-                <small>Commission</small>
-            </div>
-        </div>
-        <div style="text-align:right;"><small>0 Utilisateurs</small></div>
+    <div style="background:white; padding:15px; border-radius:10px; display:flex; justify-content:space-between; align-items:center;">
+        <span><b>Lv1</b> 25% Commission</span>
+        <span>0 Utilisateurs</span>
     </div>
 </div>
-
-<nav class="bottom-nav" style="position:fixed; bottom:0; width:100%; background:white; display:flex; justify-content:space-around; padding:10px; border-top:1px solid #ddd;">
-    <a href="dashboard.html" style="text-decoration:none; color:gray;">🏠 Accueil</a>
-    <a href="equipe.html" style="text-decoration:none; color:#3b82f6; font-weight:bold;">👥 Équipe</a>
-    <a href="vip.html" style="text-decoration:none; color:gray;">💰 Investir</a>
-    <a href="profil.html" style="text-decoration:none; color:gray;">👤 Moi</a>
-</nav>
 
 <script>
 function copyText(text) {
     navigator.clipboard.writeText(text);
-    alert("Copié : " + text);
+    alert("Copié dans le presse-papier !");
 }
 </script>
 
