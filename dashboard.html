@@ -5,74 +5,107 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DELL INVEST - Dashboard</title>
     <style>
-        body { margin: 0; font-family: 'Arial', sans-serif; background-color: #f5f6fa; padding-bottom: 80px; }
-        .header { background: #1a237e; color: white; padding: 30px 20px; border-bottom-left-radius: 25px; border-bottom-right-radius: 25px; }
-        .balance-box { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 15px; margin-top: 15px; border: 1px solid rgba(255,255,255,0.2); }
+        body { margin: 0; font-family: 'Segoe UI', Arial, sans-serif; background-color: #f4f7fe; color: #333; padding-bottom: 80px; }
         
-        /* Zone Parrainage Style Exemplaire */
-        .invite-card { background: white; margin: 20px; padding: 20px; border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        .invite-label { color: #888; font-size: 0.8rem; text-transform: uppercase; }
-        .invite-row { display: flex; justify-content: space-between; align-items: center; margin: 10px 0; }
-        .code-display { font-size: 1.3rem; font-weight: bold; color: #1a237e; letter-spacing: 1px; }
-        .copy-btn { background: #ffeb3b; border: none; padding: 8px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; color: #000; }
-        
-        .team-stats { display: flex; border-top: 1px solid #eee; margin-top: 15px; padding-top: 15px; }
-        .stat-item { flex: 1; text-align: center; }
-        .stat-val { font-size: 1.1rem; font-weight: bold; color: #1a237e; }
-        .stat-lbl { font-size: 0.7rem; color: #999; }
+        /* Header & Solde */
+        .header-section {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('IMG_2276.jpeg');
+            background-size: cover; background-position: center; height: 180px;
+            padding: 20px; color: white; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px;
+        }
+        .balance-card {
+            background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px);
+            padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.3); margin-top: 10px;
+        }
+        .balance-amount { font-size: 1.8rem; font-weight: bold; }
 
-        .action-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 20px; margin-top: -20px; }
-        .btn-action { background: white; padding: 15px; border-radius: 15px; text-align: center; text-decoration: none; color: #333; font-size: 0.75rem; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #eee; }
-        .nav-item { text-decoration: none; color: #bbb; font-size: 0.7rem; text-align: center; }
-        .nav-item.active { color: #1a237e; }
+        /* Grille d'actions */
+        .action-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 0 20px; margin-top: -30px; }
+        .action-item {
+            background: white; padding: 15px 5px; border-radius: 15px; text-align: center;
+            text-decoration: none; color: #333; box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            font-size: 0.8rem; font-weight: 600;
+        }
+        .action-icon { font-size: 1.5rem; display: block; margin-bottom: 5px; }
+
+        /* Bloc Parrainage (Le milieu) */
+        .referral-container {
+            margin: 20px; background: white; border-radius: 20px; padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        /* Carrousel */
+        .carousel-container { margin: 20px; height: 120px; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .slide { width: 100%; height: 100%; background-size: cover; background-position: center; }
+
+        /* Navigation Basse */
+        .nav-bar {
+            position: fixed; bottom: 0; width: 100%; background: white;
+            display: flex; justify-content: space-around; padding: 12px 0;
+            border-top: 1px solid #eee; z-index: 1000;
+        }
+        .nav-link { text-decoration: none; color: #888; font-size: 0.75rem; text-align: center; }
+        .nav-link.active { color: #1a237e; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <div style="font-weight: bold;">DELL INVEST</div>
-        <div class="balance-box">
-            <div style="font-size: 0.8rem; opacity: 0.8;">Solde total</div>
-            <div id="solde" style="font-size: 1.8rem; font-weight: bold;">0.00 CDF</div>
+    <div class="header-section">
+        <div style="font-weight: bold; color: #ffeb3b;">DELL INVEST</div>
+        <div class="balance-card">
+            <div style="font-size: 0.8rem; opacity: 0.9;">Solde disponible</div>
+            <div class="balance-amount" id="solde">0 CDF</div>
         </div>
     </div>
 
     <div class="action-grid">
-        <a href="recharge.html" class="btn-action"><span style="font-size: 1.5rem;">📥</span><br>Dépôt</a>
-        <a href="withdraw.html" class="btn-action"><span style="font-size: 1.5rem;">📤</span><br>Retrait</a>
-        <a href="about.html" class="btn-action"><span style="font-size: 1.5rem;">📖</span><br>Guide</a>
+        <a href="recharge.html" class="action-item"><span class="action-icon">➕</span>Recharger</a>
+        <a href="withdraw.html" class="action-item"><span class="action-icon">💸</span>Retirer</a>
+        <a href="about.html" class="action-item"><span class="action-icon">ℹ️</span>Infos</a>
     </div>
 
-    <div class="invite-card">
-        <div class="invite-label">Mon Code d'invitation</div>
-        <div class="invite-row">
-            <div id="mon-code" class="code-display">--------</div>
-            <button class="copy-btn" onclick="copyLink()">COPIER</button>
+    <div class="referral-container">
+        <div style="font-size: 0.8rem; color: #888; margin-bottom: 5px;">VOTRE CODE D'INVITATION</div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <span id="mon-code" style="font-size: 1.4rem; font-weight: bold; color: #1a237e; letter-spacing: 1px;">Génération...</span>
+            <button onclick="copyLink()" style="background: #ffeb3b; border: none; padding: 10px 20px; border-radius: 25px; font-weight: bold; cursor: pointer;">COPIER LE LIEN</button>
         </div>
-        
+
         <input type="text" id="mon-lien" style="position: absolute; left: -9999px;">
 
-        <div class="team-stats">
-            <div class="stat-item" style="border-right: 1px solid #eee;">
-                <div id="compteur-fillieuls" class="stat-val">0</div>
-                <div class="stat-lbl">Équipe (Pers.)</div>
+        <div style="display: flex; border-top: 1px solid #f0f0f0; padding-top: 15px; text-align: center;">
+            <div style="flex: 1; border-right: 1px solid #f0f0f0;">
+                <div id="compteur-fillieuls" style="font-size: 1.2rem; font-weight: bold; color: #1a237e;">0</div>
+                <div style="font-size: 0.7rem; color: #aaa;">MES INVITÉS</div>
             </div>
-            <div class="stat-item">
-                <div class="stat-val">0 CDF</div>
-                <div class="stat-lbl">Commission</div>
+            <div style="flex: 1;">
+                <div style="font-size: 1.2rem; font-weight: bold; color: #4caf50;">0 CDF</div>
+                <div style="font-size: 0.7rem; color: #aaa;">COMMISSION</div>
             </div>
         </div>
+    </div>
+
+    <div class="carousel-container">
+        <div class="slide" style="background-image: url('IMG_2276.jpeg');"></div>
     </div>
 
     <nav class="nav-bar">
-        <a href="dashboard.html" class="nav-item active">🏠<br>Accueil</a>
-        <a href="vip.html" class="nav-item">💎<br>Produits</a>
-        <a href="equipe.html" class="nav-item">👥<br>Équipe</a>
-        <a href="profil.html" class="nav-item">👤<br>Profil</a>
+        <a href="dashboard.html" class="nav-link active">🏠<br>Accueil</a>
+        <a href="vip.html" class="nav-link">💎<br>Produits</a>
+        <a href="equipe.html" class="nav-link">👥<br>Équipe</a>
+        <a href="profil.html" class="nav-link">👤<br>Profil</a>
     </nav>
 
     <script src="app.js"></script>
+    <script>
+        // Fonction simple pour copier
+        function copyLink() {
+            const input = document.getElementById("mon-lien");
+            input.select();
+            input.setSelectionRange(0, 99999); // Pour mobile
+            document.execCommand("copy");
+            alert("Lien d'invitation copié !");
+        }
+    </script>
 </body>
 </html>
