@@ -1,77 +1,96 @@
-// ================= INITIALISATION =================
-if (!localStorage.getItem("all_users")) {
-    localStorage.setItem("all_users", JSON.stringify([]));
+/***********************
+ * INITIALISATION
+ ***********************/
+if (!localStorage.getItem("ALL_USERS")) {
+    localStorage.setItem("ALL_USERS", JSON.stringify([]));
 }
 
-// ================= UTILS =================
-function getAllUsers() {
-    return JSON.parse(localStorage.getItem("all_users"));
+/***********************
+ * UTILISATEUR CONNECTÉ
+ ***********************/
+function getCurrentUser() {
+    return JSON.parse(localStorage.getItem("CURRENT_USER"));
 }
 
-function saveAllUsers(users) {
-    localStorage.setItem("all_users", JSON.stringify(users));
+function setCurrentUser(user) {
+    localStorage.setItem("CURRENT_USER", JSON.stringify(user));
 }
 
-function getUser() {
-    return JSON.parse(localStorage.getItem("user"));
+function logout() {
+    localStorage.removeItem("CURRENT_USER");
+    location.href = "login.html";
 }
 
-function setUser(user) {
-    localStorage.setItem("user", JSON.stringify(user));
+/***********************
+ * PROTECTION DES PAGES
+ ***********************/
+function protectDashboard() {
+    if (!getCurrentUser()) {
+        location.href = "login.html";
+    }
 }
 
-function generateInviteCode() {
-    return "DELL" + Math.floor(1000 + Math.random() * 9000);
-}
-
-// ================= INSCRIPTION =================
+/***********************
+ * INSCRIPTION
+ ***********************/
 function registerUser(phone, password, inviteCode) {
-    let users = getAllUsers();
+    let users = JSON.parse(localStorage.getItem("ALL_USERS"));
 
     if (users.find(u => u.phone === phone)) {
         alert("Numéro déjà utilisé");
         return false;
     }
 
-    const myCode = generateInviteCode();
+    const myCode = "DELL" + Math.floor(1000 + Math.random() * 9000);
 
     const newUser = {
-        phone: phone,
-        password: password,
+        phone,
+        password,
         myInviteCode: myCode,
         referredBy: inviteCode || "DIRECT",
         invitedCount: 0,
         solde: 0,
-        date: new Date().toLocaleDateString()
+        createdAt: new Date().toISOString()
     };
 
-    // Parrainage
+    // Gestion du parrainage
     if (inviteCode) {
-        const parent = users.find(u => u.myInviteCode === inviteCode);
-        if (parent) parent.invitedCount += 1;
+        const sponsor = users.find(u => u.myInviteCode === inviteCode);
+        if (sponsor) sponsor.invitedCount++;
     }
 
     users.push(newUser);
-    saveAllUsers(users);
-    setUser(newUser); // connexion automatique
+    localStorage.setItem("ALL_USERS", JSON.stringify(users));
+    setCurrentUser(newUser);
 
     return true;
 }
 
-// ================= CONNEXION =================
+/***********************
+ * CONNEXION
+ ***********************/
 function loginUser(phone, password) {
-    let users = getAllUsers();
+    let users = JSON.parse(localStorage.getItem("ALL_USERS"));
     const user = users.find(u => u.phone === phone && u.password === password);
 
-    if (!user) return false;
+    if (!user) {
+        alert("Identifiants incorrects");
+        return false;
+    }
 
-    setUser(user);
+    setCurrentUser(user);
     return true;
 }
 
-// ================= PROTECTION =================
-function protectDashboard() {
-    if (!getUser()) {
-        window.location.href = "login.html";
+/***********************
+ * SYNCHRONISATION
+ ***********************/
+function syncUser(user) {
+    let users = JSON.parse(localStorage.getItem("ALL_USERS"));
+    const index = users.findIndex(u => u.phone === user.phone);
+    if (index !== -1) {
+        users[index] = user;
+        localStorage.setItem("ALL_USERS", JSON.stringify(users));
+        setCurrentUser(user);
     }
 }
