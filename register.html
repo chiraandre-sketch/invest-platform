@@ -8,42 +8,51 @@
         body { font-family: sans-serif; background: #f4f7fe; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
         .card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 90%; max-width: 400px; }
         input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background: #1a237e; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        button { width: 100%; padding: 12px; background: #1a237e; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
-
 <div class="card">
     <h2 style="text-align: center; color: #1a237e;">Créer un compte</h2>
-    <input type="tel" id="phone" placeholder="Numéro de téléphone">
-    <input type="password" id="pass" placeholder="Mot de passe">
-    <input type="text" id="invite" placeholder="Code d'invitation (Optionnel)" readonly style="background: #f0f0f0;">
+    <input type="tel" id="phone" placeholder="+243810000000">
+    <input type="password" id="pass" placeholder="Mot de passe (6 min)">
+    <input type="text" id="invite" placeholder="Code d'invitation" readonly style="background: #eee;">
     <button onclick="validerInscription()">S'INSCRIRE</button>
+    <p style="text-align:center; font-size:0.8rem;">Déjà un compte ? <a href="login.html">Se connecter</a></p>
 </div>
 
 <script src="app.js"></script>
 <script>
-    // 1. Lire le code dans l'URL dès l'ouverture
     window.onload = function() {
         const urlParams = new URLSearchParams(window.location.search);
         const code = urlParams.get('inviteCode');
-        if (code) {
-            document.getElementById('invite').value = code;
-        }
+        if (code) document.getElementById('invite').value = code;
     };
 
-    // 2. Lancer l'inscription
     function validerInscription() {
-        const p = document.getElementById('phone').value;
+        const p = document.getElementById('phone').value.trim();
         const pw = document.getElementById('pass').value;
         const inv = document.getElementById('invite').value;
 
-        if (p && pw) {
-            if (registerUser(p, pw, inv)) {
-                window.location.href = "dashboard.html";
-            }
-        } else {
-            alert("Remplissez tous les champs.");
+        if (!p.startsWith("+243") || p.length < 13) {
+            alert("Format requis : +243 suivi de 9 chiffres.");
+            return;
+        }
+        if (pw.length < 6) {
+            alert("Le mot de passe doit faire au moins 6 caractères.");
+            return;
+        }
+
+        const allUsers = JSON.parse(localStorage.getItem("all_users")) || [];
+        if (allUsers.find(u => u.phone === p)) {
+            alert("Numéro déjà utilisé. Connectez-vous.");
+            window.location.href = "login.html";
+            return;
+        }
+
+        if (registerUser(p, pw, inv)) {
+            alert("Compte créé avec succès !");
+            window.location.href = "dashboard.html";
         }
     }
 </script>
