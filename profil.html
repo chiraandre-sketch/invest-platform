@@ -3,42 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mon Profil</title>
+    <title>Mon Profil - DELL INVEST</title>
+    <link rel="stylesheet" href="style.css">
     <style>
-        body { margin: 0; font-family: sans-serif; background: #f4f6f9; padding-bottom: 80px; }
-        .header-profil { background: #8b1c3d; color: white; padding: 40px 20px; text-align: center; border-radius: 0 0 30px 30px; }
-        .avatar { width: 80px; height: 80px; background: white; border-radius: 50%; margin-bottom: 10px; display: inline-block; border: 4px solid rgba(255,255,255,0.3); }
-        .container { padding: 20px; margin-top: -20px; }
-        .info-card { background: white; border-radius: 15px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        .info-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #eee; }
-        .info-row:last-child { border: none; }
-        .label { color: #666; }
-        .value { font-weight: bold; color: #333; }
-        .btn-logout { display: block; width: 100%; padding: 15px; background: #fee2e2; color: #ef4444; border: none; border-radius: 10px; margin-top: 20px; font-weight: bold; text-decoration: none; text-align: center; }
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #eee; }
-        .nav-item { text-decoration: none; color: #888; font-size: 12px; }
-        .nav-item.active { color: #8b1c3d; font-weight: bold; }
+        body {
+            background-image: url("IMG_2276.jpeg");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        .profile-container {
+            padding: 20px;
+            padding-bottom: 100px;
+            background: rgba(15, 23, 42, 0.7);
+            min-height: 100vh;
+        }
+        .user-header {
+            text-align: center;
+            padding: 20px 0;
+        }
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            background: #3b82f6;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            border: 3px solid rgba(255,255,255,0.2);
+        }
+        .balance-card {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        .balance-amount {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #22c55e;
+            margin: 10px 0;
+        }
+        .menu-list {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        .menu-link {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px;
+            text-decoration: none;
+            color: #334155;
+            border-bottom: 1px solid #f1f5f9;
+            font-weight: 500;
+        }
+        /* Style spécial pour le bouton WhatsApp dans la liste */
+        .whatsapp-style {
+            background: #e8f5e9;
+            color: #2e7d32;
+            font-weight: bold;
+        }
+        .btn-logout {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            margin-top: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
-    <div class="header-profil">
-        <div class="avatar"></div>
-        <h3>Utilisateur RDC</h3>
-        <p>ID: 88524</p>
+
+<div class="profile-container">
+    <div class="user-header">
+        <div class="user-avatar">D</div>
+        <h3>Utilisateur DELL</h3>
+        <p style="font-size: 0.9rem; opacity: 0.8;">ID: 5627</p>
     </div>
-    <div class="container">
-        <div class="info-card">
-            <div class="info-row"><span class="label">Téléphone</span> <span class="value">+243 000 000</span></div>
-            <div class="info-row"><span class="label">Solde</span> <span class="value">0 FC</span></div>
-            <div class="info-row"><span class="label">Statut</span> <span class="value" style="color: #22c55e;">Actif</span></div>
+
+    <div class="balance-card">
+        <p style="text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px;">Solde Actuel du Compte</p>
+        <div class="balance-amount">0.00 FC</div>
+        <div style="display: flex; justify-content: space-around; margin-top: 15px;">
+            <a href="recharge.html" style="color: #3b82f6; text-decoration: none; font-weight: bold;">RECHARGER</a>
+            <div style="width: 1px; background: rgba(255,255,255,0.2);"></div>
+            <a href="retrait.html" style="color: #f59e0b; text-decoration: none; font-weight: bold;">RETIRER</a>
         </div>
-        <a href="login.html" class="btn-logout">Se Déconnecter</a>
     </div>
-    <nav class="bottom-nav">
-        <a href="dashboard.html" class="nav-item">Accueil</a>
-        <a href="vip.html" class="nav-item">Produits</a>
-        <a href="equipe.html" class="nav-item">Équipe</a>
-        <a href="profil.html" class="nav-item active">Profil</a>
-    </nav>
+
+    <div class="menu-list">
+        <a href="equipe.html" class="menu-link">
+            <span>Mon Équipe</span>
+            <span>➔</span>
+        </a>
+        <a href="records.html" class="menu-link">
+            <span>Historique des Transactions</span>
+            <span>➔</span>
+        </a>
+        
+        <a href="https://chat.whatsapp.com/VOTRE_LIEN_ICI" class="menu-link whatsapp-style">
+            <span>💬 Rejoindre le Groupe WhatsApp</span>
+            <span>REJOINDRE</span>
+        </a>
+
+        <a href="about.html" class="menu-link">
+            <span>À propos de DELL INVEST</span>
+            <span>➔</span>
+        </a>
+    </div>
+
+    <a href="index.html" class="btn-logout">Déconnexion</a>
+</div>
+
+<nav style="position:fixed; bottom:0; width:100%; background:white; display:flex; justify-content:space-around; padding:15px; border-top:1px solid #ddd; z-index: 100;">
+    <a href="dashboard.html" style="text-decoration:none; color:gray;">Accueil</a>
+    <a href="equipe.html" style="text-decoration:none; color:gray;">Équipe</a>
+    <a href="vip.html" style="text-decoration:none; color:gray;">Investir</a>
+    <a href="profil.html" style="text-decoration:none; color:#3b82f6; font-weight:bold;">Moi</a>
+</nav>
+
 </body>
 </html>
