@@ -1,77 +1,92 @@
-/********************************GLOBAL********************************/
+// --- FONCTIONS DE BASE ---
 function getUser() { return JSON.parse(localStorage.getItem("user")); }
 function setUser(user) { localStorage.setItem("user", JSON.stringify(user)); }
 function getAllUsers() { return JSON.parse(localStorage.getItem("all_users")) || []; }
 
-/********************************INSCRIPTION********************************/
+// --- GÉNÉRATEUR AUTOMATIQUE DE CODE ---
+// Cette fonction crée un code unique comme DELL-8429
+function generateAutoCode() {
+    const num = Math.floor(1000 + Math.random() * 9000);
+    return "DELL-" + num;
+}
+
+// --- INSCRIPTION AUTOMATIQUE ---
 function registerUser() {
     const phone = document.getElementById("reg-phone").value;
     const pass = document.getElementById("reg-pass").value;
     const pass2 = document.getElementById("reg-pass2").value;
     
-    // Capture du code d'invitation comme dans ton exemplaire
+    // On récupère le code du parrain dans l'URL s'il existe
     const urlParams = new URLSearchParams(window.location.search);
-    const inviteCode = urlParams.get('inviteCode') || "DIRECT";
+    const codeDuParrain = urlParams.get('inviteCode') || "DIRECT";
 
-    if (!phone || !pass || !pass2) { alert("Tous les champs sont obligatoires"); return; }
-    if (pass !== pass2) { alert("Les mots de passe ne correspondent pas"); return; }
+    if (!phone || !pass || !pass2) {
+        alert("Remplissez tous les champs");
+        return;
+    }
+    if (pass !== pass2) {
+        alert("Les mots de passe ne correspondent pas");
+        return;
+    }
 
-    // Génération d'un code unique style exemplaire (Majuscules et Chiffres)
-    const myNewCode = Math.random().toString(36).substring(2, 10).toUpperCase();
+    // CRÉATION AUTOMATIQUE DU CODE POUR LE NOUVEL UTILISATEUR
+    const monPropreCode = generateAutoCode();
 
     const newUser = {
         phone: phone,
         password: pass,
         solde: 0,
-        myInviteCode: myNewCode,
-        referredBy: inviteCode,
+        myInviteCode: monPropreCode, // Son code créé ici
+        referredBy: codeDuParrain,    // On lie l'invité au parrain
         date: new Date().toLocaleDateString()
     };
 
-    // Sauvegarde
-    let allUsers = getAllUsers();
-    allUsers.push(newUser);
-    localStorage.setItem("all_users", JSON.stringify(allUsers));
+    // Enregistrement dans la base globale
+    let users = getAllUsers();
+    users.push(newUser);
+    localStorage.setItem("all_users", JSON.stringify(users));
+    
+    // Connexion
     setUser(newUser);
-
+    alert("Compte créé avec succès ! Votre code est : " + monPropreCode);
     window.location.href = "dashboard.html";
 }
 
-/********************************DASHBOARD********************************/
-function initDashboard() {
+// --- MISE À JOUR DU TABLEAU DE BORD ---
+function updateDashboard() {
     const user = getUser();
     const allUsers = getAllUsers();
 
     if (!user) return;
 
-    // 1. Affichage du Solde
-    const soldeEl = document.getElementById("solde");
-    if (soldeEl) soldeEl.innerText = (user.solde || 0).toFixed(2) + " CDF";
-
-    // 2. Affichage du Code Invitation
-    const codeEl = document.getElementById("mon-code");
-    if (codeEl) codeEl.innerText = user.myInviteCode;
-
-    // 3. Lien de parrainage (Format exemplaire)
-    const lienEl = document.getElementById("mon-lien");
-    if (lienEl) {
-        lienEl.value = "https://chiraandre-sketch.github.io/invest-platform/register.html?inviteCode=" + user.myInviteCode;
+    // Afficher le code généré automatiquement
+    if (document.getElementById("mon-code")) {
+        document.getElementById("mon-code").innerText = user.myInviteCode;
     }
 
-    // 4. Compteur d'équipe (Dynamique)
-    const countEl = document.getElementById("compteur-fillieuls");
-    if (countEl) {
-        const team = allUsers.filter(u => u.referredBy === user.myInviteCode);
-        countEl.innerText = team.length;
+    // Créer le lien d'invitation avec le code dedans
+    if (document.getElementById("mon-lien")) {
+        const monLienLien = "https://chiraandre-sketch.github.io/invest-platform/register.html?inviteCode=" + user.myInviteCode;
+        document.getElementById("mon-lien").value = monLienLien;
+    }
+
+    // Compter les gens qui se sont inscrits via ce lien
+    if (document.getElementById("compteur-fillieuls")) {
+        const mesInvites = allUsers.filter(u => u.referredBy === user.myInviteCode);
+        document.getElementById("compteur-fillieuls").innerText = mesInvites.length;
+    }
+
+    // Afficher le solde
+    if (document.getElementById("solde")) {
+        document.getElementById("solde").innerText = (user.solde || 0) + " CDF";
     }
 }
 
-// Fonction de copie
 function copyLink() {
     const input = document.getElementById("mon-lien");
     input.select();
     document.execCommand("copy");
-    alert("Lien d'invitation copié !");
+    alert("Lien d'invitation copié ! Envoyez-le à vos amis.");
 }
 
-document.addEventListener("DOMContentLoaded", initDashboard);
+document.addEventListener("DOMContentLoaded", updateDashboard);
