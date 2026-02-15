@@ -3,121 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tableau de bord - DELL INVEST</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Tableau de Bord - DELL INVEST</title>
     <style>
         body {
-            /* Utilisation de ton image de fond */
-            background-image: url("IMG_2276.jpeg");
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f4f7fe;
+            color: #333;
+        }
+
+        /* Header avec ton image */
+        .header-section {
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('IMG_2276.jpeg');
             background-size: cover;
             background-position: center;
-            background-attachment: fixed;
-            margin: 0;
-            font-family: 'Segoe UI', sans-serif;
-        }
-
-        .container {
+            height: 200px;
             padding: 20px;
-            min-height: 100vh;
-            background: rgba(0, 0, 0, 0.4); /* Voile pour la lisibilité */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .glass-card {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 30px 20px;
-            border-radius: 20px;
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            margin-top: 60px;
-        }
-
-        .balance-title {
-            font-size: 1.1rem;
-            color: #666;
-            margin: 0;
-        }
-
-        .balance-amount {
-            color: #00c853;
-            font-size: 36px;
-            font-weight: 800;
-            margin: 15px 0 30px 0;
-        }
-
-        /* Design des boutons allongés */
-        .btn-large {
-            display: block;
-            width: 100%;
-            padding: 18px 0;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 1.1rem;
-            margin-bottom: 15px;
             color: white;
-            transition: transform 0.2s;
-            border: none;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
         }
 
-        .btn-large:active {
-            transform: scale(0.98);
+        .brand-name { font-size: 1.6rem; font-weight: bold; color: #ffeb3b; margin-bottom: 10px; }
+
+        /* Carte de solde transparente (Glassmorphism) */
+        .balance-card {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
         }
 
-        .bg-green { background: #00c853; }
-        .bg-blue { background: #2979ff; }
-        .bg-whatsapp { background: #25D366; }
+        .balance-amount { font-size: 1.8rem; font-weight: bold; margin-top: 5px; color: #fff; }
 
-        /* Menu du bas */
-        .bottom-nav {
+        /* Carrousel d'images (Slideshow) */
+        .carousel-container {
+            margin: 20px;
+            height: 150px;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            display: none;
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* Boutons d'action (Recharger, Retirer, etc) */
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            padding: 0 20px;
+            margin-top: -10px;
+        }
+
+        .action-item {
+            background: white;
+            padding: 15px 5px;
+            border-radius: 15px;
+            text-align: center;
+            text-decoration: none;
+            color: #333;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .action-icon { font-size: 1.8rem; margin-bottom: 5px; display: block; }
+
+        /* Section Infos */
+        .info-card {
+            background: white;
+            margin: 20px;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .section-title { font-weight: bold; color: #d32f2f; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+
+        /* Bouton WhatsApp Flottant avec ton lien */
+        .whatsapp-float {
+            position: fixed;
+            right: 20px;
+            bottom: 90px;
+            background: #25D366;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(37,211,102,0.4);
+            z-index: 1000;
+            text-decoration: none;
+            font-size: 1.8rem;
+        }
+
+        /* Navigation Basse */
+        .nav-bar {
             position: fixed;
             bottom: 0;
             width: 100%;
             background: white;
             display: flex;
             justify-content: space-around;
-            padding: 15px 0;
+            padding: 12px 0;
             border-top: 1px solid #eee;
+            z-index: 1000;
         }
 
-        .nav-item {
-            text-decoration: none;
-            color: #888;
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-
-        .nav-item.active {
-            color: #2979ff;
-        }
+        .nav-link { text-decoration: none; color: #888; font-size: 0.75rem; text-align: center; }
+        .nav-link.active { color: #d32f2f; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="glass-card">
-        <p class="balance-title">Mon Solde</p>
-        <div class="balance-amount">0.00 CDF</div>
+    <div class="header-section">
+        <div class="brand-name">DELL INVEST</div>
+        <div class="balance-card">
+            <div style="font-size: 0.8rem; opacity: 0.9;">Solde disponible</div>
+            <div class="balance-amount">💰 0.00 CDF</div>
+        </div>
+    </div>
 
-        <a href="recharge.html" class="btn-large bg-green">Dépôt</a>
-        <a href="withdraw.html" class="btn-large bg-blue">Retrait</a>
-        
-        <a href="https://chat.whatsapp.com/FGlMMhRWzKv1OGsDkLDIGL" class="btn-large bg-whatsapp">
-            📢 Rejoindre le Groupe WhatsApp
+    <div class="action-grid">
+        <a href="recharge.html" class="action-item">
+            <span class="action-icon" style="color: #4caf50;">➕</span>
+            Recharger
+        </a>
+        <a href="withdraw.html" class="action-item">
+            <span class="action-icon" style="color: #2196f3;">💸</span>
+            Retirer
+        </a>
+        <a href="about.html" class="action-item">
+            <span class="action-icon" style="color: #f44336;">ℹ️</span>
+            À propos
         </a>
     </div>
-</div>
 
-<nav class="bottom-nav">
-  <a href="dashboard.html" class="nav-item active">Accueil</a>
-  <a href="vip.html" class="nav-item">Produits</a>
-  <a href="equipe.html" class="nav-item">Équipe</a>
-  <a href="profil.html" class="nav-item">Profil</a>
-</nav>
+    <div class="carousel-container">
+        <div class="slide" style="display:block; background-image: url('IMG_2276.jpeg');"></div>
+        <div class="slide" style="background-color: #1a237e; background-image: linear-gradient(to right, #1a237e, #3949ab);">
+            <div style="color:white; text-align:center; padding-top:50px; font-weight:bold;">DELL INVEST : L'avenir du trading</div>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <div class="section-title">🏢 À propos de la plateforme</div>
+        <p style="font-size: 0.85rem; color: #666; line-height: 1.6; margin: 0;">
+            Bienvenue chez <b>DELL INVEST</b>. Nous offrons des solutions d'investissement technologiques pour maximiser vos revenus quotidiens en toute sécurité.
+        </p>
+    </div>
+
+    <a href="https://chat.whatsapp.com/FGlMMhRWzKv1OGsDkLDIGL" class="whatsapp-float">
+        <span style="color: white;">💬</span>
+    </a>
+
+    <nav class="nav-bar">
+        <a href="dashboard.html" class="nav-link active">🏠<br>Accueil</a>
+        <a href="vip.html" class="nav-link">💎<br>Produits</a>
+        <a href="equipe.html" class="nav-link">👥<br>Équipe</a>
+        <a href="profil.html" class="nav-link">👤<br>Profil</a>
+    </nav>
+
+    <script>
+        // Script pour faire défiler le carrousel
+        let slideIndex = 0;
+        showSlides();
+
+        function showSlides() {
+            let slides = document.getElementsByClassName("slide");
+            for (let i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            slideIndex++;
+            if (slideIndex > slides.length) {slideIndex = 1}
+            slides[slideIndex-1].style.display = "block";
+            setTimeout(showSlides, 4000); // Change d'image toutes les 4 secondes
+        }
+    </script>
 
 </body>
 </html>
