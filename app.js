@@ -1,9 +1,9 @@
-// ================= INIT =================
+// ================= INITIALISATION =================
 if (!localStorage.getItem("all_users")) {
     localStorage.setItem("all_users", JSON.stringify([]));
 }
 
-// ================= UTIL =================
+// ================= UTILS =================
 function getAllUsers() {
     return JSON.parse(localStorage.getItem("all_users"));
 }
@@ -29,7 +29,7 @@ function registerUser(phone, password, inviteCode) {
     let users = getAllUsers();
 
     if (users.find(u => u.phone === phone)) {
-        alert("Ce numéro est déjà utilisé.");
+        alert("Numéro déjà utilisé");
         return false;
     }
 
@@ -42,22 +42,18 @@ function registerUser(phone, password, inviteCode) {
         referredBy: inviteCode || "DIRECT",
         invitedCount: 0,
         solde: 0,
-        gainQuotidien: 0,
-        transactions: [],
         date: new Date().toLocaleDateString()
     };
 
-    // 🔗 Gestion parrainage
-    if (inviteCode && inviteCode !== "DIRECT") {
+    // Parrainage
+    if (inviteCode) {
         const parent = users.find(u => u.myInviteCode === inviteCode);
-        if (parent) {
-            parent.invitedCount += 1;
-        }
+        if (parent) parent.invitedCount += 1;
     }
 
     users.push(newUser);
     saveAllUsers(users);
-    setUser(newUser); // connexion automatique après inscription
+    setUser(newUser); // connexion automatique
 
     return true;
 }
@@ -65,9 +61,7 @@ function registerUser(phone, password, inviteCode) {
 // ================= CONNEXION =================
 function loginUser(phone, password) {
     let users = getAllUsers();
-    const user = users.find(
-        u => u.phone === phone && u.password === password
-    );
+    const user = users.find(u => u.phone === phone && u.password === password);
 
     if (!user) return false;
 
@@ -75,10 +69,9 @@ function loginUser(phone, password) {
     return true;
 }
 
-// ================= PROTECTION DASHBOARD =================
+// ================= PROTECTION =================
 function protectDashboard() {
-    const user = getUser();
-    if (!user) {
+    if (!getUser()) {
         window.location.href = "login.html";
     }
 }
