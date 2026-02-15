@@ -1,95 +1,53 @@
-/**********************
-  GESTION UTILISATEUR
-**********************/
+// --- FONCTIONS DE BASE ---
 function getUser() {
-  return JSON.parse(localStorage.getItem("user"));
-}
-
-function setUser(user) {
-  localStorage.setItem("user", JSON.stringify(user));
+    return JSON.parse(localStorage.getItem("user"));
 }
 
 function getAllUsers() {
-  return JSON.parse(localStorage.getItem("all_users")) || [];
+    return JSON.parse(localStorage.getItem("all_users")) || [];
 }
 
-/**********************
-  INSCRIPTION & CONNEXION
-**********************/
-function registerUser() {
-  const phone = document.getElementById("reg-phone").value;
-  const pass = document.getElementById("reg-pass").value;
-  const pass2 = document.getElementById("reg-pass2").value;
-  
-  const urlParams = new URLSearchParams(window.location.search);
-  const parrainCode = urlParams.get('ref') || "DIRECT";
-
-  if (!phone || !pass || !pass2) {
-    alert("Tous les champs sont obligatoires");
-    return;
-  }
-  if (pass !== pass2) {
-    alert("Les mots de passe ne correspondent pas");
-    return;
-  }
-
-  const myCode = "DELL" + Math.floor(1000 + Math.random() * 9000);
-  const newUser = {
-    phone: phone,
-    password: pass,
-    solde: 0,
-    myInviteCode: myCode,
-    referredBy: parrainCode
-  };
-
-  setUser(newUser);
-  let allUsers = getAllUsers();
-  allUsers.push(newUser);
-  localStorage.setItem("all_users", JSON.stringify(allUsers));
-
-  // REDIRECTION (Vérifie bien que le fichier s'appelle dashboard.html)
-  window.location.href = "dashboard.html";
-}
-
-function loginUser() {
-  const phone = document.getElementById("login-phone").value;
-  const pass = document.getElementById("login-pass").value;
-  const allUsers = getAllUsers();
-  const user = allUsers.find(u => u.phone === phone && u.password === pass);
-
-  if (!user) {
-    alert("Identifiants incorrects");
-    return;
-  }
-
-  setUser(user);
-  window.location.href = "dashboard.html";
-}
-
-/**********************
-  LOGIQUE DASHBOARD
-**********************/
+// --- INITIALISATION DU DASHBOARD ---
 function initDashboard() {
-  const user = getUser();
-  if (!user) return;
+    const user = getUser();
+    const allUsers = getAllUsers();
 
-  // Mise à jour du solde
-  const soldeEl = document.getElementById("solde");
-  if (soldeEl) soldeEl.innerText = user.solde + " CDF";
+    if (!user) {
+        // Si pas de session, retour au login
+        if (!window.location.href.includes("login.html") && !window.location.href.includes("register.html")) {
+            window.location.href = "login.html";
+        }
+        return;
+    }
 
-  // Infos parrainage
-  if(document.getElementById("mon-code")) document.getElementById("mon-code").innerText = user.myInviteCode;
-  
-  if(document.getElementById("mon-lien")) {
-    document.getElementById("mon-lien").value = "https://chiraandre-sketch.github.io/invest-platform/register.html?ref=" + user.myInviteCode;
-  }
+    // 1. Afficher le solde
+    const soldeEl = document.getElementById("solde");
+    if (soldeEl) soldeEl.innerText = (user.solde || 0) + " CDF";
 
-  // Calculateur de filleuls
-  const allUsers = getAllUsers();
-  const nombre = allUsers.filter(u => u.referredBy === user.myInviteCode).length;
-  if(document.getElementById("compteur-fillieuls")) {
-    document.getElementById("compteur-fillieuls").innerText = nombre;
-  }
+    // 2. Afficher le code d'invitation
+    const codeEl = document.getElementById("mon-code");
+    if (codeEl) {
+        // Si l'utilisateur n'a pas encore de code (ancien compte), on lui en donne un
+        if (!user.myInviteCode) {
+            user.myInviteCode = "DELL" + Math.floor(1000 + Math.random() * 9000);
+            localStorage.setItem("user", JSON.stringify(user));
+        }
+        codeEl.innerText = user.myInviteCode;
+    }
+
+    // 3. Afficher le lien de parrainage
+    const lienEl = document.getElementById("mon-lien");
+    if (lienEl) {
+        lienEl.value = "https://chiraandre-sketch.github.io/invest-platform/register.html?ref=" + user.myInviteCode;
+    }
+
+    // 4. Compter les filleuls
+    const countEl = document.getElementById("compteur-fillieuls");
+    if (countEl) {
+        const nombre = allUsers.filter(u => u.referredBy === user.myInviteCode).length;
+        countEl.innerText = nombre;
+    }
 }
 
+// Lancer au chargement
 document.addEventListener("DOMContentLoaded", initDashboard);
