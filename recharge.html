@@ -1,193 +1,209 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Recharger mon compte - DELL INVEST</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recharge - DELL INVEST</title>
+    <style>
+        :root {
+            --primary-color: #8b1c3d; /* Couleur bordeaux des boutons */
+            --bg-color: #f4f7fe;
+            --text-grey: #64748b;
+        }
 
-<style>
-body {
-    margin: 0;
-    font-family: 'Segoe UI', Arial, sans-serif;
-    /* Ajout du background */
-    background-image: url("IMG_2276.jpeg");
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-}
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg-color);
+            color: #333;
+        }
 
-.overlay {
-    background: rgba(0, 0, 0, 0.4); /* Voile sombre pour faire ressortir la carte */
-    min-height: 100vh;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+        /* En-tête bleu avec solde */
+        .header {
+            background: linear-gradient(to right, #22c55e, #1e40af);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-.container {
-    max-width: 420px;
-    width: 100%;
-    background: rgba(255, 255, 255, 0.95); /* Carte blanche légèrement transparente */
-    padding: 20px;
-    border-radius: 20px;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-}
+        .container {
+            padding: 20px;
+            max-width: 450px;
+            margin: auto;
+        }
 
-h2 {
-    margin-top: 0;
-    color: #1a202c;
-    text-align: center;
-}
+        h3 { margin-bottom: 20px; font-size: 1.1rem; }
 
-.networks {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 20px;
-}
+        /* Grille des réseaux */
+        .network-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
 
-.network {
-    border: 2px solid #ddd;
-    border-radius: 12px;
-    padding: 12px;
-    text-align: center;
-    font-weight: bold;
-    cursor: pointer;
-    background: #fff;
-    transition: 0.3s;
-}
+        .network-card {
+            background: white;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: 0.3s;
+        }
 
-/* Changement de couleur pour correspondre à votre bleu de dashboard */
-.network.active {
-    border-color: #2979ff;
-    background: #eef5ff;
-    color: #2979ff;
-}
+        .network-card.active {
+            border-color: var(--primary-color);
+            background: #fff8f9;
+        }
 
-.number-box {
-    background: #f8fafc;
-    border-left: 5px solid #2979ff;
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 20px;
-}
+        .network-card img { width: 30px; margin-bottom: 5px; }
 
-.number {
-    font-size: 22px;
-    font-weight: bold;
-    color: #1e293b;
-}
+        /* Boîte du numéro de paiement */
+        .payment-box {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border: 1px dashed #cbd5e1;
+        }
 
-input {
-    width: 100%;
-    padding: 14px;
-    margin-bottom: 12px;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-    font-size: 15px;
-    box-sizing: border-box;
-}
+        .phone-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-top: 10px;
+        }
 
-button {
-    width: 100%;
-    padding: 15px;
-    border-radius: 12px;
-    border: none;
-    background: #2979ff; /* Bleu pour cohérence */
-    color: #fff;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-}
+        .copy-btn {
+            color: var(--primary-color);
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-weight: bold;
+        }
 
-.instructions {
-    background: #fff9c4; /* Jaune léger pour attirer l'attention */
-    border-radius: 12px;
-    padding: 15px;
-    margin-top: 20px;
-    font-size: 14px;
-    color: #5d4037;
-}
+        /* Formulaire */
+        .input-group { margin-bottom: 15px; }
+        label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 8px; }
+        input {
+            width: 100%;
+            padding: 14px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+            background: white;
+        }
 
-.back-link {
-    display: block;
-    text-align: center;
-    margin-top: 15px;
-    text-decoration: none;
-    color: #2979ff;
-    font-weight: bold;
-}
-</style>
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        /* Instructions */
+        .instructions {
+            background: #eef2ff;
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 25px;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+    </style>
 </head>
-
 <body>
 
-<div class="overlay">
-    <div class="container">
+<div class="header">
+    <div style="font-weight:bold;">🟢 Dépôt</div>
+    <div style="text-align:right;">
+        <small>Solde</small><br>
+        <b>5 250 CDF</b>
+    </div>
+</div>
 
-    <h2>🔻 Recharge</h2>
-
-    <p style="text-align: center; font-weight: bold;">Choisissez votre réseau</p>
-
-    <div class="networks">
-        <div class="network active" onclick="selectNetwork('airtel')">Airtel Money</div>
-        <div class="network" onclick="selectNetwork('orange')">Orange Money</div>
-        <div class="network" onclick="selectNetwork('vodacom')">Vodacom (M-Pesa)</div>
+<div class="container">
+    <h3>↓ Recharger mon compte</h3>
+    
+    <p><small>Choisissez votre réseau</small></p>
+    <div class="network-selector">
+        <div class="network-card active" onclick="setNetwork('Airtel', '0975617195', this)">
+            <b>Airtel Money</b>
+        </div>
+        <div class="network-card" onclick="setNetwork('Orange', '', this)">
+            <b>Orange Money</b>
+        </div>
+        <div class="network-card" onclick="setNetwork('M-Pesa', '', this)">
+            <b>M-Pesa</b>
+        </div>
     </div>
 
-    <div class="number-box">
-        <p style="margin:0; font-size: 0.85rem; color: #64748b;">Envoyez l'argent à ce numéro :</p>
-        <div class="number" id="payNumber">0975617195</div>
-        <small style="color: #64748b;">Copiez ce numéro et faites le transfert</small>
+    <div class="payment-box">
+        <span style="font-size: 0.8rem; color: var(--text-grey);">Envoyez l'argent à ce numéro (<span id="netName">Airtel</span>) :</span>
+        <div class="phone-display">
+            <span id="payNumber">0975617195</span>
+            <button class="copy-btn" onclick="copyNum()">📋 Copier</button>
+        </div>
+        <p style="font-size: 0.75rem; color: var(--text-grey); margin-top: 10px;">Agent : Namwezi Sifa</p>
     </div>
 
-    <input type="text" placeholder="Votre numéro de téléphone">
-    <input type="number" placeholder="Montant à déposer (CDF)">
-    <input type="text" placeholder="ID de transaction">
+    <div class="input-group">
+        <label>Votre numéro de téléphone</label>
+        <input type="tel" placeholder="Ex: 0991234567">
+    </div>
 
-    <button onclick="validerDepot()">VALIDER MON DÉPÔT</button>
+    <div class="input-group">
+        <label>Montant à déposer (Min: 25000 CDF)</label>
+        <input type="number" placeholder="Ex: 50000">
+    </div>
+
+    <div class="input-group">
+        <label>ID de transaction</label>
+        <input type="text" placeholder="ID reçu par SMS">
+    </div>
+
+    <button class="btn-submit" onclick="alert('Dépôt soumis pour vérification')">✓ Valider mon dépôt</button>
 
     <div class="instructions">
-        <strong>⚠️ Important :</strong>
-        <ol style="padding-left: 20px; margin-top: 5px;">
-            <li>Envoyez le montant exact au numéro affiché.</li>
-            <li>Copiez l'ID de transaction reçu par SMS.</li>
-            <li>Collez-le dans la case ci-dessus.</li>
-        </ol>
-    </div>
-
-    <a href="dashboard.html" class="back-link">❮ Annuler et retourner</a>
-
+        <b>Instructions :</b><br>
+        1. Sélectionnez votre réseau.<br>
+        2. Envoyez l'argent au numéro affiché.<br>
+        3. Entrez VOTRE numéro de téléphone.<br>
+        4. Entrez l'ID de transaction reçu par SMS.<br>
+        5. Validez votre dépôt. Délai : 1-5 minutes.
     </div>
 </div>
 
 <script>
-function selectNetwork(network) {
-    document.querySelectorAll('.network').forEach(n => n.classList.remove('active'));
-
-    let number = "";
-
-    if (network === "airtel") {
-        number = "0975617195";
-        document.querySelectorAll('.network')[0].classList.add('active');
-    }
-    if (network === "orange") {
-        number = "081XXXXXXX"; // À compléter
-        document.querySelectorAll('.network')[1].classList.add('active');
-    }
-    if (network === "vodacom") {
-        number = "082XXXXXXX"; // À compléter
-        document.querySelectorAll('.network')[2].classList.add('active');
+    function setNetwork(name, number, element) {
+        document.querySelectorAll('.network-card').forEach(c => c.classList.remove('active'));
+        element.classList.add('active');
+        document.getElementById('payNumber').innerText = number;
+        document.getElementById('netName').innerText = name;
     }
 
-    document.getElementById("payNumber").innerText = number;
-}
-
-function validerDepot() {
-    alert("Dépôt envoyé avec succès. Notre équipe vérifie la transaction (Délai : 1-5 min).");
-    window.location.href = "dashboard.html";
-}
+    function copyNum() {
+        const num = document.getElementById('payNumber').innerText;
+        navigator.clipboard.writeText(num);
+        alert("Numéro copié : " + num);
+    }
 </script>
 
 </body>
