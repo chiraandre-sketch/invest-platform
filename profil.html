@@ -7,145 +7,123 @@
     <style>
         body {
             margin: 0;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background-color: #f4f7fe;
-            background-image: url('IMG_2276.jpeg'); /* Image de fond comme sur l'image 5 */
+            font-family: 'Segoe UI', sans-serif;
+            background: url('IMG_2276.jpeg') no-repeat center center fixed;
             background-size: cover;
-            background-attachment: fixed;
         }
 
         .overlay {
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.6);
             min-height: 100vh;
             padding: 20px;
             padding-bottom: 80px;
-        }
-
-        /* En-tête Profil */
-        .profile-header {
-            text-align: center;
             color: white;
-            margin-bottom: 30px;
         }
 
-        .avatar {
-            width: 80px;
-            height: 80px;
-            background: #3b82f6;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            font-weight: bold;
-            border: 3px solid white;
-            margin-bottom: 10px;
+        .profile-info { text-align: center; margin-bottom: 25px; }
+        .avatar { 
+            width: 70px; height: 70px; background: #3b82f6; 
+            border-radius: 50%; display: inline-flex; 
+            align-items: center; justify-content: center; 
+            font-size: 1.5rem; font-weight: bold; border: 2px solid #fff;
         }
 
-        /* Boîte de Solde Noire (Image 5) */
+        /* Boîte Solde */
         .balance-box {
             background: #1a2233;
-            border-radius: 20px;
-            padding: 25px;
-            text-align: center;
-            color: white;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            margin-bottom: 25px;
-        }
-
-        .balance-box p { font-size: 0.8rem; letter-spacing: 1px; margin-bottom: 10px; opacity: 0.8; }
-        .balance-amount { font-size: 2.2rem; font-weight: bold; color: #2ecc71; margin-bottom: 20px; }
-
-        .btn-group {
-            display: flex;
-            justify-content: space-around;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            padding-top: 15px;
-        }
-
-        /* Correction des boutons Retirer et Recharger */
-        .action-link {
-            color: #ff9800;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-        }
-
-        .action-link.recharge { color: #3b82f6; }
-
-        /* Liste de menus (Image 5) */
-        .menu-list {
-            background: white;
             border-radius: 15px;
-            overflow: hidden;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
         }
+        .balance-amount { font-size: 2rem; font-weight: bold; color: #2ecc71; margin: 10px 0; }
+        
+        .btn-row { display: flex; justify-content: space-around; border-top: 1px solid #333; padding-top: 15px; }
+        .btn-row a { text-decoration: none; font-weight: bold; font-size: 0.9rem; }
+        .recharge-btn { color: #3b82f6; }
+        .withdraw-btn { color: #f39c12; }
 
+        /* Menu List */
+        .menu-card { background: white; border-radius: 15px; overflow: hidden; margin-top: 10px; }
         .menu-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-            border-bottom: 1px solid #eee;
-            text-decoration: none;
-            color: #333;
-            font-size: 0.95rem;
+            display: flex; justify-content: space-between; padding: 15px 20px;
+            border-bottom: 1px solid #eee; color: #333; text-decoration: none; font-size: 0.95rem;
         }
-
         .menu-item:last-child { border-bottom: none; }
-        .menu-item span { color: #666; }
 
-        /* Navigation Basse */
-        .nav-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: white;
-            display: flex;
-            justify-content: space-around;
-            padding: 12px 0;
-            border-top: 1px solid #eee;
+        /* Styles pour les Historiques (Modales) */
+        .modal {
+            display: none; position: fixed; z-index: 2000; left: 0; top: 0;
+            width: 100%; height: 100%; background: rgba(0,0,0,0.8);
         }
+        .modal-content {
+            background: white; margin: 15% auto; padding: 20px;
+            width: 85%; border-radius: 15px; color: #333; max-height: 60vh; overflow-y: auto;
+        }
+        .close { float: right; font-size: 25px; font-weight: bold; cursor: pointer; }
+        .hist-item { border-bottom: 1px solid #eee; padding: 10px 0; font-size: 0.85rem; }
 
+        .nav-bar {
+            position: fixed; bottom: 0; left: 0; width: 100%; background: white;
+            display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee;
+        }
         .nav-link { text-decoration: none; color: #888; font-size: 0.75rem; text-align: center; }
-        .nav-link.active { color: #3b82f6; font-weight: bold; }
+        .active { color: #3b82f6; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="overlay">
-    <div class="profile-header">
+    <div class="profile-info">
         <div class="avatar">D</div>
-        <h2 style="margin:5px 0;">Utilisateur DELL</h2>
+        <h3>Utilisateur DELL</h3>
         <small>ID: 5627</small>
     </div>
 
     <div class="balance-box">
-        <p>SOLDE ACTUEL DU COMPTE</p>
+        <p style="margin:0; font-size:0.75rem; opacity:0.7;">SOLDE ACTUEL DU COMPTE</p>
         <div class="balance-amount">0.00 FC</div>
-        
-        <div class="btn-group">
-            <a href="recharge.html" class="action-link recharge">RECHARGER</a>
-            <span style="color:rgba(255,255,255,0.2)">|</span>
-            <a href="withdraw.html" class="action-link">RETIRER</a>
+        <div class="btn-row">
+            <a href="recharge.html" class="recharge-btn">RECHARGER</a>
+            <span style="color:#333;">|</span>
+            <a href="withdraw.html" class="withdraw-btn">RETIRER</a>
         </div>
     </div>
 
-    <div class="menu-list">
-        <a href="equipe.html" class="menu-item">
-            Mon Équipe <span>➔</span>
-        </a>
-        <a href="history.html" class="menu-item">
-            Historique des Transactions <span>➔</span>
-        </a>
-        <a href="https://chat.whatsapp.com/FGlMMhRWzKv1OGsDkLDIGL" class="menu-item">
+    <div class="menu-card">
+        <a href="equipe.html" class="menu-item">Mon Équipe <span>➔</span></a>
+        
+        <div class="menu-item" onclick="openModal('modalRecharge')" style="cursor:pointer;">
+            Historique de Recharge <span>➔</span>
+        </div>
+        <div class="menu-item" onclick="openModal('modalRetrait')" style="cursor:pointer;">
+            Historique de Retrait <span>➔</span>
+        </div>
+
+        <a href="https://chat.whatsapp.com/FGlMMhRWzKv1OGsDkLDIGL" class="menu-item" target="_blank">
             <div style="color:#2ecc71;">💬 Rejoindre le Groupe WhatsApp</div>
-            <strong style="color:#2ecc71; font-size: 0.7rem;">REJOINDRE</strong>
+            <b style="color:#2ecc71;">REJOINDRE</b>
         </a>
-        <a href="about.html" class="menu-item">
-            À propos de DELL INVEST <span>➔</span>
-        </a>
+    </div>
+</div>
+
+<div id="modalRecharge" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('modalRecharge')">&times;</span>
+        <h3>Historique de Recharge</h3>
+        <div id="rechargeList">
+            <p class="hist-item">Aucune recharge effectuée pour le moment.</p>
+        </div>
+    </div>
+</div>
+
+<div id="modalRetrait" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('modalRetrait')">&times;</span>
+        <h3>Historique de Retrait</h3>
+        <div id="retraitList">
+            <p class="hist-item">Aucun retrait effectué pour le moment.</p>
+        </div>
     </div>
 </div>
 
@@ -155,6 +133,18 @@
     <a href="equipe.html" class="nav-link">👥<br>Équipe</a>
     <a href="profil.html" class="nav-link active">👤<br>Moi</a>
 </nav>
+
+<script>
+    function openModal(id) { document.getElementById(id).style.display = "block"; }
+    function closeModal(id) { document.getElementById(id).style.display = "none"; }
+
+    // Fermer si on clique en dehors de la fenêtre
+    window.onclick = function(event) {
+        if (event.target.className === 'modal') {
+            event.target.style.display = "none";
+        }
+    }
+</script>
 
 </body>
 </html>
