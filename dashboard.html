@@ -10,6 +10,7 @@
             font-family: 'Segoe UI', Arial, sans-serif;
             background-color: #f4f7fe;
             color: #333;
+            padding-bottom: 80px; /* Espace pour la barre de navigation */
         }
 
         /* Header avec ton image */
@@ -57,7 +58,7 @@
             background-position: center;
         }
 
-        /* Boutons d'action (Recharger, Retirer, etc) */
+        /* Boutons d'action */
         .action-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -80,8 +81,8 @@
 
         .action-icon { font-size: 1.8rem; margin-bottom: 5px; display: block; }
 
-        /* Section Infos */
-        .info-card {
+        /* Section Parrainage / Réseau */
+        .network-card {
             background: white;
             margin: 20px;
             padding: 20px;
@@ -89,24 +90,23 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
 
-        .section-title { font-weight: bold; color: #d32f2f; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-
-        /* Bouton WhatsApp Flottant avec ton lien */
-        .whatsapp-float {
-            position: fixed;
-            right: 20px;
-            bottom: 90px;
-            background: #25D366;
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
+        .stat-box {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 15px rgba(37,211,102,0.4);
-            z-index: 1000;
-            text-decoration: none;
-            font-size: 1.8rem;
+            justify-content: space-between;
+            background: #f8faff;
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+        }
+
+        .copy-btn {
+            background: #1a237e;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
         }
 
         /* Navigation Basse */
@@ -124,6 +124,22 @@
 
         .nav-link { text-decoration: none; color: #888; font-size: 0.75rem; text-align: center; }
         .nav-link.active { color: #d32f2f; font-weight: bold; }
+        
+        .whatsapp-float {
+            position: fixed;
+            right: 20px;
+            bottom: 90px;
+            background: #25D366;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(37,211,102,0.4);
+            z-index: 1000;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
@@ -132,23 +148,42 @@
         <div class="brand-name">DELL INVEST</div>
         <div class="balance-card">
             <div style="font-size: 0.8rem; opacity: 0.9;">Solde disponible</div>
-            <div class="balance-amount">💰 0.00 CDF</div>
+            <div class="balance-amount" id="solde">0.00 CDF</div>
         </div>
     </div>
 
     <div class="action-grid">
         <a href="recharge.html" class="action-item">
-            <span class="action-icon" style="color: #4caf50;">➕</span>
-            Recharger
+            <span class="action-icon" style="color: #4caf50;">➕</span>Recharger
         </a>
         <a href="withdraw.html" class="action-item">
-            <span class="action-icon" style="color: #2196f3;">💸</span>
-            Retirer
+            <span class="action-icon" style="color: #2196f3;">💸</span>Retirer
         </a>
         <a href="about.html" class="action-item">
-            <span class="action-icon" style="color: #f44336;">ℹ️</span>
-            À propos
+            <span class="action-icon" style="color: #f44336;">ℹ️</span>À propos
         </a>
+    </div>
+
+    <div class="network-card">
+        <div style="font-weight: bold; color: #1a237e; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+            👥 Mon Réseau de Parrainage
+        </div>
+        
+        <div class="stat-box">
+            <div>
+                <span style="font-size: 0.7rem; color: #777; text-transform: uppercase;">Mon Code</span>
+                <div id="mon-code" style="font-weight: bold; font-size: 1.1rem; color: #1a237e;">...</div>
+            </div>
+            <div style="text-align: right;">
+                <span style="font-size: 0.7rem; color: #777; text-transform: uppercase;">Filleuls</span>
+                <div id="compteur-fillieuls" style="font-weight: bold; font-size: 1.1rem; color: #2e7d32;">0</div>
+            </div>
+        </div>
+
+        <div style="background: #f1f1f1; padding: 10px; border-radius: 10px; display: flex; align-items: center; gap: 10px;">
+            <input type="text" id="mon-lien" readonly style="flex: 1; border: none; background: none; font-size: 0.7rem; color: #555; outline: none;">
+            <button class="copy-btn" onclick="copyLink()">Copier</button>
+        </div>
     </div>
 
     <div class="carousel-container">
@@ -158,15 +193,8 @@
         </div>
     </div>
 
-    <div class="info-card">
-        <div class="section-title">🏢 À propos de la plateforme</div>
-        <p style="font-size: 0.85rem; color: #666; line-height: 1.6; margin: 0;">
-            Bienvenue chez <b>DELL INVEST</b>. Nous offrons des solutions d'investissement technologiques pour maximiser vos revenus quotidiens en toute sécurité.
-        </p>
-    </div>
-
     <a href="https://chat.whatsapp.com/FGlMMhRWzKv1OGsDkLDIGL" class="whatsapp-float">
-        <span style="color: white;">💬</span>
+        <span style="color: white; font-size: 1.5rem;">💬</span>
     </a>
 
     <nav class="nav-bar">
@@ -176,22 +204,28 @@
         <a href="profil.html" class="nav-link">👤<br>Profil</a>
     </nav>
 
+    <script src="app.js"></script>
     <script>
-        // Script pour faire défiler le carrousel
+        // Carrousel
         let slideIndex = 0;
         showSlides();
-
         function showSlides() {
             let slides = document.getElementsByClassName("slide");
-            for (let i = 0; i < slides.length; i++) {
-                slides[i].style.display = "none";
-            }
+            for (let i = 0; i < slides.length; i++) { slides[i].style.display = "none"; }
             slideIndex++;
             if (slideIndex > slides.length) {slideIndex = 1}
             slides[slideIndex-1].style.display = "block";
-            setTimeout(showSlides, 4000); // Change d'image toutes les 4 secondes
+            setTimeout(showSlides, 4000);
+        }
+
+        // Fonction pour copier le lien (Utilise app.js pour le lien)
+        function copyLink() {
+            const copyText = document.getElementById("mon-lien");
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(copyText.value);
+            alert("Lien de parrainage copié !");
         }
     </script>
-
 </body>
 </html>
