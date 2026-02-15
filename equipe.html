@@ -11,88 +11,182 @@
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
-            color: #333;
             margin: 0;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
         }
-        .team-container { padding: 20px; padding-bottom: 100px; text-align: center; background: rgba(255,255,255,0.7); min-height: 100vh; }
-        .header-box { background: #3b82f6; padding: 15px; border-radius: 5px; font-weight: bold; color: white; margin-bottom: 15px; }
-        .bonus-card { background: linear-gradient(135deg, #6366f1, #a855f7); padding: 40px 20px; border-radius: 15px; font-size: 1.5rem; font-weight: bold; margin-bottom: 20px; color: white; }
-        .invite-section { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
-        .invite-card { background: #2d3748; padding: 15px; border-radius: 10px; color: white; }
-        .btn-copy { background: #4fd1c5; color: #1a202c; border: none; padding: 8px; border-radius: 20px; font-weight: bold; width: 100%; cursor: pointer; }
-        
-        /* Style pour les niveaux */
-        .lv-box {
-            background: white;
+
+        .overlay {
+            background: rgba(255, 255, 255, 0.85);
+            min-height: 100vh;
+            padding: 20px;
+            padding-bottom: 100px;
+            box-sizing: border-box;
+        }
+
+        .btn-invite-top {
+            background: #5c7cfa;
+            color: white;
+            width: 100%;
             padding: 15px;
             border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .bonus-card {
+            background: linear-gradient(135deg, #7950f2, #be4bdb);
+            color: white;
+            padding: 40px 20px;
+            border-radius: 20px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .invite-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .info-box {
+            background: #2c2e33;
+            color: white;
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .info-box p { margin: 0; font-size: 0.75rem; color: #adb5bd; }
+        .info-box b { display: block; margin: 8px 0; font-size: 0.8rem; word-break: break-all; }
+        .info-box h2 { margin: 5px 0; font-size: 1.2rem; }
+
+        .btn-copy {
+            background: #63e6be;
+            color: #087f5b;
+            border: none;
+            padding: 8px;
+            width: 100%;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .stat-row {
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
-        .lv-info { text-align: left; }
-        .lv-info b { display: block; color: #3b82f6; }
+
+        .stat-info b { display: block; font-size: 1rem; }
+        .stat-info span { font-size: 0.8rem; color: #868e96; }
+        .stat-count { font-weight: bold; color: #495057; }
+
+        /* Navigation basse */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            border-top: 1px solid #eee;
+        }
+
+        .nav-item { text-decoration: none; color: #adb5bd; font-weight: bold; font-size: 0.9rem; }
+        .nav-item.active { color: #5c7cfa; }
     </style>
 </head>
 <body>
 
-<div class="team-container">
-    <div class="header-box">INVITER DES AMIS</div>
-    <div class="bonus-card">DELL INVEST - BONUS</div>
+<div class="overlay">
+    <div class="btn-invite-top">Inviter des amis</div>
+    
+    <div class="bonus-card">
+        DELL INVEST - BONUS
+    </div>
 
     <div class="invite-section">
-        <div class="invite-card">
-            <p style="font-size: 0.7rem;">LIEN D'INVITATION</p>
-            <p style="font-size: 0.55rem; word-break: break-all;">https://chiraandre-sketch.github.io/invest-platform/</p>
-            <button class="btn-copy" onclick="copyText('https://chiraandre-sketch.github.io/invest-platform/')">PHOTOCOPIER</button>
+        <div class="info-box">
+            <p>LIEN D'INVITATION</p>
+            <b id="myLink">https://chiraandre-sketch.github.io/invest-platform/register.html?ref=DELL5627</b>
+            <button class="btn-copy" onclick="copier('myLink')">PHOTOCOPIER</button>
         </div>
-        <div class="invite-card">
-            <p style="font-size: 0.7rem;">CODE D'INVITATION</p>
-            <h3 style="margin: 10px 0;">DELL5627</h3>
-            <button class="btn-copy" onclick="copyText('DELL5627')">PHOTOCOPIER</button>
+        <div class="info-box">
+            <p>CODE D'INVITATION</p>
+            <h2 id="myCode">DELL5627</h2>
+            <button class="btn-copy" onclick="copier('myCode')">PHOTOCOPIER</button>
         </div>
     </div>
 
-    <div class="lv-box">
-        <div class="lv-info">
-            <b>Lv1 25% Commission</b>
-            <small>Récompense directe</small>
+    <div class="stat-row">
+        <div class="stat-info">
+            <b style="color: #4dabf7;">Lv1 25% Commission</b>
+            <span>Récompense directe</span>
         </div>
-        <span>0 Utilisateurs</span>
+        <div class="stat-count" id="countLv1">0 Utilisateurs</div>
     </div>
 
-    <div class="lv-box">
-        <div class="lv-info">
-            <b style="color: #22c55e;">Lv2 3% Commission</b>
-            <small>Récompense niveau 2</small>
+    <div class="stat-row">
+        <div class="stat-info">
+            <b style="color: #69db7c;">Lv2 3% Commission</b>
+            <span>Récompense niveau 2</span>
         </div>
-        <span>0 Utilisateurs</span>
+        <div class="stat-count" id="countLv2">0 Utilisateurs</div>
     </div>
 
-    <div class="lv-box">
-        <div class="lv-info">
-            <b style="color: #f59e0b;">Lv3 1% Commission</b>
-            <small>Récompense niveau 3</small>
+    <div class="stat-row">
+        <div class="stat-info">
+            <b style="color: #ffd43b;">Lv3 1% Commission</b>
+            <span>Récompense niveau 3</span>
         </div>
-        <span>0 Utilisateurs</span>
+        <div class="stat-count" id="countLv3">0 Utilisateurs</div>
     </div>
 </div>
 
-<nav style="position:fixed; bottom:0; width:100%; background:white; display:flex; justify-content:space-around; padding:15px; border-top:1px solid #ddd;">
-    <a href="dashboard.html" style="text-decoration:none; color:gray;">Accueil</a>
-    <a href="equipe.html" style="text-decoration:none; color:#3b82f6; font-weight:bold;">Équipe</a>
-    <a href="vip.html" style="text-decoration:none; color:gray;">Investir</a>
-    <a href="profil.html" style="text-decoration:none; color:gray;">Moi</a>
+<nav class="bottom-nav">
+    <a href="dashboard.html" class="nav-item">Accueil</a>
+    <a href="equipe.html" class="nav-item active">Équipe</a>
+    <a href="vip.html" class="nav-item">Investir</a>
+    <a href="profil.html" class="nav-item">Moi</a>
 </nav>
 
 <script>
-function copyText(text) {
-    navigator.clipboard.writeText(text);
-    alert("Copié : " + text);
-}
+    // 1. Identifiant unique de cet utilisateur (pour le test on garde DELL5627)
+    const monID = "DELL5627";
+
+    // 2. Fonction pour copier le texte
+    function copier(id) {
+        let texte = document.getElementById(id).innerText;
+        navigator.clipboard.writeText(texte).then(() => {
+            alert("Copié avec succès !");
+        });
+    }
+
+    // 3. Charger les statistiques réelles depuis le stockage
+    function chargerStats() {
+        let stats = JSON.parse(localStorage.getItem('teamStats_' + monID)) || { lv1: 0, lv2: 0, lv3: 0 };
+        
+        document.getElementById('countLv1').innerText = stats.lv1 + " Utilisateurs";
+        document.getElementById('countLv2').innerText = stats.lv2 + " Utilisateurs";
+        document.getElementById('countLv3').innerText = stats.lv3 + " Utilisateurs";
+    }
+
+    // Lancer au chargement
+    window.onload = chargerStats;
 </script>
 
 </body>
