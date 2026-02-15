@@ -15,12 +15,26 @@
             margin: 0;
             font-family: Arial, sans-serif;
         }
-        .team-container { padding: 20px; padding-bottom: 100px; text-align: center; background: rgba(255,255,255,0.8); min-height: 100vh; }
+        .team-container { padding: 20px; padding-bottom: 100px; text-align: center; background: rgba(255,255,255,0.7); min-height: 100vh; }
         .header-box { background: #3b82f6; padding: 15px; border-radius: 5px; font-weight: bold; color: white; margin-bottom: 15px; }
         .bonus-card { background: linear-gradient(135deg, #6366f1, #a855f7); padding: 40px 20px; border-radius: 15px; font-size: 1.5rem; font-weight: bold; margin-bottom: 20px; color: white; }
         .invite-section { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
         .invite-card { background: #2d3748; padding: 15px; border-radius: 10px; color: white; }
         .btn-copy { background: #4fd1c5; color: #1a202c; border: none; padding: 8px; border-radius: 20px; font-weight: bold; width: 100%; cursor: pointer; }
+        
+        /* Style pour les niveaux */
+        .lv-box {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .lv-info { text-align: left; }
+        .lv-info b { display: block; color: #3b82f6; }
     </style>
 </head>
 <body>
@@ -32,7 +46,7 @@
     <div class="invite-section">
         <div class="invite-card">
             <p style="font-size: 0.7rem;">LIEN D'INVITATION</p>
-            <p style="font-size: 0.6rem; word-break: break-all;">https://chiraandre-sketch.github.io/invest-platform/</p>
+            <p style="font-size: 0.55rem; word-break: break-all;">https://chiraandre-sketch.github.io/invest-platform/</p>
             <button class="btn-copy" onclick="copyText('https://chiraandre-sketch.github.io/invest-platform/')">PHOTOCOPIER</button>
         </div>
         <div class="invite-card">
@@ -42,16 +56,42 @@
         </div>
     </div>
 
-    <div style="background:white; padding:15px; border-radius:10px; display:flex; justify-content:space-between; align-items:center;">
-        <span><b>Lv1</b> 25% Commission</span>
+    <div class="lv-box">
+        <div class="lv-info">
+            <b>Lv1 25% Commission</b>
+            <small>Récompense directe</small>
+        </div>
+        <span>0 Utilisateurs</span>
+    </div>
+
+    <div class="lv-box">
+        <div class="lv-info">
+            <b style="color: #22c55e;">Lv2 3% Commission</b>
+            <small>Récompense niveau 2</small>
+        </div>
+        <span>0 Utilisateurs</span>
+    </div>
+
+    <div class="lv-box">
+        <div class="lv-info">
+            <b style="color: #f59e0b;">Lv3 1% Commission</b>
+            <small>Récompense niveau 3</small>
+        </div>
         <span>0 Utilisateurs</span>
     </div>
 </div>
 
+<nav style="position:fixed; bottom:0; width:100%; background:white; display:flex; justify-content:space-around; padding:15px; border-top:1px solid #ddd;">
+    <a href="dashboard.html" style="text-decoration:none; color:gray;">Accueil</a>
+    <a href="equipe.html" style="text-decoration:none; color:#3b82f6; font-weight:bold;">Équipe</a>
+    <a href="vip.html" style="text-decoration:none; color:gray;">Investir</a>
+    <a href="profil.html" style="text-decoration:none; color:gray;">Moi</a>
+</nav>
+
 <script>
 function copyText(text) {
     navigator.clipboard.writeText(text);
-    alert("Copié dans le presse-papier !");
+    alert("Copié : " + text);
 }
 </script>
 
