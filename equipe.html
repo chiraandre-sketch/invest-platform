@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Équipe - DELL INVEST</title>
+    <title>Mon Équipe - DELL INVEST</title>
     <style>
-        body { margin: 0; font-family: sans-serif; background: #f0f2f5; padding-bottom: 80px; }
+        body { margin: 0; font-family: sans-serif; background: #f8f9ff; padding-bottom: 80px; }
         .bonus-card { background: linear-gradient(135deg, #6366f1, #a855f7); color: white; margin: 15px; padding: 25px; border-radius: 20px; text-align: center; font-weight: bold; }
-        .invite-container { display: flex; gap: 10px; padding: 0 15px; }
+        .invite-section { display: flex; gap: 10px; padding: 0 15px; }
         .invite-box { background: #1e293b; color: white; padding: 15px; border-radius: 15px; flex: 1; text-align: center; }
-        .btn-copy { background: #10b981; color: white; border: none; padding: 5px 10px; border-radius: 5px; font-size: 0.7rem; margin-top: 10px; cursor: pointer; }
-        .lv-row { background: white; margin: 10px 15px; padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .copy-btn { background: #10b981; color: white; border: none; padding: 8px; border-radius: 5px; font-size: 0.7rem; margin-top: 10px; cursor: pointer; width: 100%; }
+        .lv-item { background: white; margin: 10px 15px; padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #ddd; }
         .nav-link { text-decoration: none; color: #94a3b8; font-size: 0.7rem; text-align: center; }
         .nav-link.active { color: #6366f1; font-weight: bold; }
@@ -18,33 +18,33 @@
 </head>
 <body>
 
-    <div class="bonus-card">PROJET DELL INVEST<br>SYSTÈME DE PARRAINAGE</div>
+    <div class="bonus-card">MON ÉQUIPE DELL INVEST</div>
 
-    <div class="invite-container">
+    <div class="invite-section">
         <div class="invite-box">
             <span style="font-size: 0.7rem; opacity: 0.7;">MON LIEN</span>
             <div id="equipe-lien-text" style="font-size: 0.5rem; word-break: break-all; margin: 8px 0;">Chargement...</div>
-            <button class="btn-copy" onclick="doCopy()">PHOTOCOPIER</button>
+            <button class="copy-btn" onclick="copyLink()">PHOTOCOPIER</button>
             <input type="hidden" id="hidden-link">
         </div>
         <div class="invite-box">
             <span style="font-size: 0.7rem; opacity: 0.7;">MON CODE</span>
             <div id="equipe-code" style="font-size: 1.1rem; font-weight: bold; margin: 8px 0;">----</div>
-            <button class="btn-copy" onclick="doCopy()">PHOTOCOPIER</button>
+            <button class="copy-btn" onclick="copyLink()">PHOTOCOPIER</button>
         </div>
     </div>
 
-    <div class="lv-row">
-        <div><b style="color:#6366f1;">Niveau 1 (25%)</b></div>
-        <div id="count-lv1">0 Utilisateurs</div>
+    <div class="lv-item">
+        <div><b style="color:#6366f1;">Niveau 1</b><br><small>25% de commission</small></div>
+        <div id="count-lv1" style="font-weight: bold;">0 Membres</div>
     </div>
-    <div class="lv-row">
-        <div><b style="color:#8b5cf6;">Niveau 2 (3%)</b></div>
-        <div id="count-lv2">0 Utilisateurs</div>
+    <div class="lv-item">
+        <div><b style="color:#8b5cf6;">Niveau 2</b><br><small>3% de commission</small></div>
+        <div id="count-lv2" style="font-weight: bold;">0 Membres</div>
     </div>
-    <div class="lv-row">
-        <div><b style="color:#d946ef;">Niveau 3 (1%)</b></div>
-        <div id="count-lv3">0 Utilisateurs</div>
+    <div class="lv-item">
+        <div><b style="color:#d946ef;">Niveau 3</b><br><small>1% de commission</small></div>
+        <div id="count-lv3" style="font-weight: bold;">0 Membres</div>
     </div>
 
     <nav class="nav-bar">
@@ -55,15 +55,10 @@
 
     <script src="app.js"></script>
     <script>
-        function doCopy() {
+        function copyLink() {
             const link = document.getElementById("hidden-link").value;
             navigator.clipboard.writeText(link).then(() => {
-                alert("Copié dans le presse-papier !");
-            }).catch(() => {
-                const t = document.createElement("input");
-                t.value = link; document.body.appendChild(t); t.select();
-                document.execCommand("copy"); document.body.removeChild(t);
-                alert("Copié !");
+                alert("Lien copié avec succès !");
             });
         }
     </script>
