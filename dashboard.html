@@ -5,197 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tableau de Bord - DELL INVEST</title>
     <style>
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background-color: #f4f7fe;
-            color: #333;
-            padding-bottom: 80px; /* Espace pour la barre de navigation */
-        }
-
-        /* Header avec ton image */
-        .header-section {
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('IMG_2276.jpeg');
-            background-size: cover;
-            background-position: center;
-            height: 200px;
-            padding: 20px;
-            color: white;
-            border-bottom-left-radius: 30px;
-            border-bottom-right-radius: 30px;
-        }
-
-        .brand-name { font-size: 1.6rem; font-weight: bold; color: #ffeb3b; margin-bottom: 10px; }
-
-        /* Carte de solde transparente (Glassmorphism) */
-        .balance-card {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 20px;
-            border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-        }
-
-        .balance-amount { font-size: 1.8rem; font-weight: bold; margin-top: 5px; color: #fff; }
-
-        /* Carrousel d'images (Slideshow) */
-        .carousel-container {
-            margin: 20px;
-            height: 150px;
-            border-radius: 20px;
-            overflow: hidden;
-            position: relative;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .slide {
-            width: 100%;
-            height: 100%;
-            display: none;
-            background-size: cover;
-            background-position: center;
-        }
-
-        /* Boutons d'action */
-        .action-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            padding: 0 20px;
-            margin-top: -10px;
-        }
-
-        .action-item {
-            background: white;
-            padding: 15px 5px;
-            border-radius: 15px;
-            text-align: center;
-            text-decoration: none;
-            color: #333;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        .action-icon { font-size: 1.8rem; margin-bottom: 5px; display: block; }
-
-        /* Section Parrainage / Réseau */
-        .network-card {
-            background: white;
-            margin: 20px;
-            padding: 20px;
-            border-radius: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
-
-        .stat-box {
-            display: flex;
-            justify-content: space-between;
-            background: #f8faff;
-            padding: 15px;
-            border-radius: 15px;
-            margin-bottom: 15px;
-        }
-
-        .copy-btn {
-            background: #1a237e;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        /* Navigation Basse */
-        .nav-bar {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background: white;
-            display: flex;
-            justify-content: space-around;
-            padding: 12px 0;
-            border-top: 1px solid #eee;
-            z-index: 1000;
-        }
-
-        .nav-link { text-decoration: none; color: #888; font-size: 0.75rem; text-align: center; }
-        .nav-link.active { color: #d32f2f; font-weight: bold; }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: #f4f7fe; color: #333; padding-bottom: 80px; }
+        .header-section { background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('IMG_2276.jpeg'); background-size: cover; height: 180px; padding: 20px; color: white; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; }
+        .balance-card { background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.3); margin-top: 10px; }
+        .balance-amount { font-size: 1.8rem; font-weight: bold; }
         
-        .whatsapp-float {
-            position: fixed;
-            right: 20px;
-            bottom: 90px;
-            background: #25D366;
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 15px rgba(37,211,102,0.4);
-            z-index: 1000;
-            text-decoration: none;
-        }
+        /* Grille d'actions */
+        .action-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 20px; margin-top: -30px; }
+        .action-item { background: white; padding: 15px 5px; border-radius: 15px; text-align: center; text-decoration: none; color: #333; box-shadow: 0 4px 12px rgba(0,0,0,0.05); font-size: 0.8rem; font-weight: 600; }
+        
+        /* SECTION PARRAINAGE (CE QUI MANQUAIT) */
+        .network-card { background: white; margin: 0 20px 20px 20px; padding: 20px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .stat-box { display: flex; justify-content: space-between; background: #f0f4ff; padding: 15px; border-radius: 15px; margin-bottom: 15px; }
+        .copy-area { display: flex; background: #f9f9f9; padding: 8px; border-radius: 10px; border: 1px dashed #1a237e; }
+        .copy-area input { flex: 1; border: none; background: none; font-size: 0.7rem; outline: none; color: #555; }
+        .copy-btn { background: #1a237e; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; }
+        .nav-link { text-decoration: none; color: #888; font-size: 0.7rem; text-align: center; }
+        .nav-link.active { color: #d32f2f; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div class="header-section">
-        <div class="brand-name">DELL INVEST</div>
+        <div style="font-weight: bold; color: #ffeb3b;">DELL INVEST</div>
         <div class="balance-card">
-            <div style="font-size: 0.8rem; opacity: 0.9;">Solde disponible</div>
-            <div class="balance-amount" id="solde">0.00 CDF</div>
+            <div style="font-size: 0.8rem;">Solde disponible</div>
+            <div class="balance-amount" id="solde">0 CDF</div>
         </div>
     </div>
 
     <div class="action-grid">
-        <a href="recharge.html" class="action-item">
-            <span class="action-icon" style="color: #4caf50;">➕</span>Recharger
-        </a>
-        <a href="withdraw.html" class="action-item">
-            <span class="action-icon" style="color: #2196f3;">💸</span>Retirer
-        </a>
-        <a href="about.html" class="action-item">
-            <span class="action-icon" style="color: #f44336;">ℹ️</span>À propos
-        </a>
+        <a href="recharge.html" class="action-item"><span>➕</span><br>Recharger</a>
+        <a href="withdraw.html" class="action-item"><span>💸</span><br>Retirer</a>
+        <a href="about.html" class="action-item"><span>ℹ️</span><br>A propos</a>
     </div>
 
     <div class="network-card">
-        <div style="font-weight: bold; color: #1a237e; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
-            👥 Mon Réseau de Parrainage
-        </div>
-        
+        <div style="font-weight: bold; color: #1a237e; margin-bottom: 15px;">🤝 Mon Réseau</div>
         <div class="stat-box">
             <div>
-                <span style="font-size: 0.7rem; color: #777; text-transform: uppercase;">Mon Code</span>
-                <div id="mon-code" style="font-weight: bold; font-size: 1.1rem; color: #1a237e;">...</div>
+                <span style="font-size: 0.7rem; color: #666;">MON CODE</span>
+                <div id="mon-code" style="font-weight: bold; color: #1a237e;">CHARGEMENT...</div>
             </div>
             <div style="text-align: right;">
-                <span style="font-size: 0.7rem; color: #777; text-transform: uppercase;">Filleuls</span>
-                <div id="compteur-fillieuls" style="font-weight: bold; font-size: 1.1rem; color: #2e7d32;">0</div>
+                <span style="font-size: 0.7rem; color: #666;">FILLEULS</span>
+                <div id="compteur-fillieuls" style="font-weight: bold; color: #2e7d32; font-size: 1.2rem;">0</div>
             </div>
         </div>
-
-        <div style="background: #f1f1f1; padding: 10px; border-radius: 10px; display: flex; align-items: center; gap: 10px;">
-            <input type="text" id="mon-lien" readonly style="flex: 1; border: none; background: none; font-size: 0.7rem; color: #555; outline: none;">
-            <button class="copy-btn" onclick="copyLink()">Copier</button>
+        <div class="copy-area">
+            <input type="text" id="mon-lien" readonly value="Lien en cours...">
+            <button class="copy-btn" onclick="copyLink()">COPIER</button>
         </div>
     </div>
-
-    <div class="carousel-container">
-        <div class="slide" style="display:block; background-image: url('IMG_2276.jpeg');"></div>
-        <div class="slide" style="background-color: #1a237e; background-image: linear-gradient(to right, #1a237e, #3949ab);">
-            <div style="color:white; text-align:center; padding-top:50px; font-weight:bold;">DELL INVEST : L'avenir du trading</div>
-        </div>
-    </div>
-
-    <a href="https://chat.whatsapp.com/FGlMMhRWzKv1OGsDkLDIGL" class="whatsapp-float">
-        <span style="color: white; font-size: 1.5rem;">💬</span>
-    </a>
 
     <nav class="nav-bar">
         <a href="dashboard.html" class="nav-link active">🏠<br>Accueil</a>
@@ -206,24 +69,10 @@
 
     <script src="app.js"></script>
     <script>
-        // Carrousel
-        let slideIndex = 0;
-        showSlides();
-        function showSlides() {
-            let slides = document.getElementsByClassName("slide");
-            for (let i = 0; i < slides.length; i++) { slides[i].style.display = "none"; }
-            slideIndex++;
-            if (slideIndex > slides.length) {slideIndex = 1}
-            slides[slideIndex-1].style.display = "block";
-            setTimeout(showSlides, 4000);
-        }
-
-        // Fonction pour copier le lien (Utilise app.js pour le lien)
         function copyLink() {
-            const copyText = document.getElementById("mon-lien");
-            copyText.select();
-            copyText.setSelectionRange(0, 99999);
-            navigator.clipboard.writeText(copyText.value);
+            const input = document.getElementById("mon-lien");
+            input.select();
+            document.execCommand("copy");
             alert("Lien de parrainage copié !");
         }
     </script>
