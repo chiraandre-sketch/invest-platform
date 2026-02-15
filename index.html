@@ -4,14 +4,11 @@
     <title>DELL INVEST</title>
     <script>
         window.onload = function() {
-            // On vérifie si l'utilisateur est déjà enregistré dans le téléphone
-            const user = localStorage.getItem("user");
-            
-            if (user) {
-                // S'il est déjà connecté, on l'envoie à l'accueil
+            const connectedUser = localStorage.getItem("connected_user");
+
+            if (connectedUser) {
                 window.location.href = "dashboard.html";
             } else {
-                // Sinon, on lui demande de se connecter ou de s'inscrire
                 window.location.href = "login.html";
             }
         };
