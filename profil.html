@@ -3,89 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Investissements VIP - DELL INVEST</title>
+    <title>Mon Profil - DELL INVEST</title>
     <style>
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f0f2f5; padding-bottom: 90px; }
-        .header { background: #1a237e; color: white; padding: 20px; text-align: center; }
-        .product-grid { padding: 15px; }
-        .card { background: white; border-radius: 20px; margin-bottom: 20px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #eee; }
-        .card-img { width: 100%; height: 150px; background: #ddd; display: flex; align-items: center; justify-content: center; font-size: 3rem; background: linear-gradient(45deg, #1a237e, #3949ab); color: white; }
-        .card-body { padding: 15px; }
-        .price { font-size: 1.2rem; font-weight: bold; color: #1a237e; }
-        .profit { color: #4caf50; font-weight: bold; font-size: 0.9rem; margin: 5px 0; }
-        .btn-buy { width: 100%; background: #1a237e; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .btn-buy:disabled { background: #ccc; }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f4f7fe; padding-bottom: 90px; }
+        .profile-header { background: #1a237e; color: white; padding: 40px 20px; text-align: center; border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; }
+        .avatar { width: 80px; height: 80px; background: white; border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: #1a237e; }
+        
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; margin-top: -30px; }
+        .stat-card { background: white; padding: 15px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; }
+        .stat-val { display: block; font-weight: bold; color: #1a237e; font-size: 1.1rem; }
+        .stat-label { font-size: 0.7rem; color: #888; text-transform: uppercase; }
+
+        .menu-list { background: white; margin: 0 20px; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .menu-item { display: flex; justify-content: space-between; padding: 18px; border-bottom: 1px solid #f0f0f0; text-decoration: none; color: #333; font-size: 0.9rem; transition: 0.3s; }
+        .menu-item:active { background: #f0f0f0; }
+
+        /* Style Spécial WhatsApp */
+        .whatsapp-item { background: #e8f5e9; color: #2e7d32 !important; font-weight: bold; }
 
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #eee; }
-        .nav-link { text-decoration: none; color: #999; font-size: 0.7rem; text-align: center; }
+        .nav-link { text-decoration: none; color: #94a3b8; font-size: 0.7rem; text-align: center; }
         .active { color: #1a237e; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h2 style="margin:0;">PRODUITS VIP</h2>
-        <p style="font-size: 0.8rem; opacity: 0.8;">Augmentez vos revenus quotidiens</p>
+    <div class="profile-header">
+        <div class="avatar">👤</div>
+        <div id="user-phone" style="font-weight: bold; font-size: 1.2rem;">Chargement...</div>
+        <div id="user-vip" style="font-size: 0.8rem; opacity: 0.8; margin-top: 5px;">Membre Standard</div>
     </div>
 
-    <div class="product-grid">
-        <div class="card">
-            <div class="card-img">💻</div>
-            <div class="card-body">
-                <div style="font-weight: bold; font-size: 1.1rem;">DELL OPTIPLEX - VIP 1</div>
-                <div class="profit">Revenu : 1500 CDF / jour</div>
-                <div class="price">Prix : 10000 CDF</div>
-                <button class="btn-buy" onclick="acheterVip(10000, 1500, 'VIP 1')">INVESTIR MAINTENANT</button>
-            </div>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <span class="stat-label">Solde Actuel</span>
+            <span id="prof-solde" class="stat-val">0 CDF</span>
         </div>
+        <div class="stat-card">
+            <span class="stat-label">Gains Quotidiens</span>
+            <span id="prof-gains" class="stat-val">0 CDF</span>
+        </div>
+    </div>
 
-        <div class="card">
-            <div class="card-img">🚀</div>
-            <div class="card-body">
-                <div style="font-weight: bold; font-size: 1.1rem;">DELL LATITUDE - VIP 2</div>
-                <div class="profit">Revenu : 5000 CDF / jour</div>
-                <div class="price">Prix : 30000 CDF</div>
-                <button class="btn-buy" onclick="acheterVip(30000, 5000, 'VIP 2')">INVESTIR MAINTENANT</button>
-            </div>
-        </div>
+    <div class="menu-list">
+        <a href="recharge.html" class="menu-item"><span>💳 Recharger le compte</span> <span>❯</span></a>
+        <a href="withdraw.html" class="menu-item"><span>💸 Retirer mes fonds</span> <span>❯</span></a>
+        
+        <a href="transactions.html" class="menu-item"><span>📜 Historique des transactions</span> <span>❯</span></a>
+        
+        <a href="equipe.html" class="menu-item"><span>👥 Mon Équipe</span> <span>❯</span></a>
+        
+        <a href="https://chat.whatsapp.com/TON_LIEN_ICI" target="_blank" class="menu-item whatsapp-item">
+            <span>🟢 Rejoindre le Groupe WhatsApp</span> <span>❯</span>
+        </a>
+
+        <a href="#" class="menu-item" onclick="deconnexion()" style="color: #d32f2f;"><span>🚪 Déconnexion</span></a>
     </div>
 
     <nav class="nav-bar">
         <a href="dashboard.html" class="nav-link">🏠<br>Accueil</a>
-        <a href="vip.html" class="nav-link active">💎<br>Investir</a>
+        <a href="vip.html" class="nav-link">💎<br>Investir</a>
         <a href="equipe.html" class="nav-link">👥<br>Équipe</a>
-        <a href="profil.html" class="nav-link">👤<br>Profil</a>
+        <a href="profil.html" class="nav-link active">👤<br>Profil</a>
     </nav>
 
     <script src="app.js"></script>
     <script>
-        function acheterVip(prix, gain, nom) {
-            let user = getUser();
-            if (!user) return;
+        function initProfil() {
+            const user = getUser();
+            if (!user) {
+                window.location.href = "register.html";
+                return;
+            }
 
-            if (user.solde < prix) {
-                alert("Solde insuffisant ! Veuillez recharger votre compte.");
-                window.location.href = "recharge.html";
-            } else {
-                if (confirm("Voulez-vous investir " + prix + " CDF dans le " + nom + " ?")) {
-                    user.solde -= prix;
-                    user.monVip = nom;
-                    user.gainQuotidien = (user.gainQuotidien || 0) + gain;
-                    
-                    // Sauvegarder
-                    localStorage.setItem("user", JSON.stringify(user));
-                    
-                    // Mettre à jour dans la liste globale
-                    let all = JSON.parse(localStorage.getItem("all_users"));
-                    let index = all.findIndex(u => u.phone === user.phone);
-                    all[index] = user;
-                    localStorage.setItem("all_users", JSON.stringify(all));
+            // Mise à jour des textes avec les infos de l'utilisateur
+            document.getElementById("user-phone").innerText = user.phone;
+            document.getElementById("user-vip").innerText = user.monVip || "Membre Standard";
+            document.getElementById("prof-solde").innerText = (user.solde || 0) + " CDF";
+            document.getElementById("prof-gains").innerText = (user.gainQuotidien || 0) + " CDF";
+        }
 
-                    alert("Félicitations ! Investissement réussi.");
-                    window.location.href = "dashboard.html";
-                }
+        function deconnexion() {
+            if(confirm("Voulez-vous vous déconnecter ?")) {
+                localStorage.removeItem("user");
+                window.location.href = "register.html";
             }
         }
+
+        window.onload = initProfil;
     </script>
 </body>
 </html>
