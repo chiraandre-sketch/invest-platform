@@ -167,5 +167,14 @@ function copyLink(){
 }
 </script>
 
+<script src="app.js"></script>
+<script>
+    protectDashboard();
+
+    const user = getCurrentUser();
+    document.getElementById("solde-display").innerText = user.solde + " CDF";
+    document.getElementById("code-display").innerText = user.myInviteCode;
+</script>
 </body>
+</html></body>
 </html>
