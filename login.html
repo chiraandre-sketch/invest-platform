@@ -61,8 +61,8 @@
 
     <div class="login-card">
         <h2>Connexion</h2>
-        <input type="tel" id="phone" placeholder="+243810000000">
-        <input type="password" id="pass" placeholder="Mot de passe">
+        <input type="tel" id="phone" placeholder="Numéro (ex: 0812345678)" required>
+        <input type="password" id="pass" placeholder="Mot de passe" required>
         <button onclick="submitLogin()">SE CONNECTER</button>
         <p>Pas de compte ? <a href="register.html">S’inscrire</a></p>
     </div>
@@ -70,8 +70,27 @@
     <script src="app.js"></script>
     <script>
         function submitLogin() {
-            const phone = document.getElementById('phone').value.trim();
-            const pass = document.getElementById('pass').value;
+            const phoneInput = document.getElementById('phone');
+            const passInput = document.getElementById('pass');
+            
+            const phone = phoneInput.value.trim();
+            const pass = passInput.value;
+
+            // 1. Vérification du format RDC (Regex identique à l'inscription)
+            const rdcRegex = /^(0|\+243)[897][0-9]{8}$/;
+            
+            if (!rdcRegex.test(phone)) {
+                alert("Numéro invalide. Utilisez un numéro RDC (commençant par 0 ou +243).");
+                return;
+            }
+
+            // 2. Vérification rapide de la longueur du mot de passe
+            if (pass.length < 6) {
+                alert("Le mot de passe doit faire au moins 6 caractères.");
+                return;
+            }
+
+            // 3. Appel de la fonction de connexion dans app.js
             if (loginUser(phone, pass)) {
                 location.href = "dashboard.html";
             }
