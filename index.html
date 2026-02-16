@@ -67,9 +67,8 @@
         <p>Pas de compte ? <a href="register.html">S’inscrire</a></p>
     </div>
 
-    <script src="app.js"></script>
-    <script>
-        function submitLogin() {
+   <script type="module" src="app.js"></script>
+       function submitLogin() {
             const phone = document.getElementById('phone').value.trim();
             const pass = document.getElementById('pass').value;
             if (loginUser(phone, pass)) {
