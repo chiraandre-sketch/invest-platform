@@ -1,36 +1,81 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>Connexion - DELL INVEST</title>
-<style>
-body{font-family:sans-serif;background:#f4f7fe;display:flex;justify-content:center;align-items:center;height:100vh;margin:0}
-.card{background:#fff;padding:30px;border-radius:20px;width:90%;max-width:400px}
-input,button{width:100%;padding:12px;margin:10px 0;border-radius:10px}
-button{background:#1a237e;color:#fff;border:none;font-weight:bold}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - DELL INVEST</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+            /* Arrière-plan avec votre image */
+            background: url('IMG_2276.jpeg') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            display: flex;
+            justify-content: center; /* Centrage horizontal */
+            align-items: center;    /* Centrage vertical */
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.9); /* Fond blanc semi-transparent */
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 380px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        h2 { color: #1a237e; margin-bottom: 25px; }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: #1a237e;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        p { margin-top: 20px; font-size: 14px; color: #555; }
+        a { color: #1a237e; text-decoration: none; font-weight: bold; }
+    </style>
 </head>
 <body>
 
-<div class="card">
-<h2>Connexion</h2>
+    <div class="login-card">
+        <h2>Connexion</h2>
+        <input type="tel" id="phone" placeholder="+243810000000">
+        <input type="password" id="pass" placeholder="Mot de passe">
+        <button onclick="submitLogin()">SE CONNECTER</button>
+        <p>Pas de compte ? <a href="register.html">S’inscrire</a></p>
+    </div>
 
-<input id="phone" placeholder="+243810000000">
-<input id="pass" type="password" placeholder="Mot de passe">
-
-<button onclick="submitLogin()">SE CONNECTER</button>
-
-<p>Pas de compte ? <a href="register.html">S’inscrire</a></p>
-</div>
-
-<script src="app.js"></script>
-<script>
-function submitLogin() {
-    if (loginUser(phone.value.trim(), pass.value)) {
-        location.href = "dashboard.html";
-    }
-}
-</script>
-
+    <script src="app.js"></script>
+    <script>
+        function submitLogin() {
+            const phone = document.getElementById('phone').value.trim();
+            const pass = document.getElementById('pass').value;
+            if (loginUser(phone, pass)) {
+                location.href = "dashboard.html";
+            }
+        }
+    </script>
 </body>
 </html>
