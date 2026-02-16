@@ -1,38 +1,45 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>Inscription - DELL INVEST</title>
-<style>
-body{font-family:sans-serif;background:#f4f7fe;display:flex;justify-content:center;align-items:center;height:100vh;margin:0}
-.card{background:#fff;padding:30px;border-radius:20px;width:90%;max-width:400px}
-input,button{width:100%;padding:12px;margin:10px 0;border-radius:10px}
-button{background:#1a237e;color:#fff;border:none;font-weight:bold}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription - DELL INVEST</title>
+    <style>
+        body { background: url('IMG_2276.jpeg') center/cover fixed; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: rgba(0,0,0,0.8); padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; color: white; text-align: center; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: none; box-sizing: border-box; }
+        button { width: 100%; padding: 14px; background: #00c853; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
+    </style>
 </head>
 <body>
+    <div class="card">
+        <h2>DELL INVEST</h2>
+        <p>Création de compte</p>
+        <input id="phone" type="tel" placeholder="Numéro de téléphone">
+        <input id="pass" type="password" placeholder="Mot de passe">
+        <input id="invite" type="text" placeholder="Code d'invitation">
+        <button onclick="submit()">S'INSCRIRE</button>
+        <p><a href="login.html" style="color:#00c853; text-decoration:none;">Déjà inscrit ? Connexion</a></p>
+    </div>
 
-<div class="card">
-<h2>Créer un compte</h2>
+    <script src="app.js"></script>
+    <script>
+        // Détecte le code dans l'URL automatiquement
+        window.onload = () => {
+            const params = new URLSearchParams(window.location.search);
+            const code = params.get('inviteCode');
+            if (code) document.getElementById('invite').value = code;
+        };
 
-<input id="phone" placeholder="+243810000000">
-<input id="pass" type="password" placeholder="Mot de passe">
-<input id="invite" placeholder="Code d'invitation">
-
-<button onclick="submitRegister()">S’INSCRIRE</button>
-
-<p>Déjà inscrit ? <a href="login.html">Connexion</a></p>
-</div>
-
-<script src="app.js"></script>
-<script>
-function submitRegister() {
-    if (registerUser(phone.value.trim(), pass.value, invite.value.trim())) {
-        alert("Inscription réussie");
-        location.href = "login.html";
-    }
-}
-</script>
-
+        function submit() {
+            const ph = document.getElementById('phone').value.trim();
+            const ps = document.getElementById('pass').value;
+            const inv = document.getElementById('invite').value.trim();
+            if (registerUser(ph, ps, inv)) {
+                alert("Compte créé !");
+                window.location.href = "login.html";
+            }
+        }
+    </script>
 </body>
 </html>
