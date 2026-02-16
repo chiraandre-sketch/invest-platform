@@ -5,120 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mon Équipe - DELL INVEST</title>
     <style>
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f8f9ff; padding-bottom: 90px; }
-        .header { background: #1a237e; color: white; padding: 30px 20px; text-align: center; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; }
-        
-        .invite-card { background: #1e293b; color: white; margin: 20px; padding: 20px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
-        .label { font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; margin-bottom: 5px; }
-        .link-display { font-size: 0.7rem; color: #10b981; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px; word-break: break-all; margin-bottom: 15px; }
-        
-        .btn-copy { background: #ffeb3b; color: #1a237e; border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; width: 100%; }
-
-        .team-stats { padding: 0 20px; margin-top: 10px; }
-        .lv-card { background: white; margin-bottom: 15px; padding: 15px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border-left: 6px solid #1a237e; }
-        .lv-info b { display: block; color: #1a237e; font-size: 1rem; }
-        .lv-info span { font-size: 0.75rem; color: #888; }
-        .count-badge { background: #e0e7ff; color: #1a237e; padding: 8px 15px; border-radius: 10px; font-weight: bold; }
-
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #eee; }
-        .nav-link { text-decoration: none; color: #999; font-size: 0.7rem; text-align: center; }
-        .active { color: #1a237e; font-weight: bold; }
+        body { font-family: sans-serif; background: #f4f7fe; margin: 0; padding-bottom: 80px; }
+        .header { background: #1a237e; color: white; padding: 30px; text-align: center; border-radius: 0 0 25px 25px; }
+        .stat-card { background: white; margin: 15px; padding: 20px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .invite-box { background: #1e293b; color: white; margin: 15px; padding: 20px; border-radius: 20px; text-align: center; }
+        .copy-btn { background: #ffeb3b; padding: 10px; width: 100%; border-radius: 10px; border: none; font-weight: bold; margin-top: 10px; cursor: pointer; }
     </style>
 </head>
 <body>
+    <div class="header"><h2>MON ÉQUIPE</h2></div>
 
-    <div class="header">
-        <h2 style="margin:0;">MON ÉQUIPE</h2>
-        <p style="font-size: 0.8rem; opacity: 0.8;">Gagnez jusqu'à 29% de commissions</p>
+    <div class="invite-box">
+        <small>VOTRE CODE : <b id="my-code">---</b></small>
+        <div id="full-link" style="font-size: 10px; color: #aaa; margin-top: 10px; word-break: break-all;">Lien de parrainage...</div>
+        <button class="copy-btn" onclick="copyLink()">COPIER MON LIEN</button>
     </div>
 
-    <div class="invite-card">
-        <div class="label">Lien d'invitation</div>
-        <div id="full-link" class="link-display">Chargement...</div>
-        
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <div>
-                <div class="label">Mon Code</div>
-                <div id="my-code" style="font-size: 1.4rem; font-weight: bold;">----</div>
-            </div>
-            <button class="btn-copy" style="width: auto; padding: 10px 20px;" onclick="copyTeamLink()">COPIER</button>
-        </div>
-    </div>
-
-    <div class="team-stats">
-        <div class="lv-card">
-            <div class="lv-info">
-                <b>Niveau 1 (Direct)</b>
-                <span>Commission : 25%</span>
-            </div>
-            <div id="cnt-lv1" class="count-badge">0</div>
-        </div>
-
-        <div class="lv-card" style="border-left-color: #6366f1;">
-            <div class="lv-info">
-                <b>Niveau 2</b>
-                <span>Commission : 3%</span>
-            </div>
-            <div id="cnt-lv2" class="count-badge">0</div>
-        </div>
-
-        <div class="lv-card" style="border-left-color: #a855f7;">
-            <div class="lv-info">
-                <b>Niveau 3</b>
-                <span>Commission : 1%</span>
-            </div>
-            <div id="cnt-lv3" class="count-badge">0</div>
-        </div>
-    </div>
-
-    <nav class="nav-bar">
-        <a href="dashboard.html" class="nav-link">🏠<br>Accueil</a>
-        <a href="vip.html" class="nav-link">💎<br>Investir</a>
-        <a href="equipe.html" class="nav-link active">👥<br>Équipe</a>
-        <a href="profil.html" class="nav-link">👤<br>Profil</a>
-    </nav>
+    <div class="stat-card"><span>Niveau 1 (25%)</span> <b id="n1">0</b></div>
+    <div class="stat-card"><span>Niveau 2 (3%)</span> <b id="n2">0</b></div>
+    <div class="stat-card"><span>Niveau 3 (1%)</span> <b id="n3">0</b></div>
 
     <script src="app.js"></script>
     <script>
-        function initTeam() {
-            const user = getUser();
-            const allUsers = JSON.parse(localStorage.getItem("all_users")) || [];
-            
-            if (!user) return;
+        window.onload = () => {
+            const user = getCurrentUser();
+            if (!user) return window.location.href = "login.html";
 
-            // Affichage code et lien
-            const baseUrl = window.location.origin + window.location.pathname.replace("equipe.html", "register.html");
-            const myLink = baseUrl + "?inviteCode=" + user.myInviteCode;
+            const allUsers = JSON.parse(localStorage.getItem("all_users") || "[]");
             
+            // 1. Affichage du lien
+            const link = window.location.origin + window.location.pathname.replace("equipe.html", "register.html") + "?inviteCode=" + user.myInviteCode;
             document.getElementById("my-code").innerText = user.myInviteCode;
-            document.getElementById("full-link").innerText = myLink;
+            document.getElementById("full-link").innerText = link;
 
-            // CALCUL DES NIVEAUX
-            // Lv1 : Ceux qui ont été invités par moi
+            // 2. Calcul des niveaux
             const lv1 = allUsers.filter(u => u.referredBy === user.myInviteCode);
-            
-            // Lv2 : Ceux qui ont été invités par mon Lv1
             const lv1Codes = lv1.map(u => u.myInviteCode);
             const lv2 = allUsers.filter(u => lv1Codes.includes(u.referredBy));
-            
-            // Lv3 : Ceux qui ont été invités par mon Lv2
             const lv2Codes = lv2.map(u => u.myInviteCode);
             const lv3 = allUsers.filter(u => lv2Codes.includes(u.referredBy));
 
-            // Mise à jour des chiffres
-            document.getElementById("cnt-lv1").innerText = lv1.length;
-            document.getElementById("cnt-lv2").innerText = lv2.length;
-            document.getElementById("cnt-lv3").innerText = lv3.length;
-        }
+            document.getElementById("n1").innerText = lv1.length;
+            document.getElementById("n2").innerText = lv2.length;
+            document.getElementById("n3").innerText = lv3.length;
+        };
 
-        function copyTeamLink() {
-            const text = document.getElementById("full-link").innerText;
-            navigator.clipboard.writeText(text).then(() => {
-                alert("Lien copié !");
-            });
+        function copyLink() {
+            navigator.clipboard.writeText(document.getElementById("full-link").innerText);
+            alert("Lien copié !");
         }
-
-        window.onload = initTeam;
     </script>
 </body>
 </html>
