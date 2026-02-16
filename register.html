@@ -15,48 +15,49 @@
     <div class="card">
         <h2>DELL INVEST</h2>
         <p>Création de compte</p>
-        <input id="phone" type="tel" placeholder="Numéro (ex: 0812345678)" pattern="^(0|\+243)[897][0-9]{8}$" required>
-        <input id="pass" type="password" placeholder="Mot de passe (6 car. min)" minlength="6" required>
+        <input id="phone" type="tel" placeholder="Numéro (ex: 0812345678)" required>
+        <input id="pass" type="password" placeholder="Mot de passe (6 car. min)" required>
         <input id="invite" type="text" placeholder="Code d'invitation">
-        <button onclick="submit()">S'INSCRIRE</button>
+        <button id="btnRegister">S'INSCRIRE</button>
         <p><a href="login.html" style="color:#00c853; text-decoration:none;">Déjà inscrit ? Connexion</a></p>
     </div>
 
-     <script type="module" src="app.js"></script>
-       window.onload = () => {
+    <script type="module" src="app.js"></script>
+
+    <script type="module">
+        // Importation de la fonction depuis app.js
+        // Note: Assure-toi que dans app.js tu as bien mis "window.registerUser = ..."
+        
+        window.onload = () => {
             const params = new URLSearchParams(window.location.search);
             const code = params.get('inviteCode');
             if (code) document.getElementById('invite').value = code;
         };
 
-        function submit() {
-            const phoneInput = document.getElementById('phone');
-            const passInput = document.getElementById('pass');
-            
-            const ph = phoneInput.value.trim();
-            const ps = passInput.value;
+        document.getElementById('btnRegister').addEventListener('click', async () => {
+            const ph = document.getElementById('phone').value.trim();
+            const ps = document.getElementById('pass').value;
             const inv = document.getElementById('invite').value.trim();
 
-            // Vérification du numéro RDC (0... ou +243...)
             const rdcRegex = /^(0|\+243)[897][0-9]{8}$/;
             
             if (!rdcRegex.test(ph)) {
-                alert("Veuillez entrer un numéro RDC valide (10 chiffres commençant par 0 ou avec +243).");
+                alert("Numéro RDC invalide (ex: 0812345678).");
                 return;
             }
 
-            // Vérification du mot de passe (6 caractères)
             if (ps.length < 6) {
                 alert("Le mot de passe doit contenir au moins 6 caractères.");
                 return;
             }
 
-            // Si tout est bon, on appelle la fonction de app.js
-            if (registerUser(ph, ps, inv)) {
-                alert("Compte créé !");
+            // Appel de la fonction Firebase dans app.js
+            const success = await window.registerUser(ph, ps, inv);
+            if (success) {
+                alert("✅ Compte créé avec succès !");
                 window.location.href = "login.html";
             }
-        }
+        });
     </script>
 </body>
 </html>
