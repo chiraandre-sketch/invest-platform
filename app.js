@@ -1,71 +1,57 @@
-// Importation des modules Firebase via CDN
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+// Initialisation de la base de données locale
+if (!localStorage.getItem("all_users")) {
+    localStorage.setItem("all_users", JSON.stringify([]));
+}
 
-// Ta configuration officielle
-const firebaseConfig = {
-  apiKey: "AIzaSyA24pBo8mBWiZssPtep--MMBdB7c8_Lu4U",
-  authDomain: "dell-invest.firebaseapp.com",
-  projectId: "dell-invest",
-  storageBucket: "dell-invest.firebasestorage.app",
-  messagingSenderId: "807081599583",
-  appId: "1:807081599583:web:e00ec3959bc4acdae031ea",
-  measurementId: "G-BPW920S27C"
-};
+// Gestion de la Session
+function getCurrentUser() {
+    return JSON.parse(localStorage.getItem("current_user"));
+}
 
-// Initialisation de Firebase
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+function logout() {
+    localStorage.removeItem("current_user");
+    window.location.href = "login.html";
+}
 
-// --- FONCTION D'INSCRIPTION ---
-window.registerUser = async function(phone, password, inviteCode) {
-    try {
-        const dbRef = ref(db);
-        const snapshot = await get(child(dbRef, `users/${phone}`));
-        
-        if (snapshot.exists()) {
-            alert("❌ Ce numéro est déjà enregistré !");
-            return false;
-        } else {
-            // On enregistre l'utilisateur avec un solde de 0 FC par défaut
-            await set(ref(db, 'users/' + phone), {
-                phone: phone,
-                password: password,
-                inviteCode: inviteCode || "Aucun",
-                solde: 0,
-                date: new Date().toLocaleDateString()
-            });
-            return true;
-        }
-    } catch (error) {
-        console.error(error);
-        alert("Erreur de base de données. Vérifiez votre connexion.");
+function protectPage() {
+    if (!getCurrentUser()) {
+        window.location.href = "login.html";
+    }
+}
+
+// Inscription avec génération de code unique
+function registerUser(phone, password, inviteCode) {
+    let users = JSON.parse(localStorage.getItem("all_users"));
+
+    if (users.find(u => u.phone === phone)) {
+        alert("Ce numéro est déjà utilisé.");
         return false;
     }
-};
 
-// --- FONCTION DE CONNEXION ---
-window.loginUser = async function(phone, password) {
-    try {
-        const dbRef = ref(db);
-        const snapshot = await get(child(dbRef, `users/${phone}`));
+    const newUser = {
+        phone: phone,
+        password: password,
+        solde: 0,
+        myInviteCode: "DELL" + Math.floor(1000 + Math.random() * 8999),
+        referredBy: inviteCode || "DIRECT",
+        createdAt: new Date().toLocaleString()
+    };
 
-        if (snapshot.exists()) {
-            const user = snapshot.val();
-            if (user.password === password) {
-                // On garde le numéro en mémoire pour la session
-                localStorage.setItem("userPhone", phone);
-                return true;
-            } else {
-                alert("❌ Mot de passe incorrect.");
-                return false;
-            }
-        } else {
-            alert("❌ Compte inexistant.");
-            return false;
-        }
-    } catch (error) {
-        alert("Erreur lors de la connexion.");
+    users.push(newUser);
+    localStorage.setItem("all_users", JSON.stringify(users));
+    return true;
+}
+
+// Connexion
+function loginUser(phone, password) {
+    let users = JSON.parse(localStorage.getItem("all_users"));
+    const user = users.find(u => u.phone === phone && u.password === password);
+
+    if (!user) {
+        alert("Identifiants incorrects.");
         return false;
     }
-};
+
+    localStorage.setItem("current_user", JSON.stringify(user));
+    return true;
+}
