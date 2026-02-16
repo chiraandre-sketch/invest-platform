@@ -1,7 +1,8 @@
-// Configuration Firebase (Utilisation des scripts CDN pour la compatibilité HTML directe)
+// Importation des modules Firebase via CDN
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
+// Ta configuration officielle
 const firebaseConfig = {
   apiKey: "AIzaSyA24pBo8mBWiZssPtep--MMBdB7c8_Lu4U",
   authDomain: "dell-invest.firebaseapp.com",
@@ -12,61 +13,59 @@ const firebaseConfig = {
   measurementId: "G-BPW920S27C"
 };
 
-// Initialisation
+// Initialisation de Firebase
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// --- FONCTION INSCRIPTION ---
+// --- FONCTION D'INSCRIPTION ---
 window.registerUser = async function(phone, password, inviteCode) {
     try {
         const dbRef = ref(db);
-        // On vérifie si l'utilisateur existe déjà
         const snapshot = await get(child(dbRef, `users/${phone}`));
         
         if (snapshot.exists()) {
-            alert("Ce numéro est déjà inscrit !");
+            alert("❌ Ce numéro est déjà enregistré !");
             return false;
         } else {
-            // Création du nouvel utilisateur dans la base de données
+            // On enregistre l'utilisateur avec un solde de 0 FC par défaut
             await set(ref(db, 'users/' + phone), {
                 phone: phone,
                 password: password,
-                inviteCode: inviteCode,
-                solde: 0, // Nouveau compte = 0 FC
-                dateInscription: new Date().toISOString()
+                inviteCode: inviteCode || "Aucun",
+                solde: 0,
+                date: new Date().toLocaleDateString()
             });
             return true;
         }
     } catch (error) {
         console.error(error);
-        alert("Erreur de connexion à la base de données.");
+        alert("Erreur de base de données. Vérifiez votre connexion.");
         return false;
     }
 };
 
-// --- FONCTION CONNEXION ---
+// --- FONCTION DE CONNEXION ---
 window.loginUser = async function(phone, password) {
     try {
         const dbRef = ref(db);
         const snapshot = await get(child(dbRef, `users/${phone}`));
 
         if (snapshot.exists()) {
-            const userData = snapshot.val();
-            if (userData.password === password) {
-                // On enregistre la session localement
-                localStorage.setItem("userConnected", phone);
+            const user = snapshot.val();
+            if (user.password === password) {
+                // On garde le numéro en mémoire pour la session
+                localStorage.setItem("userPhone", phone);
                 return true;
             } else {
-                alert("Mot de passe incorrect !");
+                alert("❌ Mot de passe incorrect.");
                 return false;
             }
         } else {
-            alert("Utilisateur non trouvé !");
+            alert("❌ Compte inexistant.");
             return false;
         }
     } catch (error) {
-        console.error(error);
-        alert("Erreur de connexion.");
+        alert("Erreur lors de la connexion.");
         return false;
     }
 };
