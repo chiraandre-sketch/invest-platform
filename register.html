@@ -22,9 +22,8 @@
         <p><a href="login.html" style="color:#00c853; text-decoration:none;">Déjà inscrit ? Connexion</a></p>
     </div>
 
-    <script src="app.js"></script>
-    <script>
-        window.onload = () => {
+     <script type="module" src="app.js"></script>
+       window.onload = () => {
             const params = new URLSearchParams(window.location.search);
             const code = params.get('inviteCode');
             if (code) document.getElementById('invite').value = code;
