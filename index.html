@@ -9,22 +9,20 @@
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', sans-serif;
-            /* Arrière-plan avec votre image */
-            background: url('IMG_2276.jpeg') no-repeat center center fixed;
-            background-size: cover;
+            background: #f4f4f4; /* Fond simple en attendant l'image */
             height: 100vh;
             display: flex;
-            justify-content: center; /* Centrage horizontal */
-            align-items: center;    /* Centrage vertical */
+            justify-content: center; 
+            align-items: center;    
         }
 
         .login-card {
-            background: rgba(255, 255, 255, 0.9); /* Fond blanc semi-transparent */
+            background: white;
             padding: 30px;
             border-radius: 20px;
             width: 90%;
             max-width: 380px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             text-align: center;
         }
 
@@ -63,38 +61,30 @@
         <h2>Connexion</h2>
         <input type="tel" id="phone" placeholder="Numéro (ex: 0812345678)" required>
         <input type="password" id="pass" placeholder="Mot de passe" required>
-        <button onclick="submitLogin()">SE CONNECTER</button>
+        <button id="btnLogin">SE CONNECTER</button>
         <p>Pas de compte ? <a href="register.html">S’inscrire</a></p>
     </div>
 
-    <script src="app.js"></script>
-    <script>
-        function submitLogin() {
-            const phoneInput = document.getElementById('phone');
-            const passInput = document.getElementById('pass');
-            
-            const phone = phoneInput.value.trim();
-            const pass = passInput.value;
+    <script type="module">
+        import { loginUser } from './app.js';
 
-            // 1. Vérification du format RDC (Regex identique à l'inscription)
+        document.getElementById('btnLogin').addEventListener('click', async () => {
+            const phone = document.getElementById('phone').value.trim();
+            const pass = document.getElementById('pass').value;
+
+            // Vérification simple
             const rdcRegex = /^(0|\+243)[897][0-9]{8}$/;
-            
             if (!rdcRegex.test(phone)) {
-                alert("Numéro invalide. Utilisez un numéro RDC (commençant par 0 ou +243).");
+                alert("Numéro invalide (RDC uniquement).");
                 return;
             }
 
-            // 2. Vérification rapide de la longueur du mot de passe
-            if (pass.length < 6) {
-                alert("Le mot de passe doit faire au moins 6 caractères.");
-                return;
+            // Appel de Firebase (qui est dans app.js)
+            const success = await loginUser(phone, pass);
+            if (success) {
+                window.location.href = "dashboard.html";
             }
-
-            // 3. Appel de la fonction de connexion dans app.js
-            if (loginUser(phone, pass)) {
-                location.href = "dashboard.html";
-            }
-        }
+        });
     </script>
 </body>
 </html>
