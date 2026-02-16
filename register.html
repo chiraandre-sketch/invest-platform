@@ -49,7 +49,7 @@
                 return;
             }
 
-            // On utilise la fonction globale enregistrée dans app.js
+            // On appelle la fonction de app.js
             if (typeof window.registerUser === 'function') {
                 const success = await window.registerUser(ph, ps, inv);
                 if (success) {
@@ -57,7 +57,7 @@
                     window.location.href = "login.html";
                 }
             } else {
-                alert("Erreur technique : Firebase n'est pas encore prêt.");
+                alert("Le système est en cours de chargement, réessayez dans 2 secondes.");
             }
         });
     </script>
