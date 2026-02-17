@@ -13,7 +13,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// FONCTION D'INSCRIPTION SÉCURISÉE
+// --- FONCTION D'INSCRIPTION ---
 window.registerUser = async function(phone, password, inviteCode) {
     try {
         const dbRef = ref(db);
@@ -24,35 +24,56 @@ window.registerUser = async function(phone, password, inviteCode) {
             return false;
         }
 
-        // Génération du code de parrainage unique pour l'utilisateur
+        // Génération d'un code unique
         const myCode = "DELL" + Math.floor(1000 + Math.random() * 9000);
         
-        // Envoi des données vers TA console Firebase
+        // Envoi à Firebase
         await set(ref(db, 'users/' + phone), {
             phone: phone,
             password: password,
             solde: 0,
-            myInviteCode: myCode,
+            invite: myCode, // On utilise "invite" pour que ce soit court et simple
             referredBy: inviteCode || "DIRECT",
-            createdAt: new Date().toLocaleString()
+            createdAt: new Date().toLocaleString(),
+            statut: "Membre"
         });
 
         return true;
     } catch (error) {
         console.error("Erreur Firebase:", error);
+        alert("Erreur de connexion : " + error.message);
         return false;
     }
 };
 
-// FONCTION DE CONNEXION
+// --- FONCTION DE CONNEXION ---
 window.loginUser = async function(phone, password) {
     try {
         const dbRef = ref(db);
         const snapshot = await get(child(dbRef, `users/${phone}`));
-        if (snapshot.exists() && snapshot.val().password === password) {
-            localStorage.setItem("userPhone", phone); // On garde le numéro pour la session
-            return true;
+        
+        if (snapshot.exists()) {
+            const userData = snapshot.val();
+            if (userData.password === password) {
+                // IMPORTANT : On enregistre le numéro pour les autres pages
+                localStorage.setItem("userPhone", phone); 
+                return true;
+            } else {
+                alert("Mot de passe incorrect");
+                return false;
+            }
+        } else {
+            alert("Ce numéro n'existe pas");
+            return false;
         }
-        return false;
-    } catch (e) { return false; }
+    } catch (e) { 
+        console.error(e);
+        return false; 
+    }
+};
+
+// --- FONCTION DE DÉCONNEXION ---
+window.logout = function() {
+    localStorage.removeItem("userPhone");
+    window.location.href = "login.html";
 };
