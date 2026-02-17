@@ -5,27 +5,97 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Retrait - DELL INVEST</title>
     <style>
-        body { margin: 0; font-family: Arial, sans-serif; background: #0f172a; color: #fff; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 400px; padding: 20px; }
-        .withdraw-card { background: #020617; padding: 20px; border-radius: 15px; border: 1px solid #1e293b; text-align: center; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: white; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; border: none; border-radius: 8px; background: #ef4444; color: white; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .info { font-size: 12px; color: #94a3b8; margin-top: 10px; }
+        /* Design sombre identique à ton projet */
+        body { 
+            margin: 0; 
+            font-family: 'Segoe UI', sans-serif; 
+            background: #0f172a; 
+            color: #fff; 
+            display: flex; 
+            justify-content: center; 
+            min-height: 100vh;
+        }
+        .container { 
+            width: 100%; 
+            max-width: 400px; 
+            padding: 20px; 
+        }
+        .header {
+            text-align: center;
+            padding: 20px 0;
+        }
+        .withdraw-card { 
+            background: #020617; 
+            padding: 25px; 
+            border-radius: 20px; 
+            border: 1px solid #1e293b; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+        .balance-label { font-size: 14px; color: #94a3b8; }
+        .balance-amount { 
+            font-size: 24px; 
+            font-weight: bold; 
+            color: #22c55e; 
+            margin: 10px 0 20px 0; 
+        }
+        label { display: block; text-align: left; font-size: 13px; margin-bottom: 5px; color: #94a3b8; }
+        input { 
+            width: 100%; 
+            padding: 14px; 
+            margin-bottom: 20px; 
+            border-radius: 10px; 
+            border: 1px solid #334155; 
+            background: #1e293b; 
+            color: white; 
+            box-sizing: border-box; 
+            font-size: 16px;
+        }
+        button { 
+            width: 100%; 
+            padding: 15px; 
+            border: none; 
+            border-radius: 10px; 
+            background: #ef4444; 
+            color: white; 
+            font-weight: bold; 
+            cursor: pointer; 
+            font-size: 16px;
+            transition: 0.3s;
+        }
+        button:hover { background: #dc2626; }
+        .warning-box {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(239, 68, 68, 0.1);
+            border-radius: 10px;
+            font-size: 12px;
+            color: #f87171;
+            line-height: 1.5;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Demander un retrait</h2>
+    <div class="header">
+        <h2>Retrait de Fonds</h2>
+    </div>
+
     <div class="withdraw-card">
-        <p>Solde disponible : <span id="current-solde" style="color: #22c55e;">...</span></p>
+        <div class="balance-label">Votre solde actuel</div>
+        <div class="balance-amount" id="current-solde">Chargement...</div>
         
-        <input type="number" id="amount" placeholder="Montant en FC (Ex: 10000)">
-        <input type="text" id="wallet" placeholder="Numéro de réception (M-Pesa, Airtel...)">
+        <label>Montant à retirer (Minimum 5000 FC)</label>
+        <input type="number" id="amount" placeholder="Ex: 5000">
+
+        <label>Numéro de réception (M-Pesa, Airtel, Orange)</label>
+        <input type="text" id="wallet" placeholder="099XXXXXXX">
         
-        <button onclick="demanderRetrait()">Confirmer le retrait</button>
+        <button onclick="demanderRetrait()">Confirmer le Retrait</button>
         
-        <p class="info">Frais de retrait : 5%<br>Délai : 24h maximum</p>
+        <div class="warning-box">
+            ⚠️ <b>Note :</b> Le montant minimum est de 5000 FC. Les retraits sont traités manuellement sous 24h. Des frais de réseau peuvent s'appliquer.
+        </div>
     </div>
 </div>
 
@@ -33,6 +103,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, onValue, set, get, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
+    // Ta configuration Firebase (identique à app.js)
     const firebaseConfig = {
         apiKey: "AIzaSyA24pBo8mBWiZssPtep--MMBdB7c8_Lu4U",
         authDomain: "dell-invest.firebaseapp.com",
@@ -46,50 +117,65 @@
     const db = getDatabase(app);
     const userPhone = localStorage.getItem("userPhone");
 
-    // Afficher le solde
-    if (userPhone) {
-        onValue(ref(db, 'users/' + userPhone + '/solde'), (snapshot) => {
-            document.getElementById("current-solde").innerText = (snapshot.val() || 0) + " FC";
-        });
-    }
+    // Rediriger si non connecté
+    if (!userPhone) { window.location.href = "login.html"; }
 
+    // Afficher le solde en direct
+    const soldeRef = ref(db, 'users/' + userPhone + '/solde');
+    onValue(soldeRef, (snapshot) => {
+        const montant = snapshot.val() || 0;
+        document.getElementById("current-solde").innerText = montant + " FC";
+    });
+
+    // Fonction de demande de retrait
     window.demanderRetrait = async function() {
         const montant = parseFloat(document.getElementById("amount").value);
         const numeroReception = document.getElementById("wallet").value;
 
+        // --- SÉCURITÉ : MINIMUM 5000 FC ---
         if (!montant || montant < 5000) {
-            alert("Le montant minimum est de 5000 FC");
-            return;
-        }
-        if (!numeroReception) {
-            alert("Veuillez saisir un numéro de réception");
+            alert("❌ Le montant minimum de retrait est de 5000 FC.");
             return;
         }
 
-        const userRef = ref(db, 'users/' + userPhone);
-        const snapshot = await get(userRef);
-        const soldeActuel = snapshot.val().solde || 0;
+        if (!numeroReception || numeroReception.length < 9) {
+            alert("❌ Veuillez entrer un numéro de réception valide.");
+            return;
+        }
 
-        if (soldeActuel >= montant) {
-            // 1. Déduire du solde
-            await set(ref(db, 'users/' + userPhone + '/solde'), soldeActuel - montant);
+        try {
+            const userRef = ref(db, 'users/' + userPhone);
+            const snapshot = await get(userRef);
+            
+            if (snapshot.exists()) {
+                const soldeActuel = snapshot.val().solde || 0;
 
-            // 2. Envoyer la demande à l'Admin
-            const retraitRef = ref(db, 'retraits');
-            await push(retraitRef, {
-                telephone: userPhone,
-                montant: montant,
-                destination: numeroReception,
-                statut: "En attente",
-                date: new Date().toLocaleString()
-            });
+                if (soldeActuel >= montant) {
+                    // 1. Déduire l'argent du solde
+                    const nouveauSolde = soldeActuel - montant;
+                    await set(ref(db, 'users/' + userPhone + '/solde'), nouveauSolde);
 
-            alert("✅ Demande envoyée ! Votre solde a été mis à jour.");
-            window.location.href = "profil.html";
-        } else {
-            alert("❌ Solde insuffisant");
+                    // 2. Créer la demande dans le dossier "retraits"
+                    const retraitRef = ref(db, 'retraits');
+                    await push(retraitRef, {
+                        utilisateur: userPhone,
+                        montant: montant,
+                        numeroReception: numeroReception,
+                        date: new Date().toLocaleString(),
+                        statut: "En attente"
+                    });
+
+                    alert("✅ Demande envoyée ! " + montant + " FC ont été déduits de votre solde.");
+                    window.location.href = "profil.html";
+                } else {
+                    alert("❌ Solde insuffisant pour ce retrait.");
+                }
+            }
+        } catch (error) {
+            alert("Une erreur est survenue. Veuillez réessayer.");
         }
     };
 </script>
+
 </body>
 </html>
