@@ -13,51 +13,46 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// --- FONCTION INSCRIPTION ---
+// FONCTION D'INSCRIPTION SÉCURISÉE
 window.registerUser = async function(phone, password, inviteCode) {
     try {
         const dbRef = ref(db);
         const snapshot = await get(child(dbRef, `users/${phone}`));
         
         if (snapshot.exists()) {
-            return { success: false, msg: "Ce numéro est déjà utilisé." };
+            alert("Ce numéro est déjà inscrit !");
+            return false;
         }
 
-        // Génération du code unique pour ce nouvel utilisateur
-        const myPersonalCode = "DELL" + Math.floor(1000 + Math.random() * 8999);
+        // Génération du code de parrainage unique pour l'utilisateur
+        const myCode = "DELL" + Math.floor(1000 + Math.random() * 9000);
         
-        // Enregistrement dans Firebase
+        // Envoi des données vers TA console Firebase
         await set(ref(db, 'users/' + phone), {
             phone: phone,
             password: password,
-            solde: 0, // Tu pourras changer ça à distance
-            invite: myPersonalCode, // Son code à lui
-            referredBy: inviteCode || "DIRECT", // Qui l'a invité
-            createdAt: new Date().toLocaleString(),
-            statut: "Membre"
+            solde: 0,
+            myInviteCode: myCode,
+            referredBy: inviteCode || "DIRECT",
+            createdAt: new Date().toLocaleString()
         });
 
-        return { success: true };
+        return true;
     } catch (error) {
-        return { success: false, msg: "Erreur de connexion à la base." };
+        console.error("Erreur Firebase:", error);
+        return false;
     }
 };
 
-// --- FONCTION CONNEXION ---
+// FONCTION DE CONNEXION
 window.loginUser = async function(phone, password) {
     try {
         const dbRef = ref(db);
         const snapshot = await get(child(dbRef, `users/${phone}`));
-        
-        if (snapshot.exists()) {
-            const userData = snapshot.val();
-            if (userData.password === password) {
-                localStorage.setItem("userPhone", phone);
-                return true;
-            }
+        if (snapshot.exists() && snapshot.val().password === password) {
+            localStorage.setItem("userPhone", phone); // On garde le numéro pour la session
+            return true;
         }
         return false;
-    } catch (error) {
-        return false;
-    }
+    } catch (e) { return false; }
 };
