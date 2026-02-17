@@ -15,51 +15,39 @@
     <div class="card">
         <h2>DELL INVEST</h2>
         <p>Création de compte</p>
-        <input id="phone" type="tel" placeholder="Numéro (ex: 0812345678)" required>
-        <input id="pass" type="password" placeholder="Mot de passe (6 car. min)" required>
+        <input id="phone" type="tel" placeholder="Numéro (ex: 0812345678)">
+        <input id="pass" type="password" placeholder="Mot de passe">
         <input id="invite" type="text" placeholder="Code d'invitation">
-        <button id="submitBtn">S'INSCRIRE</button>
+        <button id="btnReg">S'INSCRIRE</button>
         <p><a href="login.html" style="color:#00c853; text-decoration:none;">Déjà inscrit ? Connexion</a></p>
     </div>
 
-    <script type="module" src="app.js"></script>
-
     <script type="module">
+        import { registerUser } from './app.js';
+
+        // Récupérer le code de parrainage dans l'URL (DELL2646)
         window.onload = () => {
             const params = new URLSearchParams(window.location.search);
             const code = params.get('inviteCode');
             if (code) document.getElementById('invite').value = code;
         };
 
-        // On lie le clic au bouton
-        document.getElementById('submitBtn').onclick = async function() {
+        // Action du bouton
+        document.getElementById('btnReg').onclick = async () => {
             const ph = document.getElementById('phone').value.trim();
             const ps = document.getElementById('pass').value;
             const inv = document.getElementById('invite').value.trim();
 
-            const rdcRegex = /^(0|\+243)[897][0-9]{8}$/;
-            
-            if (!rdcRegex.test(ph)) {
-                alert("Veuillez entrer un numéro RDC valide.");
-                return;
-            }
-
-            if (ps.length < 6) {
-                alert("Le mot de passe doit contenir au moins 6 caractères.");
-                return;
-            }
-
-            // On appelle la fonction Firebase qui est dans app.js
-            // On utilise "window.registerUser" car elle est exportée globalement
-            const success = await window.registerUser(ph, ps, inv);
-            
-            if (success) {
-                alert("Compte créé avec succès !");
-                window.location.href = "login.html";
+            if (ph && ps.length >= 6) {
+                const success = await window.registerUser(ph, ps, inv);
+                if (success) {
+                    alert("Compte créé avec succès !");
+                    window.location.href = "login.html";
+                }
             } else {
-                alert("Erreur : Ce numéro est peut-être déjà utilisé.");
+                alert("Vérifiez vos informations (Mot de passe 6 car. min)");
             }
-        }
+        };
     </script>
 </body>
 </html>
