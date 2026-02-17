@@ -20,21 +20,17 @@
 
 <div class="invite-card">
     <div style="font-size: 14px; opacity: 0.8;">VOTRE CODE :</div>
-    <div id="myCodeDisplay" style="font-size: 28px; font-weight: bold; margin: 10px 0; letter-spacing: 2px;">CHARGEMENT...</div>
+    <div id="myCodeDisplay" style="font-size: 28px; font-weight: bold; margin: 10px 0; letter-spacing: 2px;">...</div>
     <button class="btn-copy" id="btnCopy">COPIER MON LIEN</button>
 </div>
 
 <div class="stat-box">
-    <span class="stat-label">Niveau 1 (25%)</span>
+    <span class="stat-label">Niveau 1 (Membres)</span>
     <span class="stat-value" id="countL1">0</span>
 </div>
 <div class="stat-box">
-    <span class="stat-label">Niveau 2 (3%)</span>
-    <span class="stat-value">0</span>
-</div>
-<div class="stat-box">
-    <span class="stat-label">Niveau 3 (1%)</span>
-    <span class="stat-value">0</span>
+    <span class="stat-label">Bonus Équipe</span>
+    <span class="stat-value" id="teamBonus">0 CDF</span>
 </div>
 
 <script type="module">
@@ -52,29 +48,42 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
-
-    // On récupère le numéro stocké à la connexion
     const userPhone = localStorage.getItem("userPhone");
 
-    if (userPhone) {
+    if (!userPhone) {
+        window.location.href = "login.html";
+    } else {
         const dbRef = ref(db);
+
+        // 1. RÉCUPÉRER LE CODE DE L'UTILISATEUR
         get(child(dbRef, `users/${userPhone}`)).then((snapshot) => {
             if (snapshot.exists()) {
                 const userData = snapshot.val();
-                const code = userData.invite || "SANS CODE";
-                
-                // AFFICHAGE DU CODE
-                document.getElementById("myCodeDisplay").innerText = code;
+                const myCode = userData.invite || "---";
+                document.getElementById("myCodeDisplay").innerText = myCode;
 
                 // BOUTON COPIER
                 document.getElementById("btnCopy").onclick = () => {
-                    const link = window.location.origin + "/register.html?inviteCode=" + code;
+                    const link = "https://chiraandre-sketch.github.io/invest-platform/register.html?inviteCode=" + myCode;
                     navigator.clipboard.writeText(link).then(() => alert("Lien de parrainage copié !"));
                 };
+
+                // 2. COMPTER LES MEMBRES DE SON ÉQUIPE (NIVEAU 1)
+                get(child(dbRef, `users`)).then((allUsersSnapshot) => {
+                    if (allUsersSnapshot.exists()) {
+                        let count = 0;
+                        allUsersSnapshot.forEach((childSnapshot) => {
+                            const member = childSnapshot.val();
+                            // Si le membre a été invité par mon code
+                            if (member.referredBy === myCode) {
+                                count++;
+                            }
+                        });
+                        document.getElementById("countL1").innerText = count;
+                    }
+                });
             }
         });
-    } else {
-        window.location.href = "login.html";
     }
 </script>
 
