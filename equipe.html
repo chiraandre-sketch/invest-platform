@@ -20,7 +20,7 @@
 
 <div class="invite-card">
     <div style="font-size: 14px; opacity: 0.8;">VOTRE CODE :</div>
-    <div id="myCodeDisplay" style="font-size: 28px; font-weight: bold; margin: 10px 0; letter-spacing: 2px;">DELL2646</div>
+    <div id="myCodeDisplay" style="font-size: 28px; font-weight: bold; margin: 10px 0; letter-spacing: 2px;">---</div>
     <button class="btn-copy" id="btnCopy">COPIER MON LIEN</button>
 </div>
 
@@ -35,6 +35,10 @@
 <div class="stat-box">
     <span class="stat-label">Niveau 3 (1%)</span>
     <span class="stat-value" id="countL3">0</span>
+</div>
+<div class="stat-box" style="background: #e8f5e9;">
+    <span class="stat-label" style="color: #2e7d32;">Bonus Équipe Total</span>
+    <span class="stat-value" id="totalBonus" style="color: #2e7d32;">0 CDF</span>
 </div>
 
 <script type="module">
@@ -62,34 +66,33 @@
         get(child(dbRef, `users`)).then((snapshot) => {
             if (snapshot.exists()) {
                 const allUsers = snapshot.val();
-                const myData = allUsers[userPhone];
-                const myCode = myData.invite;
+                const myCode = allUsers[userPhone].invite;
                 document.getElementById("myCodeDisplay").innerText = myCode;
 
-                // --- LOGIQUE DE CALCUL DES NIVEAUX ---
+                // LOGIQUE DES 3 NIVEAUX
                 let l1 = [], l2 = [], l3 = [];
 
-                // Niveau 1 : Ceux que J'AI invités
+                // 1. Trouver Niveau 1
                 Object.values(allUsers).forEach(u => {
                     if (u.referredBy === myCode) l1.push(u.invite);
                 });
 
-                // Niveau 2 : Ceux que le NIVEAU 1 a invités
+                // 2. Trouver Niveau 2 (invités par le N1)
                 Object.values(allUsers).forEach(u => {
                     if (l1.includes(u.referredBy)) l2.push(u.invite);
                 });
 
-                // Niveau 3 : Ceux que le NIVEAU 2 a invités
+                // 3. Trouver Niveau 3 (invités par le N2)
                 Object.values(allUsers).forEach(u => {
                     if (l2.includes(u.referredBy)) l3.push(u.invite);
                 });
 
-                // Affichage des compteurs
+                // Affichage
                 document.getElementById("countL1").innerText = l1.length;
                 document.getElementById("countL2").innerText = l2.length;
                 document.getElementById("countL3").innerText = l3.length;
 
-                // Bouton Copier
+                // Lien de parrainage
                 document.getElementById("btnCopy").onclick = () => {
                     const link = "https://chiraandre-sketch.github.io/invest-platform/register.html?inviteCode=" + myCode;
                     navigator.clipboard.writeText(link).then(() => alert("Lien copié !"));
@@ -98,6 +101,5 @@
         });
     }
 </script>
-
 </body>
 </html>
