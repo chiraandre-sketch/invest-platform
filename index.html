@@ -3,100 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion - DELL INVEST</title>
+    <title>DELL INVEST - Inscription</title>
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', sans-serif;
-            background: url('IMG_2276.jpeg') no-repeat center center fixed;
-            background-size: cover;
-            height: 100vh;
-            display: flex;
-            justify-content: center; 
-            align-items: center;    
-        }
-
-        .login-card {
-            background: rgba(255, 255, 255, 0.9); 
-            padding: 30px;
-            border-radius: 20px;
-            width: 90%;
-            max-width: 380px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            text-align: center;
-        }
-
-        h2 { color: #1a237e; margin-bottom: 25px; }
-
-        input {
-            width: 100%;
-            padding: 14px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            box-sizing: border-box;
-            font-size: 16px;
-        }
-
-        button {
-            width: 100%;
-            padding: 15px;
-            background: #1a237e;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-weight: bold;
-            font-size: 16px;
-            cursor: pointer;
-            margin-top: 15px;
-        }
-
-        p { margin-top: 20px; font-size: 14px; color: #555; }
-        a { color: #1a237e; text-decoration: none; font-weight: bold; }
+        body { background: #000 url('IMG_2276.jpeg') center/cover fixed; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; color: white; }
+        .card { background: rgba(0,0,0,0.85); padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; border: 1px solid #333; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: none; box-sizing: border-box; font-size: 16px; }
+        button { width: 100%; padding: 14px; background: #00c853; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-    <div class="login-card">
-        <h2>Connexion</h2>
-        <input type="tel" id="phone" placeholder="Numéro (ex: 0812345678)" required>
-        <input id="pass" type="password" placeholder="Mot de passe" required>
-        <button id="btnLogin">SE CONNECTER</button>
-        <p>Pas de compte ? <a href="register.html">S’inscrire</a></p>
+    <div class="card">
+        <h2>DELL INVEST</h2>
+        <p>Rejoignez notre plateforme</p>
+        
+        <input id="phone" type="tel" placeholder="Numéro de téléphone">
+        <input id="pass" type="password" placeholder="Mot de passe">
+        <input id="invite" type="text" placeholder="Code d'invitation">
+        
+        <button id="btnReg">S'INSCRIRE</button>
     </div>
 
-    <script type="module" src="app.js"></script>
-
     <script type="module">
-        // On lie le bouton à la fonction de connexion
-        document.getElementById('btnLogin').onclick = async function() {
-            const phone = document.getElementById('phone').value.trim();
-            const pass = document.getElementById('pass').value;
+        import { registerUser } from './app.js';
 
-            const rdcRegex = /^(0|\+243)[897][0-9]{8}$/;
-            
-            if (!rdcRegex.test(phone)) {
-                alert("Numéro invalide. Utilisez un numéro RDC.");
-                return;
+        // DETECTION DU CODE DANS LE LIEN
+        window.onload = () => {
+            const params = new URLSearchParams(window.location.search);
+            const code = params.get('inviteCode');
+            if (code) {
+                document.getElementById('invite').value = code;
+                console.log("Code détecté : " + code);
             }
+        };
 
-            if (pass.length < 6) {
-                alert("Le mot de passe doit faire au moins 6 caractères.");
-                return;
-            }
+        document.getElementById('btnReg').onclick = async () => {
+            const ph = document.getElementById('phone').value.trim();
+            const ps = document.getElementById('pass').value;
+            const inv = document.getElementById('invite').value.trim();
 
-            // Appel de la fonction loginUser dans app.js
-            // On utilise "await" car Firebase doit chercher dans la base de données
-            const success = await window.loginUser(phone, pass);
-
-            if (success) {
-                // Si la connexion réussit, on enregistre le numéro localement 
-                // pour que le dashboard sache quel solde afficher
-                localStorage.setItem('userPhone', phone);
-                location.href = "dashboard.html";
+            if (ph && ps.length >= 6) {
+                // Utilise la fonction de app.js pour envoyer à Firebase
+                const res = await window.registerUser(ph, ps, inv);
+                if (res) {
+                    alert("Compte créé !");
+                    window.location.href = "login.html";
+                }
             } else {
-                alert("Numéro ou mot de passe incorrect.");
+                alert("Erreur : Remplissez tous les champs.");
             }
         };
     </script>
