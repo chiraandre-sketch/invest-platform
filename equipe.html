@@ -8,9 +8,9 @@
         body { margin: 0; font-family: sans-serif; background: #f4f7fe; text-align: center; }
         .header { background: #1a237e; color: white; padding: 40px 20px; border-radius: 0 0 30px 30px; font-weight: bold; font-size: 24px; }
         .invite-card { background: #232d4b; color: white; margin: -30px 20px 20px; padding: 25px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-        .btn-copy { background: #ffeb3b; border: none; padding: 15px; width: 100%; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 15px; color: #1a237e; }
+        .btn-copy { background: #ffeb3b; border: none; padding: 15px; width: 100%; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 15px; color: #1a237e; text-transform: uppercase; }
         .stat-box { background: white; margin: 10px 20px; padding: 20px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .stat-label { font-weight: bold; color: #333; }
+        .stat-label { font-weight: bold; color: #333; font-size: 14px; }
         .stat-value { font-weight: bold; color: #1a237e; font-size: 18px; }
     </style>
 </head>
@@ -20,17 +20,21 @@
 
 <div class="invite-card">
     <div style="font-size: 14px; opacity: 0.8;">VOTRE CODE :</div>
-    <div id="myCodeDisplay" style="font-size: 28px; font-weight: bold; margin: 10px 0; letter-spacing: 2px;">...</div>
+    <div id="myCodeDisplay" style="font-size: 28px; font-weight: bold; margin: 10px 0; letter-spacing: 2px;">DELL2646</div>
     <button class="btn-copy" id="btnCopy">COPIER MON LIEN</button>
 </div>
 
 <div class="stat-box">
-    <span class="stat-label">Niveau 1 (Membres)</span>
+    <span class="stat-label">Niveau 1 (25%)</span>
     <span class="stat-value" id="countL1">0</span>
 </div>
 <div class="stat-box">
-    <span class="stat-label">Bonus Équipe</span>
-    <span class="stat-value" id="teamBonus">0 CDF</span>
+    <span class="stat-label">Niveau 2 (3%)</span>
+    <span class="stat-value" id="countL2">0</span>
+</div>
+<div class="stat-box">
+    <span class="stat-label">Niveau 3 (1%)</span>
+    <span class="stat-value" id="countL3">0</span>
 </div>
 
 <script type="module">
@@ -55,33 +59,41 @@
     } else {
         const dbRef = ref(db);
 
-        // 1. RÉCUPÉRER LE CODE DE L'UTILISATEUR
-        get(child(dbRef, `users/${userPhone}`)).then((snapshot) => {
+        get(child(dbRef, `users`)).then((snapshot) => {
             if (snapshot.exists()) {
-                const userData = snapshot.val();
-                const myCode = userData.invite || "---";
+                const allUsers = snapshot.val();
+                const myData = allUsers[userPhone];
+                const myCode = myData.invite;
                 document.getElementById("myCodeDisplay").innerText = myCode;
 
-                // BOUTON COPIER
+                // --- LOGIQUE DE CALCUL DES NIVEAUX ---
+                let l1 = [], l2 = [], l3 = [];
+
+                // Niveau 1 : Ceux que J'AI invités
+                Object.values(allUsers).forEach(u => {
+                    if (u.referredBy === myCode) l1.push(u.invite);
+                });
+
+                // Niveau 2 : Ceux que le NIVEAU 1 a invités
+                Object.values(allUsers).forEach(u => {
+                    if (l1.includes(u.referredBy)) l2.push(u.invite);
+                });
+
+                // Niveau 3 : Ceux que le NIVEAU 2 a invités
+                Object.values(allUsers).forEach(u => {
+                    if (l2.includes(u.referredBy)) l3.push(u.invite);
+                });
+
+                // Affichage des compteurs
+                document.getElementById("countL1").innerText = l1.length;
+                document.getElementById("countL2").innerText = l2.length;
+                document.getElementById("countL3").innerText = l3.length;
+
+                // Bouton Copier
                 document.getElementById("btnCopy").onclick = () => {
                     const link = "https://chiraandre-sketch.github.io/invest-platform/register.html?inviteCode=" + myCode;
-                    navigator.clipboard.writeText(link).then(() => alert("Lien de parrainage copié !"));
+                    navigator.clipboard.writeText(link).then(() => alert("Lien copié !"));
                 };
-
-                // 2. COMPTER LES MEMBRES DE SON ÉQUIPE (NIVEAU 1)
-                get(child(dbRef, `users`)).then((allUsersSnapshot) => {
-                    if (allUsersSnapshot.exists()) {
-                        let count = 0;
-                        allUsersSnapshot.forEach((childSnapshot) => {
-                            const member = childSnapshot.val();
-                            // Si le membre a été invité par mon code
-                            if (member.referredBy === myCode) {
-                                count++;
-                            }
-                        });
-                        document.getElementById("countL1").innerText = count;
-                    }
-                });
             }
         });
     }
