@@ -5,55 +5,78 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mon Équipe - DELL INVEST</title>
     <style>
-        body { font-family: sans-serif; background: #f4f7fe; margin: 0; padding-bottom: 80px; }
-        .header { background: #1a237e; color: white; padding: 30px; text-align: center; border-radius: 0 0 25px 25px; }
-        .stat-card { background: white; margin: 15px; padding: 20px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .invite-box { background: #1e293b; color: white; margin: 15px; padding: 20px; border-radius: 20px; text-align: center; }
-        .copy-btn { background: #ffeb3b; padding: 10px; width: 100%; border-radius: 10px; border: none; font-weight: bold; margin-top: 10px; cursor: pointer; }
+        body { margin: 0; font-family: sans-serif; background: #f4f7fe; text-align: center; }
+        .header { background: #1a237e; color: white; padding: 40px 20px; border-radius: 0 0 30px 30px; font-weight: bold; font-size: 24px; }
+        .invite-card { background: #232d4b; color: white; margin: -30px 20px 20px; padding: 25px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        .btn-copy { background: #ffeb3b; border: none; padding: 15px; width: 100%; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 15px; color: #1a237e; }
+        .stat-box { background: white; margin: 10px 20px; padding: 20px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .stat-label { font-weight: bold; color: #333; }
+        .stat-value { font-weight: bold; color: #1a237e; font-size: 18px; }
     </style>
 </head>
 <body>
-    <div class="header"><h2>MON ÉQUIPE</h2></div>
 
-    <div class="invite-box">
-        <small>VOTRE CODE : <b id="my-code">---</b></small>
-        <div id="full-link" style="font-size: 10px; color: #aaa; margin-top: 10px; word-break: break-all;">Lien de parrainage...</div>
-        <button class="copy-btn" onclick="copyLink()">COPIER MON LIEN</button>
-    </div>
+<div class="header">MON ÉQUIPE</div>
 
-    <div class="stat-card"><span>Niveau 1 (25%)</span> <b id="n1">0</b></div>
-    <div class="stat-card"><span>Niveau 2 (3%)</span> <b id="n2">0</b></div>
-    <div class="stat-card"><span>Niveau 3 (1%)</span> <b id="n3">0</b></div>
+<div class="invite-card">
+    <div style="font-size: 14px; opacity: 0.8;">VOTRE CODE :</div>
+    <div id="myCodeDisplay" style="font-size: 28px; font-weight: bold; margin: 10px 0; letter-spacing: 2px;">CHARGEMENT...</div>
+    <button class="btn-copy" id="btnCopy">COPIER MON LIEN</button>
+</div>
 
-    <script src="app.js"></script>
-    <script>
-        window.onload = () => {
-            const user = getCurrentUser();
-            if (!user) return window.location.href = "login.html";
+<div class="stat-box">
+    <span class="stat-label">Niveau 1 (25%)</span>
+    <span class="stat-value" id="countL1">0</span>
+</div>
+<div class="stat-box">
+    <span class="stat-label">Niveau 2 (3%)</span>
+    <span class="stat-value">0</span>
+</div>
+<div class="stat-box">
+    <span class="stat-label">Niveau 3 (1%)</span>
+    <span class="stat-value">0</span>
+</div>
 
-            const allUsers = JSON.parse(localStorage.getItem("all_users") || "[]");
-            
-            // 1. Affichage du lien
-            const link = window.location.origin + window.location.pathname.replace("equipe.html", "register.html") + "?inviteCode=" + user.myInviteCode;
-            document.getElementById("my-code").innerText = user.myInviteCode;
-            document.getElementById("full-link").innerText = link;
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-            // 2. Calcul des niveaux
-            const lv1 = allUsers.filter(u => u.referredBy === user.myInviteCode);
-            const lv1Codes = lv1.map(u => u.myInviteCode);
-            const lv2 = allUsers.filter(u => lv1Codes.includes(u.referredBy));
-            const lv2Codes = lv2.map(u => u.myInviteCode);
-            const lv3 = allUsers.filter(u => lv2Codes.includes(u.referredBy));
+    const firebaseConfig = {
+        apiKey: "AIzaSyA24pBo8mBWiZssPtep--MMBdB7c8_Lu4U",
+        authDomain: "dell-invest.firebaseapp.com",
+        projectId: "dell-invest",
+        storageBucket: "dell-invest.firebasestorage.app",
+        messagingSenderId: "807081599583",
+        appId: "1:807081599583:web:e00ec3959bc4acdae031ea"
+    };
 
-            document.getElementById("n1").innerText = lv1.length;
-            document.getElementById("n2").innerText = lv2.length;
-            document.getElementById("n3").innerText = lv3.length;
-        };
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
 
-        function copyLink() {
-            navigator.clipboard.writeText(document.getElementById("full-link").innerText);
-            alert("Lien copié !");
-        }
-    </script>
+    // On récupère le numéro stocké à la connexion
+    const userPhone = localStorage.getItem("userPhone");
+
+    if (userPhone) {
+        const dbRef = ref(db);
+        get(child(dbRef, `users/${userPhone}`)).then((snapshot) => {
+            if (snapshot.exists()) {
+                const userData = snapshot.val();
+                const code = userData.invite || "SANS CODE";
+                
+                // AFFICHAGE DU CODE
+                document.getElementById("myCodeDisplay").innerText = code;
+
+                // BOUTON COPIER
+                document.getElementById("btnCopy").onclick = () => {
+                    const link = window.location.origin + "/register.html?inviteCode=" + code;
+                    navigator.clipboard.writeText(link).then(() => alert("Lien de parrainage copié !"));
+                };
+            }
+        });
+    } else {
+        window.location.href = "login.html";
+    }
+</script>
+
 </body>
 </html>
