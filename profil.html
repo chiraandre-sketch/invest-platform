@@ -5,97 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mon Profil - DELL INVEST</title>
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', sans-serif;
-            /* Ajout de l'arrière-plan centralisé */
-            background: url('IMG_2276.jpeg') no-repeat center center fixed;
-            background-size: cover;
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
-        }
-
-        /* Centralisation du contenu */
-        .main-wrapper {
-            width: 100%;
-            max-width: 450px;
-            padding-bottom: 90px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .profile-header {
-            background: rgba(26, 35, 126, 0.9);
-            color: white;
-            padding: 40px 20px;
-            text-align: center;
-            border-bottom-left-radius: 30px;
-            border-bottom-right-radius: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-
-        .user-info { margin-top: 10px; }
-        .user-phone { font-size: 1.2rem; font-weight: bold; }
-
-        .stats-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            padding: 20px;
-            margin-top: -30px;
-        }
-
-        .stat-box {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 15px;
-            border-radius: 20px;
-            text-align: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-
-        .stat-label { font-size: 10px; color: #888; text-transform: uppercase; }
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; background: url('IMG_2276.jpeg') no-repeat center center fixed; background-size: cover; display: flex; justify-content: center; min-height: 100vh; }
+        .main-wrapper { width: 100%; max-width: 450px; padding-bottom: 90px; display: flex; flex-direction: column; }
+        .profile-header { background: rgba(26, 35, 126, 0.9); color: white; padding: 40px 20px; text-align: center; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .user-phone { font-size: 1.2rem; font-weight: bold; margin-top: 10px; }
+        .stats-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; margin-top: -30px; }
+        .stat-box { background: rgba(255, 255, 255, 0.95); padding: 15px; border-radius: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .stat-value { display: block; font-size: 18px; font-weight: bold; color: #1a237e; }
-
-        .menu-list {
-            background: rgba(255, 255, 255, 0.95);
-            margin: 10px 20px;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-
-        .menu-link {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 18px;
-            text-decoration: none;
-            color: #333;
-            border-bottom: 1px solid #f0f0f0;
-            font-size: 15px;
-        }
-
-        /* Style spécial pour le bouton WhatsApp */
-        .whatsapp-btn {
-            background: #25D366;
-            color: white !important;
-            font-weight: bold;
-        }
-
-        .nav-footer {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            max-width: 450px;
-            background: white;
-            display: flex;
-            justify-content: space-around;
-            padding: 15px 0;
-            border-top: 1px solid #eee;
-        }
-
+        .menu-list { background: rgba(255, 255, 255, 0.95); margin: 10px 20px; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .menu-link { display: flex; justify-content: space-between; align-items: center; padding: 18px; text-decoration: none; color: #333; border-bottom: 1px solid #f0f0f0; font-size: 15px; }
+        .whatsapp-btn { background: #25D366 !important; color: white !important; font-weight: bold; }
+        .nav-footer { position: fixed; bottom: 0; width: 100%; max-width: 450px; background: white; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #eee; }
         .nav-item { text-decoration: none; color: #999; font-size: 11px; text-align: center; }
         .nav-item.active { color: #1a237e; font-weight: bold; }
     </style>
@@ -105,19 +25,17 @@
 <div class="main-wrapper">
     <div class="profile-header">
         <div style="font-size: 50px;">👤</div>
-        <div class="user-info">
-            <div class="user-phone" id="display-phone">+243...</div>
-            <div style="font-size: 12px; opacity: 0.8;">ID de l'investisseur</div>
-        </div>
+        <div class="user-phone" id="display-phone">Chargement...</div>
+        <div style="font-size: 12px; opacity: 0.8;">Investisseur DELL Certifié</div>
     </div>
 
     <div class="stats-container">
         <div class="stat-box">
-            <span class="stat-label">Mon Solde</span>
+            <span style="font-size: 10px; color: #888;">SOLDE</span>
             <span class="stat-value" id="display-solde">0 CDF</span>
         </div>
         <div class="stat-box">
-            <span class="stat-label">Niveau VIP</span>
+            <span style="font-size: 10px; color: #888;">NIVEAU VIP</span>
             <span class="stat-value">LV 0</span>
         </div>
     </div>
@@ -128,10 +46,11 @@
             <span>❯</span>
         </a>
         
-        <a href="recharge.html" class="menu-link"><span>💳 Dépôt</span> <span>❯</span></a>
+        <a href="depot.html" class="menu-link"><span>💳 Dépôt</span> <span>❯</span></a>
         <a href="withdraw.html" class="menu-link"><span>💸 Retrait</span> <span>❯</span></a>
         <a href="equipe.html" class="menu-link"><span>👥 Mon Équipe</span> <span>❯</span></a>
-        <a href="#" onclick="logoutUser()" class="menu-link" style="color: red; border-bottom: none;">
+        
+        <a href="javascript:void(0)" onclick="logoutUser()" class="menu-link" style="color: red; border-bottom: none;">
             <span>🚪 Déconnexion</span>
         </a>
     </div>
@@ -144,22 +63,44 @@
     </nav>
 </div>
 
-<script>
-    // Chargement des données utilisateur
-    window.onload = function() {
-        const user = JSON.parse(localStorage.getItem("current_user"));
-        if (user) {
-            document.getElementById("display-phone").innerText = user.phone;
-            document.getElementById("display-solde").innerText = user.solde + " CDF";
-        } else {
-            window.location.href = "login.html";
-        }
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyA24pBo8mBWiZssPtep--MMBdB7c8_Lu4U",
+        authDomain: "dell-invest.firebaseapp.com",
+        projectId: "dell-invest",
+        storageBucket: "dell-invest.firebasestorage.app",
+        messagingSenderId: "807081599583",
+        appId: "1:807081599583:web:e00ec3959bc4acdae031ea"
     };
 
-    function logoutUser() {
-        localStorage.removeItem("current_user");
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    
+    // On utilise userPhone pour rester connecté
+    const userPhone = localStorage.getItem("userPhone");
+
+    if (userPhone) {
+        const userRef = ref(db, 'users/' + userPhone);
+        onValue(userRef, (snapshot) => {
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                document.getElementById("display-phone").innerText = data.phone;
+                document.getElementById("display-solde").innerText = (data.solde || 0) + " CDF";
+            }
+        });
+    } else {
+        // Redirection vers login seulement si la clé n'existe pas
         window.location.href = "login.html";
     }
+
+    // Fonction globale de déconnexion
+    window.logoutUser = function() {
+        localStorage.removeItem("userPhone");
+        window.location.href = "login.html";
+    };
 </script>
 
 </body>
