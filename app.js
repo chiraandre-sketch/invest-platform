@@ -1,8 +1,6 @@
-// Importation des modules Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getDatabase, ref, set, get, child, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-// TA CONFIGURATION FIREBASE (Garde celle-ci, elle est liée à ton projet)
 const firebaseConfig = {
     apiKey: "AIzaSyA24pBo8mBWiZssPtep--MMBdB7c8_Lu4U",
     authDomain: "dell-invest.firebaseapp.com",
@@ -12,44 +10,40 @@ const firebaseConfig = {
     appId: "1:807081599583:web:e00ec3959bc4acdae031ea"
 };
 
-// Initialisation
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// --- FONCTIONS GLOBALES (Accessibles par tes fichiers HTML) ---
-
-// 1. INSCRIPTION (Envoie vers Firebase)
+// --- FONCTION INSCRIPTION ---
 window.registerUser = async function(phone, password, inviteCode) {
     try {
         const dbRef = ref(db);
         const snapshot = await get(child(dbRef, `users/${phone}`));
         
         if (snapshot.exists()) {
-            alert("Ce numéro est déjà utilisé.");
-            return false;
+            return { success: false, msg: "Ce numéro est déjà utilisé." };
         }
 
-        const myInviteCode = "DELL" + Math.floor(1000 + Math.random() * 8999);
+        // Génération du code unique pour ce nouvel utilisateur
+        const myPersonalCode = "DELL" + Math.floor(1000 + Math.random() * 8999);
         
-        // On crée l'utilisateur dans le cloud
+        // Enregistrement dans Firebase
         await set(ref(db, 'users/' + phone), {
             phone: phone,
             password: password,
-            solde: 0,
-            invite: myInviteCode,
-            referredBy: inviteCode || "DIRECT",
+            solde: 0, // Tu pourras changer ça à distance
+            invite: myPersonalCode, // Son code à lui
+            referredBy: inviteCode || "DIRECT", // Qui l'a invité
             createdAt: new Date().toLocaleString(),
             statut: "Membre"
         });
 
-        return true;
+        return { success: true };
     } catch (error) {
-        console.error(error);
-        return false;
+        return { success: false, msg: "Erreur de connexion à la base." };
     }
 };
 
-// 2. CONNEXION (Vérifie dans Firebase)
+// --- FONCTION CONNEXION ---
 window.loginUser = async function(phone, password) {
     try {
         const dbRef = ref(db);
@@ -58,7 +52,6 @@ window.loginUser = async function(phone, password) {
         if (snapshot.exists()) {
             const userData = snapshot.val();
             if (userData.password === password) {
-                // On garde juste le numéro en local pour la session
                 localStorage.setItem("userPhone", phone);
                 return true;
             }
@@ -67,10 +60,4 @@ window.loginUser = async function(phone, password) {
     } catch (error) {
         return false;
     }
-};
-
-// 3. DÉCONNEXION
-window.logout = function() {
-    localStorage.removeItem("userPhone");
-    window.location.href = "login.html";
 };
