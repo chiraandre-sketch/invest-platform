@@ -3,38 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inscription - DELL INVEST</title>
+    <title>DELL INVEST - Inscription</title>
     <style>
-        body { background: #000 url('IMG_2276.jpeg') center/cover fixed; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .card { background: rgba(0,0,0,0.85); padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; color: white; text-align: center; border: 1px solid #333; }
+        body { background: #000 url('IMG_2276.jpeg') center/cover fixed; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; color: white; }
+        .card { background: rgba(0,0,0,0.85); padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; border: 1px solid #333; }
         input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: none; box-sizing: border-box; font-size: 16px; }
         button { width: 100%; padding: 14px; background: #00c853; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 10px; }
-        a { color: #00c853; text-decoration: none; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div class="card">
         <h2>DELL INVEST</h2>
-        <p>Inscription sécurisée</p>
+        <p>Rejoignez notre plateforme</p>
         
         <input id="phone" type="tel" placeholder="Numéro de téléphone">
         <input id="pass" type="password" placeholder="Mot de passe">
         <input id="invite" type="text" placeholder="Code d'invitation">
         
         <button id="btnReg">S'INSCRIRE</button>
-        <p>Déjà inscrit ? <a href="login.html">Connexion</a></p>
     </div>
 
     <script type="module">
         import { registerUser } from './app.js';
 
-        // SCRIPT POUR RÉCUPÉRER LE CODE DANS LE LIEN
+        // DETECTION DU CODE DANS LE LIEN
         window.onload = () => {
             const params = new URLSearchParams(window.location.search);
             const code = params.get('inviteCode');
             if (code) {
                 document.getElementById('invite').value = code;
+                console.log("Code détecté : " + code);
             }
         };
 
@@ -44,13 +43,14 @@
             const inv = document.getElementById('invite').value.trim();
 
             if (ph && ps.length >= 6) {
+                // Utilise la fonction de app.js pour envoyer à Firebase
                 const res = await window.registerUser(ph, ps, inv);
                 if (res) {
                     alert("Compte créé !");
                     window.location.href = "login.html";
                 }
             } else {
-                alert("Remplissez tous les champs (MDP : 6 caractères)");
+                alert("Erreur : Remplissez tous les champs.");
             }
         };
     </script>
