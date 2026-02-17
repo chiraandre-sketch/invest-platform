@@ -9,12 +9,20 @@
         .main-wrapper { width: 100%; max-width: 450px; padding-bottom: 90px; display: flex; flex-direction: column; }
         .profile-header { background: rgba(26, 35, 126, 0.9); color: white; padding: 40px 20px; text-align: center; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         .user-phone { font-size: 1.2rem; font-weight: bold; margin-top: 10px; }
+        
         .stats-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; margin-top: -30px; }
         .stat-box { background: rgba(255, 255, 255, 0.95); padding: 15px; border-radius: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .stat-value { display: block; font-size: 18px; font-weight: bold; color: #1a237e; }
+
+        /* SECTION PRODUITS ACHETÉS */
+        .products-section { background: rgba(255, 255, 255, 0.95); margin: 10px 20px; padding: 15px; border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .products-title { font-size: 14px; font-weight: bold; color: #1a237e; margin-bottom: 10px; display: flex; align-items: center; }
+        .product-item { background: #f8fafc; padding: 10px; border-radius: 10px; margin-bottom: 8px; border-left: 4px solid #22c55e; display: flex; justify-content: space-between; font-size: 13px; color: #333; }
+
         .menu-list { background: rgba(255, 255, 255, 0.95); margin: 10px 20px; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .menu-link { display: flex; justify-content: space-between; align-items: center; padding: 18px; text-decoration: none; color: #333; border-bottom: 1px solid #f0f0f0; font-size: 15px; }
         .whatsapp-btn { background: #25D366 !important; color: white !important; font-weight: bold; }
+        
         .nav-footer { position: fixed; bottom: 0; width: 100%; max-width: 450px; background: white; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #eee; }
         .nav-item { text-decoration: none; color: #999; font-size: 11px; text-align: center; }
         .nav-item.active { color: #1a237e; font-weight: bold; }
@@ -32,11 +40,18 @@
     <div class="stats-container">
         <div class="stat-box">
             <span style="font-size: 10px; color: #888;">SOLDE</span>
-            <span class="stat-value" id="display-solde">0 CDF</span>
+            <span class="stat-value" id="display-solde">0 FC</span>
         </div>
         <div class="stat-box">
-            <span style="font-size: 10px; color: #888;">NIVEAU VIP</span>
-            <span class="stat-value">LV 0</span>
+            <span style="font-size: 10px; color: #888;">MES INVITS</span>
+            <span class="stat-value" id="display-invite">...</span>
+        </div>
+    </div>
+
+    <div class="products-section">
+        <div class="products-title">💎 Mes Investissements</div>
+        <div id="list-produits">
+            <p style="font-size:12px; color:#999; text-align:center;">Aucun produit actif</p>
         </div>
     </div>
 
@@ -45,11 +60,9 @@
             <span>🟢 Rejoindre le groupe WhatsApp</span>
             <span>❯</span>
         </a>
-        
-        <a href="depot.html" class="menu-link"><span>💳 Dépôt</span> <span>❯</span></a>
+        <a href="recharge.html" class="menu-link"><span>💳 Dépôt</span> <span>❯</span></a>
         <a href="withdraw.html" class="menu-link"><span>💸 Retrait</span> <span>❯</span></a>
         <a href="equipe.html" class="menu-link"><span>👥 Mon Équipe</span> <span>❯</span></a>
-        
         <a href="javascript:void(0)" onclick="logoutUser()" class="menu-link" style="color: red; border-bottom: none;">
             <span>🚪 Déconnexion</span>
         </a>
@@ -78,25 +91,45 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
-    
-    // On utilise userPhone pour rester connecté
     const userPhone = localStorage.getItem("userPhone");
 
     if (userPhone) {
+        // 1. Charger les infos de base (Solde et Code)
         const userRef = ref(db, 'users/' + userPhone);
         onValue(userRef, (snapshot) => {
             if (snapshot.exists()) {
                 const data = snapshot.val();
                 document.getElementById("display-phone").innerText = data.phone;
-                document.getElementById("display-solde").innerText = (data.solde || 0) + " CDF";
+                document.getElementById("display-solde").innerText = (data.solde || 0) + " FC";
+                document.getElementById("display-invite").innerText = data.invite || "---";
             }
         });
+
+        // 2. Charger les produits achetés
+        const achatsRef = ref(db, 'achats/' + userPhone);
+        onValue(achatsRef, (snapshot) => {
+            const listDiv = document.getElementById("list-produits");
+            if (snapshot.exists()) {
+                listDiv.innerHTML = ""; // On vide le message "Aucun produit"
+                const achats = snapshot.val();
+                
+                // On boucle sur chaque achat pour l'afficher
+                Object.values(achats).forEach(achat => {
+                    const item = document.createElement("div");
+                    item.className = "product-item";
+                    item.innerHTML = `
+                        <span><b>${achat.produit}</b></span>
+                        <span style="color: #22c55e;">Actif ✅</span>
+                    `;
+                    listDiv.appendChild(item);
+                });
+            }
+        });
+
     } else {
-        // Redirection vers login seulement si la clé n'existe pas
         window.location.href = "login.html";
     }
 
-    // Fonction globale de déconnexion
     window.logoutUser = function() {
         localStorage.removeItem("userPhone");
         window.location.href = "login.html";
