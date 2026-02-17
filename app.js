@@ -24,7 +24,7 @@ window.registerUser = async function(phone, password, inviteCode) {
             return false;
         }
 
-        // Génération d'un code unique
+        // Génération d'un code unique pour l'utilisateur
         const myCode = "DELL" + Math.floor(1000 + Math.random() * 9000);
         
         // Envoi à Firebase
@@ -32,7 +32,7 @@ window.registerUser = async function(phone, password, inviteCode) {
             phone: phone,
             password: password,
             solde: 0,
-            invite: myCode, // On utilise "invite" pour que ce soit court et simple
+            invite: myCode,
             referredBy: inviteCode || "DIRECT",
             createdAt: new Date().toLocaleString(),
             statut: "Membre"
