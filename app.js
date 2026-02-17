@@ -1,56 +1,66 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, onValue, set, push, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-const firebaseConfig = {
-    apiKey: "AIzaSyA24pBo8mBWiZssPtep--MMBdB7c8_Lu4U",
-    authDomain: "dell-invest.firebaseapp.com",
-    projectId: "dell-invest",
-    storageBucket: "dell-invest.firebasestorage.app",
-    messagingSenderId: "807081599583",
-    appId: "1:807081599583:web:e00ec3959bc4acdae031ea"
-};
+    // Ta configuration Firebase
+    const firebaseConfig = {
+        apiKey: "AIzaSyA24pBo8mBWiZssPtep--MMBdB7c8_Lu4U",
+        authDomain: "dell-invest.firebaseapp.com",
+        projectId: "dell-invest",
+        storageBucket: "dell-invest.firebasestorage.app",
+        messagingSenderId: "807081599583",
+        appId: "1:807081599583:web:e00ec3959bc4acdae031ea"
+    };
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const userPhone = localStorage.getItem("userPhone");
 
-// --- INSCRIPTION ---
-window.registerUser = async function(phone, password, inviteCode) {
-    try {
-        const dbRef = ref(db);
-        const snapshot = await get(child(dbRef, `users/${phone}`));
-        if (snapshot.exists()) { alert("Numéro déjà inscrit !"); return false; }
-
-        const myCode = "DELL" + Math.floor(1000 + Math.random() * 9000);
-        await set(ref(db, 'users/' + phone), {
-            phone: phone,
-            password: password,
-            solde: 0,
-            invite: myCode,
-            referredBy: inviteCode || "DIRECT",
-            createdAt: new Date().toLocaleString()
+    // 1. AFFICHER LE SOLDE EN TEMPS RÉEL
+    if (userPhone) {
+        const soldeRef = ref(db, 'users/' + userPhone + '/solde');
+        onValue(soldeRef, (snapshot) => {
+            const soldeData = snapshot.val() || 0;
+            document.getElementById("solde").innerText = soldeData + " FC";
         });
-        return true;
-    } catch (e) { return false; }
-};
+    } else {
+        window.location.href = "login.html"; // Redirige si pas connecté
+    }
 
-// --- CONNEXION ---
-window.loginUser = async function(phone, password) {
-    try {
-        const dbRef = ref(db);
-        const snapshot = await get(child(dbRef, `users/${phone}`));
-        if (snapshot.exists() && snapshot.val().password === password) {
-            // ON FIXE LE NOM DE LA CLÉ ICI : userPhone
-            localStorage.setItem("userPhone", phone);
-            return true;
-        } else {
-            alert("Identifiants incorrects");
-            return false;
+    // 2. FONCTION ACHETER
+    window.acheterVIP = async function(prix, nomProduit) {
+        if (!userPhone) return;
+
+        const userRef = ref(db, 'users/' + userPhone);
+        
+        try {
+            const snapshot = await get(userRef);
+            if (snapshot.exists()) {
+                let soldeActuel = snapshot.val().solde || 0;
+
+                if (soldeActuel >= prix) {
+                    let nouveauSolde = soldeActuel - prix;
+
+                    // Mettre à jour le solde dans Firebase
+                    await set(ref(db, 'users/' + userPhone + '/solde'), nouveauSolde);
+
+                    // Enregistrer l'achat pour que l'ADMIN le voie
+                    const achatRef = ref(db, 'achats/' + userPhone);
+                    const nouvelAchat = push(achatRef);
+                    await set(nouvelAchat, {
+                        produit: nomProduit,
+                        prix: prix,
+                        date: new Date().toLocaleString()
+                    });
+
+                    alert("✅ Achat réussi de " + nomProduit + " !");
+                } else {
+                    alert("❌ Solde insuffisant. Rechargez votre compte.");
+                }
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Erreur lors de l'achat.");
         }
-    } catch (e) { return false; }
-};
-
-// --- DÉCONNEXION ---
-window.logoutUser = function() {
-    localStorage.removeItem("userPhone");
-    window.location.href = "login.html";
-};
+    };
+</script>
