@@ -1,29 +1,82 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DELL INVEST - Dépôt</title>
+    <title>Recharge - DELL INVEST</title>
     <style>
-        body { font-family: sans-serif; text-align: center; padding: 20px; background: #f4f4f4; }
-        .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        input { width: 90%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 8px; }
-        button { width: 90%; padding: 15px; background: #1a237e; color: white; border: none; border-radius: 8px; font-weight: bold; }
+        :root {
+            --primary-color: #8b1c3d;
+            --bg-color: #f4f7fe;
+            --text-grey: #64748b;
+        }
+
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: var(--bg-color); color: #333; }
+
+        .header { background: linear-gradient(to right, #22c55e, #1e40af); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+
+        .container { padding: 20px; max-width: 450px; margin: auto; }
+
+        .network-selector { display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px; }
+
+        .network-card { background: white; border: 2px solid transparent; border-radius: 12px; padding: 15px; text-align: center; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: 0.3s; }
+
+        .network-card.active { border-color: var(--primary-color); background: #fff8f9; }
+
+        .payment-box { background: #f8fafc; border-radius: 15px; padding: 20px; margin-bottom: 25px; border: 1px dashed #cbd5e1; }
+
+        .phone-display { display: flex; justify-content: space-between; align-items: center; background: white; padding: 12px; border-radius: 10px; font-weight: bold; font-size: 1.2rem; color: var(--primary-color); margin-top: 10px; }
+
+        .copy-btn { color: var(--primary-color); font-size: 0.9rem; cursor: pointer; border: none; background: none; font-weight: bold; }
+
+        input { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid #ddd; box-sizing: border-box; background: white; margin-bottom: 15px; }
+
+        .btn-submit { width: 100%; padding: 16px; background-color: var(--primary-color); color: white; border: none; border-radius: 12px; font-size: 1rem; font-weight: bold; cursor: pointer; }
+
+        .instructions { background: #eef2ff; border-radius: 12px; padding: 15px; margin-top: 25px; font-size: 0.85rem; line-height: 1.6; }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <h2>Dépôt (Min: 20 000 FC)</h2>
-    <input type="number" id="m_montant" placeholder="Montant en FC">
-    <input type="text" id="m_tid" placeholder="ID de transaction">
-    <button id="m_btn">VALIDER LE DÉPÔT</button>
-    <p id="m_msg" style="color: red; font-size: 12px;"></p>
+<div class="header">
+    <div style="font-weight:bold;">🟢 Dépôt</div>
+    <div style="text-align:right;">
+        <small>Solde</small><br>
+        <b id="userBalance">0 CDF</b>
+    </div>
+</div>
+
+<div class="container">
+    <h3>↓ Recharger mon compte</h3>
+    
+    <div class="network-selector">
+        <div class="network-card active" onclick="setNetwork('Airtel', '0975617195', 'Namwezi Sifa', this)"><b>Airtel Money</b></div>
+        <div class="network-card" onclick="setNetwork('Orange', '08XXXXXXXX', 'Agent Orange', this)"><b>Orange Money</b></div>
+        <div class="network-card" onclick="setNetwork('M-Pesa', '08XXXXXXXX', 'Agent M-Pesa', this)"><b>M-Pesa</b></div>
+    </div>
+
+    <div class="payment-box">
+        <span style="font-size: 0.8rem; color: var(--text-grey);">Envoyez l'argent à ce numéro (<span id="netName">Airtel</span>) :</span>
+        <div class="phone-display">
+            <span id="payNumber">0975617195</span>
+            <button class="copy-btn" onclick="copyNum()">📋 Copier</button>
+        </div>
+        <p id="agentName" style="font-size: 0.75rem; color: var(--text-grey); margin-top: 10px;">Agent : Namwezi Sifa</p>
+    </div>
+
+    <input type="number" id="depotAmount" placeholder="Montant à déposer (Min: 25000)">
+    <input type="text" id="transactionId" placeholder="ID de transaction reçu par SMS">
+
+    <button class="btn-submit" id="btnValider">✓ Valider mon dépôt</button>
+
+    <div class="instructions">
+        <b>Instructions :</b> Envoyez l'argent, puis remplissez le formulaire. Une fois vérifié, votre solde sera crédité.
+    </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, set, push, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyA24pBo8mBWiZssPtep--MMBdB7c8_Lu4U",
@@ -36,39 +89,50 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
+    const userPhone = localStorage.getItem("userPhone");
 
-    document.getElementById("m_btn").onclick = async () => {
-        const montant = document.getElementById("m_montant").value;
-        const tid = document.getElementById("m_tid").value;
-        const phone = localStorage.getItem("userPhone"); // On vérifie si l'utilisateur est connu
-        const msg = document.getElementById("m_msg");
+    // Afficher le solde en temps réel
+    if(userPhone) {
+        onValue(ref(db, `users/${userPhone}`), (snap) => {
+            if(snap.exists()) document.getElementById("userBalance").innerText = snap.val().solde + " CDF";
+        });
+    }
 
-        if (!phone) {
-            alert("ERREUR : Vous n'êtes pas connecté. Retournez à la page de connexion.");
-            window.location.href = "login.html";
-            return;
-        }
+    // Fonction de validation
+    document.getElementById("btnValider").onclick = async () => {
+        const amount = document.getElementById("depotAmount").value;
+        const tid = document.getElementById("transactionId").value;
 
-        if (montant < 20000) {
-            alert("Le minimum est de 20 000 FC");
-            return;
-        }
-
-        try {
-            msg.innerText = "Envoi en cours...";
-            await push(ref(db, 'recharges'), {
-                utilisateur: phone,
-                montant: parseInt(montant),
-                id_transaction: tid,
-                statut: "En attente",
-                date: new Date().toLocaleString()
+        if (amount >= 25000 && tid) {
+            // On enregistre la demande dans un dossier "recharges" pour que TOI tu puisses voir
+            const rechargeRef = ref(db, 'recharges');
+            const newRecharge = push(rechargeRef);
+            await set(newRecharge, {
+                user: userPhone,
+                montant: amount,
+                transactionID: tid,
+                date: new Date().toLocaleString(),
+                statut: "En attente"
             });
-            alert("✅ RÉUSSI ! Demande envoyée.");
-            window.location.href = "profil.html";
-        } catch (e) {
-            alert("Erreur Firebase : " + e.message);
+            alert("Demande envoyée ! Votre solde sera mis à jour après vérification.");
+        } else {
+            alert("Veuillez remplir correctement les champs (Min 25000 CDF)");
         }
     };
 </script>
+
+<script>
+    function setNetwork(name, number, agent, element) {
+        document.querySelectorAll('.network-card').forEach(c => c.classList.remove('active'));
+        element.classList.add('active');
+        document.getElementById('payNumber').innerText = number;
+        document.getElementById('netName').innerText = name;
+        document.getElementById('agentName').innerText = "Agent : " + agent;
+    }
+    function copyNum() {
+        const num = document.getElementById('payNumber').innerText;
+        navigator.clipboard.writeText(num);
+        alert("Numéro copié !");
+    }
+</script>
 </body>
-</html>
