@@ -1,26 +1,24 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recharge - DELL INVEST</title>
+    <title>DELL INVEST - Dépôt</title>
     <style>
-        body { font-family: sans-serif; background: #f0f2f5; display: flex; justify-content: center; padding: 20px; }
-        .card { background: white; padding: 20px; border-radius: 15px; width: 100%; max-width: 400px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; }
-        button { width: 100%; padding: 15px; background: #1a237e; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        body { font-family: sans-serif; text-align: center; padding: 20px; background: #f4f4f4; }
+        .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        input { width: 90%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 8px; }
+        button { width: 90%; padding: 15px; background: #1a237e; color: white; border: none; border-radius: 8px; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h2>Dépôt DELL INVEST</h2>
-    <p>Minimum : <b>20 000 FC</b></p>
-    
-    <input type="number" id="montantInput" placeholder="Montant (ex: 20000)">
-    <input type="text" id="tidInput" placeholder="ID de transaction">
-    
-    <button id="btnValider">VALIDER LE DÉPÔT</button>
+    <h2>Dépôt (Min: 20 000 FC)</h2>
+    <input type="number" id="m_montant" placeholder="Montant en FC">
+    <input type="text" id="m_tid" placeholder="ID de transaction">
+    <button id="m_btn">VALIDER LE DÉPÔT</button>
+    <p id="m_msg" style="color: red; font-size: 12px;"></p>
 </div>
 
 <script type="module">
@@ -39,37 +37,38 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // CETTE PARTIE EST LA PLUS IMPORTANTE
-    document.getElementById("btnValider").addEventListener("click", async () => {
-        const montant = document.getElementById("montantInput").value;
-        const tid = document.getElementById("tidInput").value;
-        const phone = localStorage.getItem("userPhone");
+    document.getElementById("m_btn").onclick = async () => {
+        const montant = document.getElementById("m_montant").value;
+        const tid = document.getElementById("m_tid").value;
+        const phone = localStorage.getItem("userPhone"); // On vérifie si l'utilisateur est connu
+        const msg = document.getElementById("m_msg");
 
         if (!phone) {
-            alert("Erreur : Vous n'êtes pas connecté !");
+            alert("ERREUR : Vous n'êtes pas connecté. Retournez à la page de connexion.");
+            window.location.href = "login.html";
             return;
         }
 
         if (montant < 20000) {
-            alert("Le montant minimum est de 20 000 FC");
+            alert("Le minimum est de 20 000 FC");
             return;
         }
 
         try {
-            const rechargeRef = ref(db, 'recharges');
-            await push(rechargeRef, {
+            msg.innerText = "Envoi en cours...";
+            await push(ref(db, 'recharges'), {
                 utilisateur: phone,
                 montant: parseInt(montant),
                 id_transaction: tid,
                 statut: "En attente",
                 date: new Date().toLocaleString()
             });
-            alert("✅ DEMANDE ENVOYÉE !");
+            alert("✅ RÉUSSI ! Demande envoyée.");
             window.location.href = "profil.html";
         } catch (e) {
             alert("Erreur Firebase : " + e.message);
         }
-    });
+    };
 </script>
 </body>
 </html>
