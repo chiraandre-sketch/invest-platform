@@ -103,7 +103,7 @@
         const amount = document.getElementById("depotAmount").value;
         const tid = document.getElementById("transactionId").value;
 
-        if (amount >= 25000 && tid) {
+        if (amount >= 20000 && tid) {
             // On enregistre la demande dans un dossier "recharges" pour que TOI tu puisses voir
             const rechargeRef = ref(db, 'recharges');
             const newRecharge = push(rechargeRef);
