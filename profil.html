@@ -14,10 +14,21 @@
         .stat-box { background: rgba(255, 255, 255, 0.95); padding: 15px; border-radius: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .stat-value { display: block; font-size: 18px; font-weight: bold; color: #1a237e; }
 
-        /* SECTION PRODUITS ACHETÉS */
+        /* SECTION HISTORIQUE & PRODUITS */
         .products-section { background: rgba(255, 255, 255, 0.95); margin: 10px 20px; padding: 15px; border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .products-title { font-size: 14px; font-weight: bold; color: #1a237e; margin-bottom: 10px; display: flex; align-items: center; }
+        .products-title { font-size: 14px; font-weight: bold; color: #1a237e; margin-bottom: 10px; }
+        
+        .history-buttons { display: flex; gap: 10px; margin-bottom: 15px; }
+        .btn-hist { flex: 1; padding: 10px; border: none; border-radius: 10px; font-size: 12px; font-weight: bold; cursor: pointer; color: white; }
+        .btn-depot { background: #1a237e; }
+        .btn-retrait { background: #ef4444; }
+
         .product-item { background: #f8fafc; padding: 10px; border-radius: 10px; margin-bottom: 8px; border-left: 4px solid #22c55e; display: flex; justify-content: space-between; font-size: 13px; color: #333; }
+
+        /* MODAL POUR HISTORIQUE */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-content { background: white; width: 90%; max-width: 400px; border-radius: 20px; padding: 20px; max-height: 70vh; overflow-y: auto; color: #333; }
+        .hist-item { border-bottom: 1px solid #eee; padding: 10px 0; font-size: 13px; display: flex; justify-content: space-between; }
 
         .menu-list { background: rgba(255, 255, 255, 0.95); margin: 10px 20px; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .menu-link { display: flex; justify-content: space-between; align-items: center; padding: 18px; text-decoration: none; color: #333; border-bottom: 1px solid #f0f0f0; font-size: 15px; }
@@ -49,15 +60,30 @@
     </div>
 
     <div class="products-section">
+        <div class="products-title">📊 Historique & Activités</div>
+        
+        <div class="history-buttons">
+            <button class="btn-hist btn-depot" onclick="showHistory('recharges')">📜 Mes Dépôts</button>
+            <button class="btn-hist btn-retrait" onclick="showHistory('retraits')">💸 Mes Retraits</button>
+        </div>
+
         <div class="products-title">💎 Mes Investissements</div>
         <div id="list-produits">
             <p style="font-size:12px; color:#999; text-align:center;">Aucun produit actif</p>
         </div>
     </div>
 
+    <div id="modalHistory" class="modal">
+        <div class="modal-content">
+            <h3 id="modalTitle" style="color:#1a237e; margin-top:0;">Historique</h3>
+            <div id="history-content">Chargement...</div>
+            <button onclick="closeModal()" style="width:100%; margin-top:20px; padding:10px; border-radius:10px; border:none; background:#eee;">Fermer</button>
+        </div>
+    </div>
+
     <div class="menu-list">
-        <a href="https://chat.whatsapp.com/FGlMMhRWzKv1OGsDkLDIGL?mode=gi_t" target="_blank" class="menu-link whatsapp-btn">
-            <span>🟢 Rejoindre le groupe WhatsApp</span>
+        <a href="https://chat.whatsapp.com/FGlMMhRWzKv1OGsDkLDIGL" target="_blank" class="menu-link whatsapp-btn">
+            <span>🟢 Groupe WhatsApp Officiel</span>
             <span>❯</span>
         </a>
         <a href="recharge.html" class="menu-link"><span>💳 Dépôt</span> <span>❯</span></a>
@@ -78,7 +104,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, onValue, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyA24pBo8mBWiZssPtep--MMBdB7c8_Lu4U",
@@ -94,46 +120,72 @@
     const userPhone = localStorage.getItem("userPhone");
 
     if (userPhone) {
-        // 1. Charger les infos de base (Solde et Code)
-        const userRef = ref(db, 'users/' + userPhone);
-        onValue(userRef, (snapshot) => {
+        onValue(ref(db, 'users/' + userPhone), (snapshot) => {
             if (snapshot.exists()) {
                 const data = snapshot.val();
                 document.getElementById("display-phone").innerText = data.phone;
                 document.getElementById("display-solde").innerText = (data.solde || 0) + " FC";
-                document.getElementById("display-invite").innerText = data.invite || "---";
+                document.getElementById("display-invite").innerText = data.invite || "0";
             }
         });
 
-        // 2. Charger les produits achetés
-        const achatsRef = ref(db, 'achats/' + userPhone);
-        onValue(achatsRef, (snapshot) => {
+        onValue(ref(db, 'achats/' + userPhone), (snapshot) => {
             const listDiv = document.getElementById("list-produits");
             if (snapshot.exists()) {
-                listDiv.innerHTML = ""; // On vide le message "Aucun produit"
-                const achats = snapshot.val();
-                
-                // On boucle sur chaque achat pour l'afficher
-                Object.values(achats).forEach(achat => {
-                    const item = document.createElement("div");
-                    item.className = "product-item";
-                    item.innerHTML = `
-                        <span><b>${achat.produit}</b></span>
-                        <span style="color: #22c55e;">Actif ✅</span>
-                    `;
-                    listDiv.appendChild(item);
+                listDiv.innerHTML = "";
+                Object.values(snapshot.val()).forEach(achat => {
+                    listDiv.innerHTML += `
+                        <div class="product-item">
+                            <span><b>${achat.produit}</b></span>
+                            <span style="color: #22c55e;">Actif ✅</span>
+                        </div>`;
                 });
             }
         });
 
-    } else {
-        window.location.href = "login.html";
-    }
+        // FONCTION HISTORIQUE
+        window.showHistory = async function(type) {
+            const modal = document.getElementById("modalHistory");
+            const content = document.getElementById("history-content");
+            const title = document.getElementById("modalTitle");
+            
+            modal.style.display = "flex";
+            title.innerText = type === 'recharges' ? "Historique Dépôts" : "Historique Retraits";
+            content.innerHTML = "Chargement...";
 
-    window.logoutUser = function() {
-        localStorage.removeItem("userPhone");
-        window.location.href = "login.html";
-    };
+            const path = type; // Dossier 'recharges' ou 'retraits'
+            const dbRef = ref(db, path);
+            const snapshot = await get(dbRef);
+
+            if (snapshot.exists()) {
+                let html = "";
+                let count = 0;
+                snapshot.forEach((child) => {
+                    const data = child.val();
+                    // Filtrer pour ne voir que ses propres transactions
+                    if (data.utilisateur === userPhone || data.telephone === userPhone || data.demandeur === userPhone) {
+                        count++;
+                        const statusColor = data.statut === "En attente" ? "orange" : "green";
+                        html += `
+                            <div class="hist-item">
+                                <div>
+                                    <b>${data.montant} FC</b><br>
+                                    <small>${data.date || ''}</small>
+                                </div>
+                                <div style="color:${statusColor}; font-weight:bold;">${data.statut || 'Validé'}</div>
+                            </div>`;
+                    }
+                });
+                content.innerHTML = count > 0 ? html : "Aucune transaction trouvée.";
+            } else {
+                content.innerHTML = "Aucun historique.";
+            }
+        };
+
+    } else { window.location.href = "login.html"; }
+
+    window.closeModal = () => { document.getElementById("modalHistory").style.display = "none"; };
+    window.logoutUser = () => { localStorage.removeItem("userPhone"); window.location.href = "login.html"; };
 </script>
 
 </body>
