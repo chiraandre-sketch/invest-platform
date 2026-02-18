@@ -3,52 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recharge - DELL INVEST</title>
+    <title>Dépôt - DELL INVEST</title>
     <style>
         :root {
-            --primary-color: #8b1c3d;
+            --primary-color: #1a237e; /* Bleu Dell pour la cohérence */
             --bg-color: #f4f7fe;
             --text-grey: #64748b;
         }
 
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: var(--bg-color); color: #333; }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: var(--bg-color); color: #333; padding-bottom: 50px; }
 
-        .header { background: linear-gradient(to right, #22c55e, #1e40af); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .header { background: linear-gradient(135deg, #1a237e, #0d47a1); color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center; border-radius: 0 0 20px 20px; }
 
         .container { padding: 20px; max-width: 450px; margin: auto; }
 
-        .network-selector { display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px; }
+        .network-selector { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 25px; }
 
-        .network-card { background: white; border: 2px solid transparent; border-radius: 12px; padding: 15px; text-align: center; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: 0.3s; }
+        .network-card { flex: 1; background: white; border: 2px solid transparent; border-radius: 12px; padding: 10px; text-align: center; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: 0.3s; font-size: 0.8rem; }
 
-        .network-card.active { border-color: var(--primary-color); background: #fff8f9; }
+        .network-card.active { border-color: var(--primary-color); background: #e8eaf6; }
 
-        .payment-box { background: #f8fafc; border-radius: 15px; padding: 20px; margin-bottom: 25px; border: 1px dashed #cbd5e1; }
+        .payment-box { background: white; border-radius: 15px; padding: 20px; margin-bottom: 25px; border: 1px dashed #cbd5e1; text-align: center; }
 
-        .phone-display { display: flex; justify-content: space-between; align-items: center; background: white; padding: 12px; border-radius: 10px; font-weight: bold; font-size: 1.2rem; color: var(--primary-color); margin-top: 10px; }
+        .phone-display { display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 15px; border-radius: 10px; font-weight: bold; font-size: 1.2rem; color: var(--primary-color); margin-top: 10px; border: 1px solid #eee; }
 
-        .copy-btn { color: var(--primary-color); font-size: 0.9rem; cursor: pointer; border: none; background: none; font-weight: bold; }
+        .copy-btn { color: #22c55e; font-size: 0.8rem; cursor: pointer; border: 1px solid #22c55e; background: none; font-weight: bold; padding: 5px 10px; border-radius: 5px; }
 
-        input { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid #ddd; box-sizing: border-box; background: white; margin-bottom: 15px; }
+        input { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid #ddd; box-sizing: border-box; background: white; margin-bottom: 15px; font-size: 1rem; }
 
-        .btn-submit { width: 100%; padding: 16px; background-color: var(--primary-color); color: white; border: none; border-radius: 12px; font-size: 1rem; font-weight: bold; cursor: pointer; }
+        .btn-submit { width: 100%; padding: 16px; background-color: var(--primary-color); color: white; border: none; border-radius: 12px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn-submit:disabled { background-color: #ccc; }
 
-        .instructions { background: #eef2ff; border-radius: 12px; padding: 15px; margin-top: 25px; font-size: 0.85rem; line-height: 1.6; }
+        .instructions { background: #fff; border-left: 4px solid var(--primary-color); border-radius: 8px; padding: 15px; margin-top: 25px; font-size: 0.85rem; line-height: 1.6; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <div style="font-weight:bold;">🟢 Dépôt</div>
+    <div style="font-weight:bold;">💎 DELL INVEST</div>
     <div style="text-align:right;">
-        <small>Solde</small><br>
-        <b id="userBalance">0 CDF</b>
+        <small>Mon Solde</small><br>
+        <b id="userBalance">0 FC</b>
     </div>
 </div>
 
 <div class="container">
-    <h3>↓ Recharger mon compte</h3>
+    <a href="profil.html" style="text-decoration:none; color: var(--primary-color); font-size: 0.9rem;">⬅ Retour</a>
+    <h3 style="margin-top:15px;">Faire un dépôt</h3>
     
+    <p style="font-size: 0.9rem; color: var(--text-grey);">1. Choisissez votre réseau :</p>
     <div class="network-selector">
         <div class="network-card active" onclick="setNetwork('Airtel', '0975617195', 'Namwezi Sifa', this)"><b>Airtel Money</b></div>
         <div class="network-card" onclick="setNetwork('Orange', '08XXXXXXXX', 'Agent Orange', this)"><b>Orange Money</b></div>
@@ -56,21 +59,25 @@
     </div>
 
     <div class="payment-box">
-        <span style="font-size: 0.8rem; color: var(--text-grey);">Envoyez l'argent à ce numéro (<span id="netName">Airtel</span>) :</span>
+        <span style="font-size: 0.8rem; color: var(--text-grey);">Envoyez l'argent au numéro <b id="netName">Airtel</b> suivant :</span>
         <div class="phone-display">
             <span id="payNumber">0975617195</span>
             <button class="copy-btn" onclick="copyNum()">📋 Copier</button>
         </div>
-        <p id="agentName" style="font-size: 0.75rem; color: var(--text-grey); margin-top: 10px;">Agent : Namwezi Sifa</p>
+        <p id="agentName" style="font-size: 0.8rem; font-weight: bold; color: #333; margin-top: 10px;">Titulaire : Namwezi Sifa</p>
     </div>
 
-    <input type="number" id="depotAmount" placeholder="Montant à déposer (Min: 25000)">
-    <input type="text" id="transactionId" placeholder="ID de transaction reçu par SMS">
+    <p style="font-size: 0.9rem; color: var(--text-grey);">2. Détails du transfert :</p>
+    <input type="number" id="depotAmount" placeholder="Montant envoyé (Min: 20000 FC)">
+    <input type="text" id="transactionId" placeholder="ID de transaction (Ex: PP2301...)">
 
     <button class="btn-submit" id="btnValider">✓ Valider mon dépôt</button>
 
     <div class="instructions">
-        <b>Instructions :</b> Envoyez l'argent, puis remplissez le formulaire. Une fois vérifié, votre solde sera crédité.
+        <b>💡 Rappel :</b><br>
+        • Minimum de dépôt : <b>20 000 FC</b><br>
+        • Frais de retrait : <b>15%</b><br>
+        • Validation : Entre 5 min et 1 heure.
     </div>
 </div>
 
@@ -91,32 +98,49 @@
     const db = getDatabase(app);
     const userPhone = localStorage.getItem("userPhone");
 
-    // Afficher le solde en temps réel
-    if(userPhone) {
-        onValue(ref(db, `users/${userPhone}`), (snap) => {
-            if(snap.exists()) document.getElementById("userBalance").innerText = snap.val().solde + " CDF";
-        });
-    }
+    if(!userPhone) window.location.href = "login.html";
 
-    // Fonction de validation
+    // Afficher le solde
+    onValue(ref(db, `users/${userPhone}`), (snap) => {
+        if(snap.exists()) document.getElementById("userBalance").innerText = (snap.val().solde || 0) + " FC";
+    });
+
+    // Validation du dépôt
     document.getElementById("btnValider").onclick = async () => {
-        const amount = document.getElementById("depotAmount").value;
-        const tid = document.getElementById("transactionId").value;
+        const btn = document.getElementById("btnValider");
+        const amount = parseInt(document.getElementById("depotAmount").value);
+        const tid = document.getElementById("transactionId").value.trim();
+        const MIN_DEPOT = 20000; // Mis à jour à 20 000
 
-        if (amount >= 25000 && tid) {
-            // On enregistre la demande dans un dossier "recharges" pour que TOI tu puisses voir
+        if (isNaN(amount) || amount < MIN_DEPOT) {
+            alert("❌ Le montant minimum est de 20 000 FC.");
+            return;
+        }
+
+        if (tid.length < 5) {
+            alert("❌ Veuillez entrer un ID de transaction valide.");
+            return;
+        }
+
+        btn.disabled = true;
+        btn.innerText = "Chargement...";
+
+        try {
             const rechargeRef = ref(db, 'recharges');
             const newRecharge = push(rechargeRef);
             await set(newRecharge, {
-                user: userPhone,
+                utilisateur: userPhone,
                 montant: amount,
-                transactionID: tid,
+                id_transaction: tid,
                 date: new Date().toLocaleString(),
                 statut: "En attente"
             });
-            alert("Demande envoyée ! Votre solde sera mis à jour après vérification.");
-        } else {
-            alert("Veuillez remplir correctement les champs (Min 25000 CDF)");
+            alert("✅ Demande envoyée ! Votre compte sera crédité après vérification.");
+            window.location.href = "profil.html";
+        } catch (e) {
+            alert("❌ Erreur lors de l'envoi. Réessayez.");
+            btn.disabled = false;
+            btn.innerText = "✓ Valider mon dépôt";
         }
     };
 </script>
@@ -127,12 +151,13 @@
         element.classList.add('active');
         document.getElementById('payNumber').innerText = number;
         document.getElementById('netName').innerText = name;
-        document.getElementById('agentName').innerText = "Agent : " + agent;
+        document.getElementById('agentName').innerText = "Titulaire : " + agent;
     }
     function copyNum() {
         const num = document.getElementById('payNumber').innerText;
-        navigator.clipboard.writeText(num);
-        alert("Numéro copié !");
+        navigator.clipboard.writeText(num).then(() => {
+            alert("Numéro copié !");
+        });
     }
 </script>
 </body>
