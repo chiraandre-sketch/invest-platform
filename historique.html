@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historique - DELL INVEST</title>
+    <style>
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #0f172a; color: #fff; padding: 20px; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tab-btn { flex: 1; padding: 10px; border: none; border-radius: 8px; background: #1e293b; color: #94a3b8; cursor: pointer; font-weight: bold; }
+        .tab-btn.active { background: #3b82f6; color: white; }
+        
+        .card { background: #020617; border-radius: 12px; border: 1px solid #1e293b; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .info { display: flex; flex-direction: column; }
+        .amount { font-weight: bold; font-size: 16px; }
+        .date { font-size: 11px; color: #64748b; margin-top: 4px; }
+        .status { font-size: 12px; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
+        
+        /* Couleurs des statuts */
+        .pending { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .success { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+        
+        #list-container { margin-top: 10px; }
+        .empty-msg { text-align: center; color: #64748b; margin-top: 50px; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h2>Mes Transactions</h2>
+</div>
+
+<div class="tabs">
+    <button class="tab-btn active" onclick="showTab('retraits')">Retraits</button>
+    <button class="tab-btn" onclick="showTab('depots')">Dépôts</button>
+</div>
+
+<div id="list-container">
+    </div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyA24pBo8mBWiZssPtep--MMBdB7c8_Lu4U",
+        authDomain: "dell-invest.firebaseapp.com",
+        projectId: "dell-invest",
+        storageBucket: "dell-invest.firebasestorage.app",
+        messagingSenderId: "807081599583",
+        appId: "1:807081599583:web:e00ec3959bc4acdae031ea"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const userPhone = localStorage.getItem("userPhone");
+
+    let currentMode = 'retraits';
+
+    window.showTab = function(mode) {
+        currentMode = mode;
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        loadData();
+    }
+
+    function loadData() {
+        const container = document.getElementById("list-container");
+        container.innerHTML = "<p style='text-align:center'>Chargement...</p>";
+
+        const dataRef = ref(db, currentMode);
+        onValue(dataRef, (snapshot) => {
+            container.innerHTML = "";
+            let hasData = false;
+
+            snapshot.forEach((childSnapshot) => {
+                const data = childSnapshot.val();
+                
+                // On ne montre que les transactions de l'utilisateur connecté
+                if (data.utilisateur === userPhone || data.telephone === userPhone || data.demandeur === userPhone) {
+                    hasData = true;
+                    const card = document.createElement("div");
+                    card.className = "card";
+                    
+                    const statusClass = (data.statut === "En attente") ? "pending" : "success";
+                    const displayAmount = data.montant || data.amount || 0;
+
+                    card.innerHTML = `
+                        <div class="info">
+                            <span class="amount">${displayAmount} FC</span>
+                            <span class="date">${data.date || 'Date inconnue'}</span>
+                        </div>
+                        <div class="status ${statusClass}">
+                            ${data.statut || 'Terminé'}
+                        </div>
+                    `;
+                    container.prepend(card); // Les plus récents en haut
+                }
+            });
+
+            if (!hasData) {
+                container.innerHTML = `<div class="empty-msg">Aucun historique trouvé pour les ${currentMode}.</div>`;
+            }
+        });
+    }
+
+    // Charger les retraits par défaut au démarrage
+    if (userPhone) { loadData(); } else { window.location.href = "login.html"; }
+
+</script>
+</body>
+</html>
