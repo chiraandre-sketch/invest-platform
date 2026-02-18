@@ -3,92 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DELL INVEST - Inscription</title>
+    <title>Inscription - DELL INVEST</title>
     <style>
-        body { background: #000 url('IMG_2276.jpeg') center/cover fixed; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; color: white; }
-        .card { background: rgba(0,0,0,0.85); padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; border: 1px solid #333; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: none; box-sizing: border-box; font-size: 16px; color: #000; }
-        button { width: 100%; padding: 14px; background: #00c853; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 10px; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7fe; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .register-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 90%; max-width: 350px; text-align: center; }
+        h2 { color: #1a237e; margin-bottom: 20px; }
+        input { width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; font-size: 16px; }
+        button { width: 100%; padding: 15px; background: #1a237e; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .info { font-size: 12px; color: #666; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <h2>DELL INVEST</h2>
-        <p>Créer un compte pour commencer</p>
-        
-        <input id="phone" type="tel" placeholder="Numéro de téléphone">
-        <input id="pass" type="password" placeholder="Mot de passe">
-        <input id="invite" type="text" placeholder="Code d'invitation">
-        
-        <button id="btnReg">S'INSCRIRE</button>
-        <p style="font-size: 14px; margin-top: 15px;">Déjà inscrit ? <a href="login.html" style="color: #00c853;">Connexion</a></p>
-    </div>
+<div class="register-card">
+    <h2>Créer un compte</h2>
+    <p class="info">Numéro RDC et 6 caractères minimum requis.</p>
+    
+    <input type="tel" id="regPhone" placeholder="Numéro (ex: 0812345678)">
+    <input type="password" id="regPass" placeholder="Mot de passe">
+    <input type="password" id="regConfirm" placeholder="Confirmer le mot de passe">
+    
+    <button id="btnRegister">S'INSCRIRE</button>
+    
+    <p style="margin-top:20px; font-size: 14px;">Déjà inscrit ? <a href="login.html" style="color:#1a237e; font-weight:bold; text-decoration:none;">Se connecter</a></p>
+</div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyA24pBo8mBWiZssPtep--MMBdB7c8_Lu4U",
-            authDomain: "dell-invest.firebaseapp.com",
-            projectId: "dell-invest",
-            storageBucket: "dell-invest.firebasestorage.app",
-            messagingSenderId: "807081599583",
-            appId: "1:807081599583:web:e00ec3959bc4acdae031ea"
-        };
+    const firebaseConfig = {
+        apiKey: "AIzaSyA24pBo8mBWiZssPtep--MMBdB7c8_Lu4U",
+        authDomain: "dell-invest.firebaseapp.com",
+        projectId: "dell-invest",
+        storageBucket: "dell-invest.firebasestorage.app",
+        messagingSenderId: "807081599583",
+        appId: "1:807081599583:web:e00ec3959bc4acdae031ea"
+    };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
 
-        // RÉCUPÉRATION DU CODE DANS LE LIEN (?inviteCode=DELL2646)
-        window.onload = () => {
-            const params = new URLSearchParams(window.location.search);
-            const code = params.get('inviteCode');
-            if (code) {
-                document.getElementById('invite').value = code;
-            }
-        };
+    document.getElementById("btnRegister").onclick = async () => {
+        const phone = document.getElementById("regPhone").value.trim();
+        const pass = document.getElementById("regPass").value.trim();
+        const confirm = document.getElementById("regConfirm").value.trim();
 
-        // ACTION DU BOUTON
-        document.getElementById('btnReg').onclick = async () => {
-            const phone = document.getElementById('phone').value.trim();
-            const password = document.getElementById('pass').value;
-            const inviteCode = document.getElementById('invite').value.trim();
+        // 1. Vérification du numéro RDC
+        const rdcRegex = /^(0|\+243)[897][0-9]{8}$/;
+        if (!rdcRegex.test(phone)) {
+            alert("❌ Numéro invalide. Utilisez un numéro de la RDC (10 chiffres).");
+            return;
+        }
 
-            if (!phone || password.length < 6) {
-                alert("Veuillez remplir les champs (Mot de passe : 6 car. min)");
+        // 2. Vérification de la longueur du mot de passe
+        if (pass.length < 6) {
+            alert("❌ Le mot de passe doit contenir au moins 6 caractères.");
+            return;
+        }
+
+        // 3. Vérification de la confirmation
+        if (pass !== confirm) {
+            alert("❌ Les mots de passe ne correspondent pas.");
+            return;
+        }
+
+        try {
+            // Vérifier si l'utilisateur existe déjà
+            const userRef = ref(db, 'users/' + phone);
+            const snapshot = await get(userRef);
+
+            if (snapshot.exists()) {
+                alert("❌ Ce numéro est déjà enregistré.");
                 return;
             }
 
-            try {
-                const dbRef = ref(db);
-                const snapshot = await get(child(dbRef, `users/${phone}`));
-                
-                if (snapshot.exists()) {
-                    alert("Ce numéro est déjà inscrit !");
-                    return;
-                }
+            // Création du compte
+            await set(userRef, {
+                password: pass,
+                solde: 0,
+                date_inscription: new Date().toLocaleString()
+            });
 
-                const myCode = "DELL" + Math.floor(1000 + Math.random() * 9000);
-                
-                await set(ref(db, 'users/' + phone), {
-                    phone: phone,
-                    password: password,
-                    solde: 0,
-                    invite: myCode,
-                    referredBy: inviteCode || "DIRECT",
-                    createdAt: new Date().toLocaleString(),
-                    statut: "Membre"
-                });
+            alert("✅ Inscription réussie ! Connectez-vous maintenant.");
+            window.location.href = "login.html";
 
-                alert("Inscription réussie !");
-                window.location.href = "login.html";
+        } catch (e) {
+            alert("Erreur lors de l'inscription : " + e.message);
+        }
+    };
+</script>
 
-            } catch (error) {
-                alert("Erreur de connexion.");
-            }
-        };
-    </script>
 </body>
 </html>
