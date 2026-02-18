@@ -5,26 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion - DELL INVEST</title>
     <style>
-        body { font-family: sans-serif; background: #f4f7fe; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7fe; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
         .login-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 90%; max-width: 350px; text-align: center; }
-        input { width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
+        h2 { color: #1a237e; }
+        input { width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; font-size: 16px; }
         button { width: 100%; padding: 15px; background: #1a237e; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; }
         .error { color: red; font-size: 13px; margin-top: 10px; display: none; }
+        .info { font-size: 12px; color: #666; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
 <div class="login-card">
     <h2>DELL INVEST</h2>
-    <p>Connectez-vous à votre compte</p>
+    <p class="info">Utilisez un numéro RDC et 6 caractères min.</p>
     
-    <input type="number" id="loginPhone" placeholder="Numéro de téléphone">
+    <input type="tel" id="loginPhone" placeholder="Numéro (ex: 0812345678)">
     <input type="password" id="loginPass" placeholder="Mot de passe">
     
     <button id="btnLogin">SE CONNECTER</button>
-    <p id="errorMsg" class="error">Identifiants incorrects</p>
+    <p id="errorMsg" class="error"></p>
     
-    <p style="margin-top:20px; font-size: 14px;">Pas de compte ? <a href="register.html">S'inscrire</a></p>
+    <p style="margin-top:20px; font-size: 14px;">Pas de compte ? <a href="register.html" style="color:#1a237e; font-weight:bold; text-decoration:none;">S'inscrire</a></p>
 </div>
 
 <script type="module">
@@ -48,32 +50,43 @@
         const pass = document.getElementById("loginPass").value.trim();
         const error = document.getElementById("errorMsg");
 
-        if (!phone || !pass) {
-            alert("Remplissez tous les champs");
+        // --- TES INSTRUCTIONS DE SÉCURITÉ ---
+        
+        // 1. Vérification Numéro RDC (Commence par 0 ou +243 et a 10 chiffres au total)
+        const rdcRegex = /^(0|\+243)[897][0-9]{8}$/;
+        if (!rdcRegex.test(phone)) {
+            alert("❌ Format invalide. Utilisez un numéro RDC (ex: 0812345678).");
+            return;
+        }
+
+        // 2. Vérification Mot de passe (6 caractères minimum)
+        if (pass.length < 6) {
+            alert("❌ Le mot de passe doit contenir au moins 6 caractères.");
             return;
         }
 
         try {
+            error.style.display = "none";
             const userRef = ref(db, 'users/' + phone);
             const snapshot = await get(userRef);
 
             if (snapshot.exists()) {
                 const userData = snapshot.val();
                 if (userData.password === pass) {
-                    // --- ÉTAPE CRUCIALE : SAUVEGARDE ET REDIRECTION ---
+                    // SAUVEGARDE ET REDIRECTION
                     localStorage.setItem("userPhone", phone);
-                    alert("Connexion réussie !");
-                    window.location.replace("profil.html"); // Force le passage à la page suivante
+                    alert("✅ Connexion réussie !");
+                    window.location.replace("dashboard.html"); 
                 } else {
                     error.style.display = "block";
                     error.innerText = "Mot de passe incorrect";
                 }
             } else {
                 error.style.display = "block";
-                error.innerText = "Ce numéro n'existe pas";
+                error.innerText = "Ce numéro n'est pas encore inscrit";
             }
         } catch (e) {
-            alert("Erreur de connexion au serveur : " + e.message);
+            alert("Erreur réseau : " + e.message);
         }
     };
 </script>
