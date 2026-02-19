@@ -5,11 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inscription - DELL INVEST</title>
     <style>
-        body { font-family: sans-serif; background: #f4f7fe; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .register-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 90%; max-width: 350px; text-align: center; }
-        input { width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
-        button { width: 100%; padding: 15px; background: #1a237e; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
-        .promo-box { background: #fff9c4; padding: 10px; border-radius: 8px; font-size: 13px; margin-bottom: 10px; color: #f57f17; font-weight: bold; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7fe; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .register-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 90%; max-width: 380px; text-align: center; }
+        h2 { color: #000; margin-bottom: 25px; font-weight: bold; }
+        input { width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; font-size: 16px; }
+        button { width: 100%; padding: 15px; background: #1a237e; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 15px; }
+        .promo-box { background: #fff9c4; padding: 12px; border-radius: 10px; font-size: 15px; margin-bottom: 15px; color: #856404; font-weight: bold; border: 1px solid #ffeeba; }
+        
+        /* La petite phrase en bas */
+        .login-link { margin-top: 25px; font-size: 15px; color: #555; }
+        .login-link a { color: #1a237e; text-decoration: none; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -19,11 +24,15 @@
     
     <div id="referralStatus" class="promo-box" style="display:none;"></div>
     
-    <input type="tel" id="regPhone" placeholder="Numéro RDC (ex: 081...)">
+    <input type="tel" id="regPhone" placeholder="Numéro (ex: 081...)">
     <input type="password" id="regPass" placeholder="Mot de passe (6 car. min)">
-    <input type="text" id="referralInput" placeholder="Code d'invitation (Optionnel)">
+    <input type="text" id="referralInput" placeholder="Code d'invitation">
     
     <button id="btnRegister">S'INSCRIRE</button>
+
+    <div class="login-link">
+        Vous avez déjà un compte ? <a href="login.html">Se connecter</a>
+    </div>
 </div>
 
 <script type="module">
@@ -42,13 +51,12 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // --- LOGIQUE DE CAPTURE DU LIEN ---
+    // Capturer le code depuis l'URL
     const urlParams = new URLSearchParams(window.location.search);
-    const inviteFromUrl = urlParams.get('inviteCode');
-    
-    if (inviteFromUrl) {
-        document.getElementById("referralInput").value = inviteFromUrl;
-        document.getElementById("referralStatus").innerText = "🎁 Parrainé par : " + inviteFromUrl;
+    const inviteCode = urlParams.get('inviteCode');
+    if (inviteCode) {
+        document.getElementById("referralInput").value = inviteCode;
+        document.getElementById("referralStatus").innerText = "🎁 Parrainé par : " + inviteCode;
         document.getElementById("referralStatus").style.display = "block";
     }
 
@@ -58,28 +66,30 @@
         const sponsor = document.getElementById("referralInput").value.trim();
 
         if (!/^(0|\+243)[897][0-9]{8}$/.test(phone)) return alert("Numéro RDC invalide");
-        if (pass.length < 6) return alert("Mot de passe trop court");
+        if (pass.length < 6) return alert("Mot de passe : 6 caractères minimum");
 
         try {
             const userRef = ref(db, 'users/' + phone);
             const snap = await get(userRef);
             if (snap.exists()) return alert("Ce numéro est déjà inscrit");
 
-            // CRÉATION DU COMPTE AVEC LIEN DE PARENTÉ
-            const myInviteCode = "DELL" + Math.floor(1000 + Math.random() * 9000); // Génère un code DELL4567
+            // Créer un code d'invitation pour le nouveau
+            const myNewCode = "DELL-" + Math.floor(1000 + Math.random() * 9000);
             
             await set(userRef, {
                 password: pass,
-                inviteCode: myInviteCode,
-                referredBy: sponsor || "DIRECT", // Ici on lie l'utilisateur à son parrain
+                inviteCode: myNewCode,
+                referredBy: sponsor || "DIRECT",
                 solde: 0,
                 bonusEquipe: 0,
+                equipeLvl1: 0,
+                equipeLvl2: 0,
+                equipeLvl3: 0,
                 date: new Date().toLocaleString()
             });
 
-            alert("✅ Inscription réussie avec succès !");
+            alert("✅ Inscription réussie !");
             window.location.href = "login.html";
-
         } catch (e) {
             alert("Erreur : " + e.message);
         }
