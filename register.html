@@ -5,27 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inscription - DELL INVEST</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #f4f7fe; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        body { font-family: sans-serif; background: #f4f7fe; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
         .register-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 90%; max-width: 350px; text-align: center; }
-        h2 { color: #1a237e; margin-bottom: 20px; }
-        input { width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; font-size: 16px; }
-        button { width: 100%; padding: 15px; background: #1a237e; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .info { font-size: 12px; color: #666; margin-bottom: 10px; }
+        input { width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; background: #1a237e; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        .promo-box { background: #fff9c4; padding: 10px; border-radius: 8px; font-size: 13px; margin-bottom: 10px; color: #f57f17; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="register-card">
-    <h2>Créer un compte</h2>
-    <p class="info">Numéro RDC et 6 caractères minimum requis.</p>
+    <h2>DELL INVEST</h2>
     
-    <input type="tel" id="regPhone" placeholder="Numéro (ex: 0812345678)">
-    <input type="password" id="regPass" placeholder="Mot de passe">
-    <input type="password" id="regConfirm" placeholder="Confirmer le mot de passe">
+    <div id="referralStatus" class="promo-box" style="display:none;"></div>
+    
+    <input type="tel" id="regPhone" placeholder="Numéro RDC (ex: 081...)">
+    <input type="password" id="regPass" placeholder="Mot de passe (6 car. min)">
+    <input type="text" id="referralInput" placeholder="Code d'invitation (Optionnel)">
     
     <button id="btnRegister">S'INSCRIRE</button>
-    
-    <p style="margin-top:20px; font-size: 14px;">Déjà inscrit ? <a href="login.html" style="color:#1a237e; font-weight:bold; text-decoration:none;">Se connecter</a></p>
 </div>
 
 <script type="module">
@@ -44,55 +42,48 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
+    // --- LOGIQUE DE CAPTURE DU LIEN ---
+    const urlParams = new URLSearchParams(window.location.search);
+    const inviteFromUrl = urlParams.get('inviteCode');
+    
+    if (inviteFromUrl) {
+        document.getElementById("referralInput").value = inviteFromUrl;
+        document.getElementById("referralStatus").innerText = "🎁 Parrainé par : " + inviteFromUrl;
+        document.getElementById("referralStatus").style.display = "block";
+    }
+
     document.getElementById("btnRegister").onclick = async () => {
         const phone = document.getElementById("regPhone").value.trim();
         const pass = document.getElementById("regPass").value.trim();
-        const confirm = document.getElementById("regConfirm").value.trim();
+        const sponsor = document.getElementById("referralInput").value.trim();
 
-        // 1. Vérification du numéro RDC
-        const rdcRegex = /^(0|\+243)[897][0-9]{8}$/;
-        if (!rdcRegex.test(phone)) {
-            alert("❌ Numéro invalide. Utilisez un numéro de la RDC (10 chiffres).");
-            return;
-        }
-
-        // 2. Vérification de la longueur du mot de passe
-        if (pass.length < 6) {
-            alert("❌ Le mot de passe doit contenir au moins 6 caractères.");
-            return;
-        }
-
-        // 3. Vérification de la confirmation
-        if (pass !== confirm) {
-            alert("❌ Les mots de passe ne correspondent pas.");
-            return;
-        }
+        if (!/^(0|\+243)[897][0-9]{8}$/.test(phone)) return alert("Numéro RDC invalide");
+        if (pass.length < 6) return alert("Mot de passe trop court");
 
         try {
-            // Vérifier si l'utilisateur existe déjà
             const userRef = ref(db, 'users/' + phone);
-            const snapshot = await get(userRef);
+            const snap = await get(userRef);
+            if (snap.exists()) return alert("Ce numéro est déjà inscrit");
 
-            if (snapshot.exists()) {
-                alert("❌ Ce numéro est déjà enregistré.");
-                return;
-            }
-
-            // Création du compte
+            // CRÉATION DU COMPTE AVEC LIEN DE PARENTÉ
+            const myInviteCode = "DELL" + Math.floor(1000 + Math.random() * 9000); // Génère un code DELL4567
+            
             await set(userRef, {
                 password: pass,
+                inviteCode: myInviteCode,
+                referredBy: sponsor || "DIRECT", // Ici on lie l'utilisateur à son parrain
                 solde: 0,
-                date_inscription: new Date().toLocaleString()
+                bonusEquipe: 0,
+                date: new Date().toLocaleString()
             });
 
-            alert("✅ Inscription réussie ! Connectez-vous maintenant.");
+            alert("✅ Inscription réussie avec succès !");
             window.location.href = "login.html";
 
         } catch (e) {
-            alert("Erreur lors de l'inscription : " + e.message);
+            alert("Erreur : " + e.message);
         }
     };
 </script>
-
 </body>
 </html>
